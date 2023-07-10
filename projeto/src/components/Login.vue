@@ -1,4 +1,5 @@
 <template>
+<v-main>
     <v-app >
       <v-container  class="d-flex flex-column justify-center align-center">
       <v-container  class="">
@@ -14,14 +15,21 @@
     
  
     
-      <div class="text-subtitle-1 text-medium-emphasis">Email</div>
+      <div  class="rounded-pill rounded text-subtitle-1 text-medium-emphasis"></div>
 
-      <v-text-field class="rounded-xl" density="compact"
-        variant="outlined"
+        <v-text-field
+    
+        density="compact"
+        variant="solo"
+        label="Email"
+
+
+        
       ></v-text-field>
 
+
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Password
+      Senha
 
         <a
           class="text-caption text-decoration-none text-blue"
@@ -29,15 +37,14 @@
           rel="noopener noreferrer"
           target="_blank"
         >
-          Forgot login password?</a>
+          Esqueceu a senha?</a>
       </div>
 
       <v-text-field
         :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visible ? 'text' : 'password'"
         density="compact"
-        placeholder="Enter your password"
-        prepend-inner-icon="mdi-lock-outline"
+
         variant="outlined"
         @click:append-inner="visible = !visible"
       ></v-text-field>
@@ -46,15 +53,10 @@
    
       
 
-      <v-btn
-        block
-        class="mb-8"
-        color="blue"
-        size="large"
-        variant="tonal"
-      >
-        Log In
-      </v-btn>
+   <v-container class="mt-auto d-flex justify-end align-self-end">
+      <v-btn class="mt-5 text-capitalize text-h6 bg-blue font-weight-black" block rounded="xl" size="x-large" >Entrar</v-btn>
+    </v-container>
+
 
  
     
@@ -64,6 +66,7 @@
      </v-container>
      </v-container>
     </v-app>
+    </v-main>
   </template>
   
   <script>
@@ -77,5 +80,6 @@ h4{
 h3{
 font-family: 'IBM Plex Sans Thai', sans-serif;
 }
+
 
 </style>
