@@ -1,6 +1,7 @@
 <template>
-    <v-container id="some" v-if="!showLogin">
-  <v-main>
+  
+
+<v-main>
     <v-app>
       
       <v-container v-if="!showLogin">
@@ -9,8 +10,8 @@
           <v-img height="65" src="./logo.svg" class="" />
 
           <h3 class="mt-1 text-h5 text-blue font-weight-medium text-center">Quest Bank</h3>
-          <h4 class="mt-10 text-h6 text-blue font-weight-bold text-center">Tudo pronto para começar?</h4>
-          <h4 class="mt-4 text-center font-weight-medium text-break">Informe seu email e senha para acessar sua conta</h4>
+          <h4 class="mt-10 text-h6 text-blue font-weight-bold text-center">Redefina sua senha!</h4>
+          <h4 class="mt-4 text-center font-weight-medium text-break">Confirme seu email para poder redefinir sua senha</h4>
         </v-container>
         <v-container class="">
 
@@ -30,40 +31,54 @@
               :type="visible ? 'text' : 'password'"
               density="compact"
               variant="solo"
-              label="Senha"
+              label="Nova senha"
+              @click:append-inner="visible = !visible"
+            ></v-text-field>
+            <v-text-field
+              class="mt-1"
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="visible ? 'text' : 'password'"
+              density="compact"
+              variant="solo"
+              label="Confirme a senha"
               @click:append-inner="visible = !visible"
             ></v-text-field>
 
             <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-end">
-              <a @click="openLogin" v-if="!showLogin" class="text-caption text-decoration-none text-blue" rel="noopener noreferrer" target="_blank">
-                Esqueceu a senha?
-              </a>
+              <h6 class="text-caption text-decoration-none text-blue" rel="noopener noreferrer" target="_blank">
+                Caracteres não permitidos: */.,;:...
+              </h6>
             </div>
 
             <v-container class="mt-auto d-flex justify-end align-self-end">
-              <v-btn class="mt-10 text-capitalize text-h6 bg-blue font-weight-black" block rounded="xl" size="x-large" @click="openResetView">Entrar</v-btn>
+              <v-btn @click="openLogin" v-if="!showLogin"  class="mt-10 text-capitalize text-h6 bg-blue font-weight-black" block rounded="xl" size="x-large" >Entrar</v-btn>
             
           </v-container>
           </div>
           
         </v-container><v-progress-circular v-if="showProgress" indeterminate color="cyan"/>
       </v-container> </v-container>
+      <v-container v-if="showLogin">
+         <Comecar/>
+      </v-container>
    
 
     </v-app>
-  </v-main></v-container><v-container v-if="showLogin">
-         <Redefinir/>
-      </v-container>
+  </v-main>
+ 
+
 </template>
 
 <script>
-  import Redefinir from '@/views/Redefinir.vue';
+
+  import Comecar from '@/components/Comecar.vue';
+
 export default {
   data() {
     return {
       showProgress: false,
       showLogin: false,
-      visible: false,
+     
     };
   },
   methods: {
@@ -73,13 +88,11 @@ export default {
       setTimeout(() => {
         this.showProgress = false;
         this.showLogin = true;
-        let some = document.getElementById("some");
-        some.style.display="none";
       }, 2000);
     },
     
   },  components: {
-   Redefinir,
+   Comecar,
   },
 };
 </script>
@@ -95,3 +108,5 @@ font-family: 'IBM Plex Sans Thai', sans-serif;
 a{cursor: pointer;}
 
 </style>
+
+
