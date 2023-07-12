@@ -1,9 +1,9 @@
 
 <template>
-
-  <v-container  class="d-flex flex-column justify-center align-center">
-    <v-container v-if="!showLogin">
-      <v-img src="./logo.png" height="170"></v-img>
+    
+  <v-container id="some" v-if="!showLogin" class="mt-15 d-flex flex-column justify-center align-center">
+  <v-container id="some" v-if="!showLogin">
+      <v-img  src="./logo.svg" height="170"/>
     </v-container>
 
     <v-container class="d-flex flex-column justify-center align-center" v-if="!showLogin">
@@ -16,37 +16,56 @@
     </v-container>
 
     <v-progress-circular v-if="showProgress" indeterminate color="cyan"></v-progress-circular>
+  
 
-    <v-container v-if="showLogin">
-    <Login />
     </v-container>
-  </v-container>
+
+  <v-container v-if="showLogin">
+
+    <Login />
+ </v-container>    
+
+
 </template>
 
 <script>
-import Comecar from '@/components/Comecar.vue';
   import Login from '@/components/Login.vue';
-  
+
+
 
 export default {
   data() {
     return {
       showProgress: false,
-      showLogin: false
+      showLogin: false,
+     
     };
   },
   methods: {
     openLogin() {
+     
       this.showProgress = true;
 
       setTimeout(() => {
         this.showProgress = false;
         this.showLogin = true;
+         let some = document.getElementById("some");
+        some.style.display="none";
       }, 2000);
-    }
+    },
+    
   },
   components: {
-   Login,Comecar
+   Login,
   },
 };
 </script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+*{
+  font-family: 'Inter', sans-serif;
+}
+h4{
+ font-family: 'IBM Plex Sans Thai', sans-serif;
+}
+</style>
