@@ -1,71 +1,110 @@
-
 <template>
-    
-  <v-container id="some" v-if="!showLogin" class="mt-15 d-flex flex-column justify-center align-center">
-  <v-container id="some" v-if="!showLogin">
-      <v-img  src="./logo.svg" height="170"/>
-    </v-container>
-
-    <v-container class="d-flex flex-column justify-center align-center" v-if="!showLogin">
-      <h2 class="mt-8 text-center font-weight-black">Recursos educacionais, e muito mais, sem limites</h2>
-      <h4 class="mt-4 text-center font-weight-medium text-break" style="max-width: 160px;">Questões na palma de sua mão</h4>
-    </v-container>
-
-    <v-container class="mt-auto d-flex justify-end align-self-end">
-      <v-btn class="mt-5 text-capitalize text-h6 bg-blue font-weight-black" block rounded="xl" size="x-large" @click="openLogin" v-if="!showLogin">Vamos lá</v-btn>
-    </v-container>
-
-    <v-progress-circular v-if="showProgress" indeterminate color="cyan"></v-progress-circular>
   
+  <v-app-bar flat >
+    <img height="30" src="../assets/logo.svg" class="ml-8">
+    <v-app-bar-title class="  text-blue text-h5 font-weight-bold">
+      Quest Bank
+    </v-app-bar-title>
+    <template v-slot:append>
+     
+     
+      
+    </template>
+  </v-app-bar> 
+  <v-container class="mt-15"></v-container>
+  <v-app>
+    <v-main>
+        <v-container>
+    <v-row align="center">
+      <v-col cols="6"> 
+        <h3 class="ml-8  text-black text-h6 font-weight-bold">Minhas Avaliações</h3>
+      </v-col>
+      <v-col cols="1" class="d-flex justify-end">
+       <addProvas/>
+      </v-col>
+      <v-col cols="5" class="d-flex justify-end">
+<buscaProva/>
+      </v-col>
+    </v-row>
+    
+  </v-container>
+    <Provas/>
 
-    </v-container>
+    <v-container class="mt-8">
+    <v-row align="center">
+      <v-col cols="6"> 
+        <h3 class="ml-8 text-black text-h6 font-weight-bold">Minhas Questões</h3>
+      </v-col>
+      <v-col cols="1" class="d-flex justify-end">
+       <addQuestao/>
+      </v-col>
+      <v-col cols="5" class="d-flex justify-end">
+<buscaQuestoes/>
+      </v-col>
+    </v-row>
+    
+  </v-container>
+    <Questoes/>
 
-  <v-container v-if="showLogin">
-
-    <Login />
- </v-container>    
-
-
+    <v-container class="mt-8 ">
+    <v-row align="center">
+      <v-col cols="6"> 
+        <h3 class="ml-8 text-black text-h6 font-weight-bold">Meus Tópicos</h3>
+      </v-col>
+      <v-col cols="1" class="d-flex justify-end">
+       <addTopico/>
+      </v-col>
+      <v-col cols="5" class="d-flex justify-end">
+<buscaTopico/>
+      </v-col>
+    </v-row>
+    
+  </v-container>
+    <Topicos/>
+    <v-container></v-container>  
+ </v-main>
+  </v-app>
+<Nav />
 </template>
 
 <script>
-  import Login from '@/components/Login.vue';
+  import buscaProva from '@/components/telaHome/Provas/buscaProva.vue';
+  import addProvas from '@/components/telaHome/Provas/addProvas.vue';
+  import Provas from '@/components/telaHome/Provas/Provas.vue';
 
+  import buscaQuestoes from '@/components/telaHome/Questoes/buscaQuestoes.vue';
+  import addQuestao from '@/components/telaHome/Questoes/addQuestao.vue';
+  import Questoes from '@/components/telaHome/Questoes/Questoes.vue';
 
+  import Topicos from '@/components/telaHome/Topicos/Topicos.vue';
+  import addTopico from '@/components/telaHome/Topicos/addTopico.vue';
+  import buscaTopico from '@/components/telaHome/Topicos/buscaTopicos.vue';
 
-export default {
-  data() {
-    return {
-      showProgress: false,
-      showLogin: false,
-     
-    };
+  import Nav from '@/components/Nav.vue';
+
+import { defineComponent } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
+export default defineComponent({
+
+    setup() {
+  const route = useRoute();
+  const router = useRouter();
+
+  const close = () => {
+    if (route.path !== '/Inicio') {
+      router.push('/Inicio');
+    }
+  };
+
+  return {
+    close
+  };
+}, components: {
+  buscaProva,addProvas,Provas,Nav,
+  buscaQuestoes,addQuestao,Questoes,
+  Topicos,addTopico,buscaTopico,
+
   },
-  methods: {
-    openLogin() {
-     
-      this.showProgress = true;
-
-      setTimeout(() => {
-        this.showProgress = false;
-        this.showLogin = true;
-         let some = document.getElementById("some");
-        some.style.display="none";
-      }, 2000);
-    },
-    
-  },
-  components: {
-   Login,
-  },
-};
+});
 </script>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-*{
-  font-family: 'Inter', sans-serif;
-}
-h4{
- font-family: 'IBM Plex Sans Thai', sans-serif;
-}
-</style>
