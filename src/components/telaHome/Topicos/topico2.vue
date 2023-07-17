@@ -15,18 +15,14 @@
   
             <div style="overflow: auto; height: 100%;">
             
-<p class="text-caption ma-1 text-center">
-<span class="font-weight-bold text-subtitle-2">Design Gráfico</span>
-<br><br>
-<span class="font-weight-bold">Enunciado:</span> Quais são os elementos
+              <p class="text-caption ma-2 text-center">
+                <span class="font-weight-bold text-subtitle-2">Design Gráfico</span>
+              <br><br>
+              <span class="font-weight-bold">Tópico:</span> Cores e Composição Visual
+              <br>
+             
+<span class="font-weight-bold">Descrição:</span>  Uso das cores e sua importância
 
-fundamentais do design gráfico?
-<br>
-<span class="font-weight-bold">Tópico:</span> Introdução ao Design Gráfico
-<br>
-<span class="font-weight-bold">Dificuldade:</span> Fácil
-<br>
-<span class="font-weight-bold">Tipo:</span> Objetiva
 
 
               </p> 

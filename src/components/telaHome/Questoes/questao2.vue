@@ -18,15 +18,18 @@
 <p class="text-caption ma-1 text-center">
 <span class="font-weight-bold text-subtitle-2">Design Gráfico</span>
 <br><br>
-<span class="font-weight-bold">Enunciado:</span> Quais são os elementos
+<span class="font-weight-bold">Enunciado:</span> Explique a importância da
 
-fundamentais do design gráfico?
+tipografia na comunicação visual.
+
 <br>
-<span class="font-weight-bold">Tópico:</span> Introdução ao Design Gráfico
+<span class="font-weight-bold">Tópico:</span> Tipografia e Diagramação
+
 <br>
-<span class="font-weight-bold">Dificuldade:</span> Fácil
+<span class="font-weight-bold">Dificuldade:</span> Média
+
 <br>
-<span class="font-weight-bold">Tipo:</span> Objetiva
+<span class="font-weight-bold">Tipo:</span> Dissertativa
 
 
               </p> 

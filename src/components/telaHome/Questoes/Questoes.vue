@@ -1,6 +1,7 @@
 <template>
 
   <v-slide-group 
+
   width="100%"
     v-model="model"
     show-arrows>
@@ -8,17 +9,15 @@
     <v-slide-group-item>
       
       <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>        
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <questao2 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <questao3 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>        
+      <questao2 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <questao3 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <questao1 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>        
+      <questao2 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <questao3 class="questao1" @mouseover="hover = true" @mouseleave="hover = false"/>
+     
         
     </v-slide-group-item>
 
@@ -27,11 +26,15 @@
   </template>
 <script> 
 import questao1 from './questao1.vue';
+import Questao3 from './questao3.vue';
+import Questao2 from './questao2.vue';
 export default {
    
     components:{
-questao1
-    },
+    questao1,
+    Questao2,
+    Questao3
+},
   data () {
     return {
       slides: [

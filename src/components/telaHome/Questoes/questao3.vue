@@ -18,15 +18,18 @@
 <p class="text-caption ma-1 text-center">
 <span class="font-weight-bold text-subtitle-2">Design Gráfico</span>
 <br><br>
-<span class="font-weight-bold">Enunciado:</span> Quais são os elementos
+<span class="font-weight-bold">Enunciado:</span> Como as cores podem influenciar a percepção das mensagens em um projeto gráfico?
 
-fundamentais do design gráfico?
+
 <br>
-<span class="font-weight-bold">Tópico:</span> Introdução ao Design Gráfico
+<span class="font-weight-bold">Tópico:</span> Cores e Composição Visual
+
+
 <br>
-<span class="font-weight-bold">Dificuldade:</span> Fácil
+<span class="font-weight-bold">Dificuldade:</span> Média
+
 <br>
-<span class="font-weight-bold">Tipo:</span> Objetiva
+<span class="font-weight-bold">Tipo:</span> Dissertativa
 
 
               </p> 

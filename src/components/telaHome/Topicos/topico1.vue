@@ -9,17 +9,20 @@
       <v-card
       color="transparent"
       elevation="0"
-      class=" mr-2 ml-2 mt-4 mb-0"
+      class=" mr-2 ml-2 mt-5 mb-0"
       height="210"
       width="180">
   
             <div style="overflow: auto; height: 100%;">
             
-              <p class="text-subtitle-2 ma-2 text-center">
-                Tópicos Tópicos Tópicos Tópicos Tópicos 
-                Tópicos Tópicos Tópicos Tópicos Tópicos 
-                Tópicos
+              <p class="text-caption ma-2 text-center">
+                <span class="font-weight-bold text-subtitle-2">Design Gráfico</span>
+                <br><br>
+                <span class="font-weight-bold">Tópico:</span> Introdução ao Design Gráfico
                 
+                <br>
+<span class="font-weight-bold">Descrição:</span>  Conceitos básicos, histórico e princípios fundamentais do design gráfico.
+
 
               </p> 
   

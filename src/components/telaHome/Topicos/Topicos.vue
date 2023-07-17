@@ -8,15 +8,15 @@
     <v-slide-group-item>
          
       <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <topico2 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <topico3 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
       <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <topico2 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <topico3 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
       <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <topico2 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
+      <topico3 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
+    
         
 
         </v-slide-group-item>
@@ -27,10 +27,13 @@
   </template>
 <script> 
 import topico1 from './topico1.vue';
+import topico2 from './topico2.vue';
+import topico3 from './topico3.vue';
+
 export default {
    
     components:{
-topico1
+topico1,topico2,topico3
     },
   data () {
     return {

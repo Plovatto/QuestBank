@@ -18,13 +18,15 @@
             <p class="text-caption ma-1 text-center">
               <span class="font-weight-bold text-subtitle-2">Design Gráfico</span>
 <br><br>
-<span class="font-weight-bold">Tópico:</span> Introdução ao Design Gráfico
+<span class="font-weight-bold">Tópico:</span> Cores e Composição Visual
+
 <br>
-<span class="font-weight-bold">Enunciado:</span> Quais são os elementos
-fundamentais do design gráfico?
+<span class="font-weight-bold">Enunciado:</span> Como as cores podem influenciar a percepção das mensagens em um projeto gráfico?
 <br>
-<span class="font-weight-bold">Descrição:</span> Prova valendo 15 pontos no 2° trimestre
+<span class="font-weight-bold">Descrição:</span> Prova valendo 20 pontos no 3° trimestre
 Formato: DOCS
+
+
 
 <br>
 

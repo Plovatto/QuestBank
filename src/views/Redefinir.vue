@@ -17,7 +17,21 @@
 <h4 class="mt-2  text-center font-weight-medium text-break">Confirme seu email para poder redefinir sua senha</h4>
   <v-container>
 <v-container>
-<Email/>
+  <v-form v-model="valid">
+    <v-text-field
+    v-model="Email"
+    type="email"
+    name="Email"
+    density="compact"
+    variant="solo"
+    label="Email"
+    required
+    :class="{ 'invalid-input': InvalidEmail }"
+    :error-messages="InvalidEmail ? ['O Email é obrigatório.'] : []"
+    @input="handleEmailInput"
+  ></v-text-field>
+                 
+</v-form>
 <novaSenha/>
 <btnConfirmar/> 
 </v-container>  
@@ -37,7 +51,6 @@
 
 <script>
   import Logo from '@/components/Logo.vue';
-  import Email from '@/components/telaLogin/Email.vue';
   import novaSenha from '@/components/telaRedefinir/novaSenha.vue';
   import btnConfirmar from '@/components/telaRedefinir/btnConfirmar.vue';
 
@@ -60,7 +73,7 @@ export default defineComponent({
     close
   };
 }, components: {
-   Logo,Email,novaSenha,btnConfirmar,
+   Logo,novaSenha,btnConfirmar,
   },
 });
 </script>

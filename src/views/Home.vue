@@ -5,6 +5,7 @@
     <v-app-bar-title class="  text-blue text-h5 font-weight-bold">
       Quest Bank
     </v-app-bar-title>
+    <v-icon @click="close" color="blue">mdi-close-circle</v-icon>
     <template v-slot:append>
      
      
@@ -68,43 +69,57 @@
 </template>
 
 <script>
-  import buscaProva from '@/components/telaHome/Provas/buscaProva.vue';
-  import addProvas from '@/components/telaHome/Provas/addProvas.vue';
-  import Provas from '@/components/telaHome/Provas/Provas.vue';
+import buscaProva from '@/components/telaHome/Provas/buscaProva.vue';
+import addProvas from '@/components/telaHome/Provas/addProvas.vue';
+import Provas from '@/components/telaHome/Provas/Provas.vue';
 
-  import buscaQuestoes from '@/components/telaHome/Questoes/buscaQuestoes.vue';
-  import addQuestao from '@/components/telaHome/Questoes/addQuestao.vue';
-  import Questoes from '@/components/telaHome/Questoes/Questoes.vue';
+import buscaQuestoes from '@/components/telaHome/Questoes/buscaQuestoes.vue';
+import addQuestao from '@/components/telaHome/Questoes/addQuestao.vue';
+import Questoes from '@/components/telaHome/Questoes/Questoes.vue';
 
-  import Topicos from '@/components/telaHome/Topicos/Topicos.vue';
-  import addTopico from '@/components/telaHome/Topicos/addTopico.vue';
-  import buscaTopico from '@/components/telaHome/Topicos/buscaTopicos.vue';
+import Topicos from '@/components/telaHome/Topicos/Topicos.vue';
+import addTopico from '@/components/telaHome/Topicos/addTopico.vue';
+import buscaTopico from '@/components/telaHome/Topicos/buscaTopicos.vue';
 
-  import Nav from '@/components/Nav.vue';
+import Nav from '@/components/Nav.vue';
 
 import { defineComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
+  components: {
+    buscaProva,
+    addProvas,
+    Provas,
+    Nav,
+    buscaQuestoes,
+    addQuestao,
+    Questoes,
+    Topicos,
+    addTopico,
+    buscaTopico,
+  },
 
-    setup() {
-  const route = useRoute();
-  const router = useRouter();
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
 
-  const close = () => {
-    if (route.path !== '/Inicio') {
-      router.push('/Inicio');
-    }
-  };
+    const close = () => {
+      if (route.path !== '/Inicio') {
+  
+        clearLocalStorage();
+        router.push('/Inicio');
+      }
+    };
 
-  return {
-    close
-  };
-}, components: {
-  buscaProva,addProvas,Provas,Nav,
-  buscaQuestoes,addQuestao,Questoes,
-  Topicos,addTopico,buscaTopico,
+    const clearLocalStorage = () => {
+      localStorage.removeItem('token');
+     
+    };
 
+    return {
+      close,
+    };
   },
 });
 </script>

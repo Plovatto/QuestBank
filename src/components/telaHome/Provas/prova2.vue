@@ -18,13 +18,17 @@
             <p class="text-caption ma-1 text-center">
               <span class="font-weight-bold text-subtitle-2">Design Gráfico</span>
 <br><br>
-<span class="font-weight-bold">Tópico:</span> Introdução ao Design Gráfico
+<span class="font-weight-bold">Tópico:</span> Tipografia e Diagramação
 <br>
-<span class="font-weight-bold">Enunciado:</span> Quais são os elementos
-fundamentais do design gráfico?
+<span class="font-weight-bold">Enunciado:</span> QExplique a importância da
+
+tipografia na comunicação visual.
+
 <br>
 <span class="font-weight-bold">Descrição:</span> Prova valendo 15 pontos no 2° trimestre
 Formato: DOCS
+
+
 
 <br>
 
