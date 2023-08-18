@@ -2,6 +2,7 @@
 
 <v-icon class="custom"  color="blue"  
 :class="{ 'animated-btn': animateButton }"
+@click="abrirCriarTopico" 
 @mouseover="animateButton = true"
 @mouseleave="resetAnimation">mdi-plus-circle</v-icon>
 </template>
@@ -25,6 +26,9 @@
       resetAnimation() {
         this.animateButton = false;
       },
+      abrirCriarTopico() {
+      this.$router.push({ name: 'CriarTopico' });
+    },
     },
   };
   </script>

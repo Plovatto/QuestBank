@@ -1,28 +1,42 @@
 <template>
-    <div>
-      
-      <v-bottom-navigation  class="text-blue pb-3" :elevation="7" mode="shift">
-  <v-btn value="recent" >
-    <v-icon class="mb-1" color="blue">mdi-home</v-icon>
 
-    Inicio
-  </v-btn>
+<v-app-bar flat>
+    
+    <img height="30" src="../assets/logo.svg" class="ml-8">
+    <v-app-bar-title class="text-blue font-weight-medium">
+      Quest Bank
+    </v-app-bar-title>
+ 
+<template v-slot:append>
+  <v-icon @click="Irhome" color="blue">mdi-close-circle</v-icon>
 
-  <v-btn value="favorites" class="ml-15 text-blue">
-    <v-icon class="mb-1" color="blue">mdi-magnify</v-icon>
 
-    Pesquisar
-  </v-btn>
-
-  <v-btn value="nearby" class="ml-15 text-blue">
-    <v-icon class="mb-1" color="blue">mdi-account</v-icon>
-
-    Perfil
-  </v-btn>
-</v-bottom-navigation></div>
+</template>
+</v-app-bar> 
 </template>
 <script>
-  export default {
-    data: () => ({ value: 1 }),
+import { defineComponent, ref } from 'vue'; 
+import { useRoute, useRouter } from 'vue-router';
+
+export default defineComponent({
+  setup() {
+  const route = useRoute();
+    const router = useRouter();
+
+    const Irhome = () => {
+      if (route.path !== '/Home') {
+        router.push('/Home');
+      }
+   
+    }; return{
+Irhome,
+    };
+  
   }
+  });
+
+
 </script>
+
+
+

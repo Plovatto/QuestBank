@@ -1,66 +1,97 @@
 <template>
+  <div class="carousel-container">
+    <v-slide-group width="100%" v-model="model" show-arrows>
+      <v-slide-group-item>
+        <v-card elevation="0" v-for="(card, cardIndex) in cards" :key="cardIndex" class="card"
+                :class="{ 'hovered': hover && hoveredCardIndex === cardIndex }"
+                @mouseover="hover = true; hoveredCardIndex = cardIndex"
+                @mouseleave="hover = false; hoveredCardIndex = null">
+       
+          <div class="bg-white ma-3 elevation-3 rounded-xl card-content">
+            <v-card-title class="text-left">
+              <span class="font-weight-bold text-subtitle-2">{{ card.Disciplina.nome_disciplina }}</span>
+            </v-card-title>
+            <v-card-text class="text-caption text-left">
+              <span class="font-weight-bold">Tópico:</span> {{ card.enunciado }} <br>
+              <span class="font-weight-bold">Criado por:</span> {{ card.usuario.nome_pessoa }} <br>
+            </v-card-text>
+            <v-card-actions class="text-center">
+              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40">Ver</v-btn>
+            </v-card-actions>
+          </div>
+        </v-card>
+      </v-slide-group-item>
+    </v-slide-group>
+  </div>
+</template>
 
-  <v-slide-group 
-  width="100%"
-    v-model="model"
-    show-arrows>
-
-    <v-slide-group-item>
-         
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico2 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico3 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico2 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico3 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico1 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico2 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-      <topico3 class="topico1" @mouseover="hover = true" @mouseleave="hover = false"/>
-    
-        
-
-        </v-slide-group-item>
-
-      </v-slide-group>
-<br>
-<br>
-  </template>
-<script> 
-import topico1 from './topico1.vue';
-import topico2 from './topico2.vue';
-import topico3 from './topico3.vue';
+<script>
+import axios from "axios";
 
 export default {
-   
-    components:{
-topico1,topico2,topico3
-    },
-  data () {
+  data() {
     return {
-      slides: [
-        'First',
-        'Second',
-        'Third',
-        'Fourth',
-        'Fifth',
-      ],hover: false,
+      model: 0,
+      cards: [],
+      hover: false,
+      hoveredCardIndex: null
+    };
+  },
+  computed: {
+    numberOfSlides() {
+      return Math.ceil(this.cards.length / this.currentCardsPerPage);
+    },
+    currentCardsPerPage() {
+      return 6; 
     }
   },
-}
+  mounted() {
+    this.fetchCards(); 
+    this.startAutoSlide();
+  },
+  methods: {
+    startAutoSlide() {
+      setInterval(() => {
+        this.model = (this.model + 1) % this.numberOfSlides;
+      }, 5000); 
+    },
+    async fetchCards() {
+      try {
+        const response = await axios.get("http://localhost:3000/listarTopico");
+        if (response.data.status === "success") {
+          this.cards = response.data.topicos;
+        } else {
+          console.error("Error fetching cards:", response.data.msg);
+        }
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      }
+    }
+  }
+};
 </script>
+
 <style>
-.bg-white{
-    border:solid 1px  black;
-    border-radius: 10px;
-}
-</style>
-<style>
-.topico1 {
-  
-  transition: transform 0.3s; 
+.carousel-container {
+  width: 100%;
+  overflow: hidden;
 }
 
-.topico1:hover {
-  transform: scale(1.06);
+.card-content {
+  height: 310px;
+  width: 210px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+  transform-origin: center;
 }
+
+.hovered {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+   transform: scale(1.05);
+}
+
 </style>

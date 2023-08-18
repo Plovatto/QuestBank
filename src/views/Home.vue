@@ -5,12 +5,7 @@
     <v-app-bar-title class="  text-blue text-h5 font-weight-bold">
       Quest Bank
     </v-app-bar-title>
-    <v-icon @click="close" color="blue">mdi-close-circle</v-icon>
-    <template v-slot:append>
-     
-     
-      
-    </template>
+    
   </v-app-bar> 
   <v-container class="mt-15"></v-container>
   <v-app>
@@ -62,10 +57,11 @@
     
   </v-container>
     <Topicos/>
-    <v-container></v-container>  
+    <br><br><br><br><br>
+
  </v-main>
   </v-app>
-<Nav />
+<navBar />
 </template>
 
 <script>
@@ -81,7 +77,7 @@ import Topicos from '@/components/telaHome/Topicos/Topicos.vue';
 import addTopico from '@/components/telaHome/Topicos/addTopico.vue';
 import buscaTopico from '@/components/telaHome/Topicos/buscaTopicos.vue';
 
-import Nav from '@/components/Nav.vue';
+import navBar from '@/components/navBar.vue';
 
 import { defineComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -91,7 +87,7 @@ export default defineComponent({
     buscaProva,
     addProvas,
     Provas,
-    Nav,
+    navBar,
     buscaQuestoes,
     addQuestao,
     Questoes,
