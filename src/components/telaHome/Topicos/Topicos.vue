@@ -57,7 +57,7 @@ export default {
     },
     async fetchCards() {
       try {
-        const response = await axios.get("http://localhost:3000/listarTopico");
+        const response = await axios.get("https://api-questbank.onrender.com/listarTopico");
         if (response.data.status === "success") {
           this.cards = response.data.topicos;
         } else {

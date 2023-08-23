@@ -66,7 +66,7 @@ Nav,
   
 
         try {
-          const response = await axios.post('http://localhost:3000/criarTopico', formData);
+          const response = await axios.post('https://api-questbank.onrender.com/criarTopico', formData);
           console.log('Tópico criado:', response.data);
          
         } catch (error) {

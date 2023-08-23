@@ -57,7 +57,7 @@ export default {
     },
     async fetchAlternativas() {
       try {
-        const response = await axios.get('http://localhost:3000/listarAlternativas');
+        const response = await axios.get('https://api-questbank.onrender.com/listarAlternativas');
         if (response.data.status === 'success') {
           this.alternativas = response.data.alternativas;
         } else {

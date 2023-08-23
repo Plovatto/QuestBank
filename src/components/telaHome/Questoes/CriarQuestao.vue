@@ -114,7 +114,7 @@ Nav,
     async saveAlternativas() {
       try {
         for (const alternativa of this.alternativas) {
-          const response = await axios.post('http://localhost:3000/criarAlternativas', {
+          const response = await axios.post('https://api-questbank.onrender.com/criarAlternativas', {
             enunciado: alternativa.enunciado,
             enunciadoQuestao: alternativa.enunciadoQuestao,
             correta: this.convertBooleanToInt(alternativa.correta),

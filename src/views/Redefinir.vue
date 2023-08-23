@@ -166,7 +166,7 @@ export default defineComponent({
       progressVisible.value = true;
 
       axios
-        .put('http://localhost:3000/reset', formData)
+        .put('https://api-questbank.onrender.com/reset', formData)
         .then((response) => {
           console.log(response.data);
   
