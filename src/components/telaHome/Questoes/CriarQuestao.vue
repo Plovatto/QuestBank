@@ -70,7 +70,7 @@ export default defineComponent({
 
     async function adicionarQuestao() {
       try {
-        const response = await axios.post("https://api-questbank.onrender.com/criarQuestao", {
+        const response = await axios.post("https://api-quest22.onrender.com/criarQuestao", {
           enunciado: enunciado.value,
           topico_enunciado: topico_enunciado.value,
           tipo: tipo.value,
