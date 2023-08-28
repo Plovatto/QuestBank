@@ -3,10 +3,9 @@
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item>
         <v-card elevation="0" v-for="(card, cardIndex) in cards" :key="cardIndex" class="card"
-                :class="{ 'hovered': hover && hoveredCardIndex === cardIndex }"
-                @mouseover="hover = true; hoveredCardIndex = cardIndex"
-                @mouseleave="hover = false; hoveredCardIndex = null">
-       
+          :class="{ 'hovered': hover && hoveredCardIndex === cardIndex }"
+          @mouseover="hover = true; hoveredCardIndex = cardIndex" @mouseleave="hover = false; hoveredCardIndex = null">
+
           <div class="bg-white ma-3 elevation-3 rounded-xl card-content">
             <v-card-title class="text-left">
               <span class="font-weight-bold text-subtitle-2">{{ card.Disciplina.nome_disciplina }}</span>
@@ -42,18 +41,18 @@ export default {
       return Math.ceil(this.cards.length / this.currentCardsPerPage);
     },
     currentCardsPerPage() {
-      return 6; 
+      return 6;
     }
   },
   mounted() {
-    this.fetchCards(); 
+    this.fetchCards();
     this.startAutoSlide();
   },
   methods: {
     startAutoSlide() {
       setInterval(() => {
         this.model = (this.model + 1) % this.numberOfSlides;
-      }, 5000); 
+      }, 5000);
     },
     async fetchCards() {
       try {
@@ -91,7 +90,6 @@ export default {
 .hovered {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
-   transform: scale(1.05);
+  transform: scale(1.05);
 }
-
 </style>

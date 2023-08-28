@@ -1,15 +1,13 @@
 <template>
-<Nav/>
-
-
+  <Nav />
 </template>
 <script>
 import Nav from '@/components/Nav.vue';
-export default{
+export default {
 
-    components: {
-Nav
-   
+  components: {
+    Nav
+
   },
-    }
+}
 </script>

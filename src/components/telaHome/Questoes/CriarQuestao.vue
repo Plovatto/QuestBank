@@ -1,146 +1,110 @@
-<template><v-container><v-container>
-  <Nav/>
-    <v-card elevation="0">
-      <br>
-      <v-card-title class="text-blue font-weight-bold text-center text-h5">Adicionar Questão</v-card-title>
-     <br><br>
-      <v-card-text>
-        <v-form ref="form">
+<template>
+  <br /><br />
+  <v-container class="mt-8">
+    <v-container>
+      <Nav />
+      <v-card elevation="0">
+        <v-card-title class="text-blue font-weight-bold text-center text-h5">Adicionar Questão</v-card-title>
+        <br /><br />
+        <v-card-text>
+
           <label>Enunciado</label>
-          
-          <v-textarea
-          class="mt-3"
-          placeholder="Exemplo:   Numa classe, há 15 meninos e 13 meninas. Quantas crianças há ao todo? "
-          variant="solo"
-          rows="2"
-          row-height="20">
-          </v-textarea>
-          <label>Tópico</label>
-          <v-textarea
-          class="mt-3"
-          placeholder="Exemplo:   Operações matemáticas básicas"
-          rows="2"
-          variant="solo"
-          row-height="20">
-          </v-textarea>
-           <label>Dificuldade</label>
-          <v-select
-          placeholder="Exemplo:   Fácil"
-          :items="['']"
-           variant="solo"
-           class="mt-3"
-           ></v-select>
+          <v-form ref="form" @submit="adicionarQuestao">
+            <v-textarea placeholder="Exemplo: Como eu devo fazer uma estilização em CSS" class="mt-3" rows="2"
+              row-height="20" variant="solo" v-model="enunciado"></v-textarea>
 
-          <label>Tipo</label>
-          <v-select
-          placeholder="Exemplo:   Objetiva"
-          :items="['']"
-           variant="solo"
-           class="mt-3"
-           ></v-select>
-           <label>Imagem</label>
-           <v-file-input class="mt-3" label="Escolha a imagem " variant="solo"></v-file-input>
-  
-          <v-icon
-            class="custom"
-            color="blue"
-            :class="{ 'animated-btn': animateButton }"
-            @click="addNovaAlternativa"
-            @mouseover="animateButton = true"
-            @mouseleave="resetAnimation"
-          >
-            mdi-plus-circle
-          </v-icon>
-  
-          <div v-for="(alternativa, index) in alternativas" :key="index">
-          <label>Enunciado da questão existente</label>
-          <v-textarea  
-          class="mt-3"
-          placeholder="Exemplo:   Numa classe, há 15 meninos e 13 meninas. Quantas crianças há ao todo?"
-          rows="2"
-          variant="solo"
-          row-height="20" 
-          v-model="alternativa.enunciadoQuestao" 
-          ></v-textarea>
-          <label>Alternativa</label>
-          <v-textarea 
-          class="mt-3"
-          placeholder="Exemplo:   28"
-          rows="2"
-          variant="solo"
-          row-height="20" 
-          v-model="alternativa.enunciado">
-        </v-textarea>
-            <v-checkbox v-model="alternativa.correta" label="Correta"></v-checkbox>
-          </div>
-        </v-form>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-center align-itens-center">
+            <label>Tópico do Enunciado</label>
+            <v-text-field placeholder="Exemplo: Manipulação de objetos" class="mt-3" variant="solo"
+              v-model="topico_enunciado"></v-text-field>
 
-        <v-btn  :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="saveAlternativas">Salvar</v-btn>
-      </v-card-actions>
-    </v-card></v-container></v-container>
-  </template>
+            <label>Tipo</label>
+            <v-select class="mt-3" v-model="tipo" :items="['Objetiva', 'Discursiva']" variant="solo"></v-select>
 
-<script> 
-import Nav from '@/components/Nav.vue';
+            <template v-if="tipo === 'Objetiva'">
+              <v-text-field class="mt-3" placeholder="Insira as alternativas" variant="solo"></v-text-field>
+              <v-text-field class="mt-3" placeholder="Insira o enunciado da alternativa" variant="solo"></v-text-field>
+              <v-checkbox class="mt-2"></v-checkbox>
+            </template>
+
+            <label>Imagem</label>
+            <v-file-input class="mt-3" type="file" placeholder="Insira a URL da imagem" variant="solo"
+              v-model="Enunciado_imagem"></v-file-input>
+
+            <label>Nível</label>
+            <v-select class="mt-3" v-model="nivel" :items="['Fácil', 'Médio', 'Difícil']" variant="solo"></v-select>
+
+            <label>Resposta</label>
+            <v-text-field class="mt-3" placeholder="Exemplo: Brasília" variant="solo" v-model="resposta"></v-text-field>
+
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-center align-items-center">
+          <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="questao">Salvar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-container>
+  </v-container>
+</template>
+
+<script>
+import Nav from "@/components/Nav.vue";
+import { defineComponent, ref } from 'vue';
 import axios from 'axios';
+import { useRouter, useRoute } from 'vue-router';
 
-export default { components:{
-Nav,
-},  
-  data() {
+export default defineComponent({
+  components: {
+    Nav,
+  },
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    const enunciado = ref("");
+    const topico_enunciado = ref("");
+    const tipo = ref("");
+    const Enunciado_imagem = ref("");
+    const nivel = ref("");
+    const resposta = ref("");
+    const professor_nome = localStorage.getItem("userName") || "";
+
+
+    async function adicionarQuestao() {
+      try {
+        const response = await axios.post("https://api-questbank.onrender.com/criarQuestao", {
+          enunciado: enunciado.value,
+          topico_enunciado: topico_enunciado.value,
+          tipo: tipo.value,
+          Enunciado_imagem: Enunciado_imagem.value,
+          nivel: nivel.value,
+          resposta: resposta.value,
+          professor_nome: professor_nome,
+
+        });
+
+        console.log("Questão criada:", response.data);
+      } catch (error) {
+        console.error("Erro ao criar questão:", error);
+      }
+    }
+
+    const questao = () => {
+      if (route.path !== '/telaConfim') {
+        adicionarQuestao();
+        router.push('/telaConfim');
+      }
+    }
+
     return {
-      animateButton: false,
-      alternativas: [],
-      enunciadoQuestao: '',
-      enunciado: '',
+      enunciado,
+      topico_enunciado,
+      tipo,
+      Enunciado_imagem,
+      nivel,
+      resposta,
+      professor_nome,
+      questao,
+
     };
   },
-  methods: {
-    resetAnimation() {
-      this.animateButton = false;
-    },
-    addNovaAlternativa() {
-      this.alternativas.push({
-        enunciadoQuestao: this.enunciadoQuestao,
-        enunciado: this.enunciado,
-        correta: false,
-      });
-    },
-    convertBooleanToInt(value) {
-      return value ? 1 : 0;
-    },
-    async saveAlternativas() {
-      try {
-        for (const alternativa of this.alternativas) {
-          const response = await axios.post('https://api-questbank.onrender.com/criarAlternativas', {
-            enunciado: alternativa.enunciado,
-            enunciadoQuestao: alternativa.enunciadoQuestao,
-            correta: this.convertBooleanToInt(alternativa.correta),
-          });
-
-          if (response.data.status === 'success') {
-            console.log('Alternativa criada com sucesso:', response.data.msg);
-
-          } else {
-            console.error('Erro ao criar alternativa:', response.data.msg);
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao fazer a requisição:', error);
-      }
-    },
-  },
-};
+});
 </script>
-  
-  <style>
-  .custom {
-    transition: all 0.3s;
-  }
-  .animated-btn {
-    transform: scale(1.5);
-  }
-  </style>
-  

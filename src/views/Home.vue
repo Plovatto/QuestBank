@@ -1,67 +1,66 @@
 <template>
-  
-  <v-app-bar flat >
+  <v-app-bar flat>
     <img height="30" src="../assets/logo.svg" class="ml-8">
     <v-app-bar-title class="  text-blue text-h5 font-weight-bold">
       Quest Bank
     </v-app-bar-title>
-    
-  </v-app-bar> 
+
+  </v-app-bar>
   <v-container class="mt-15"></v-container>
   <v-app>
     <v-main>
-        <v-container>
-    <v-row align="center">
-      <v-col cols="6"> 
-        <h3 class="ml-8  text-black text-h6 font-weight-bold">Minhas Avaliações</h3>
-      </v-col>
-      <v-col cols="1" class="d-flex justify-end">
-       <addProvas/>
-      </v-col>
-      <v-col cols="5" class="d-flex justify-end">
-<buscaProva/>
-      </v-col>
-    </v-row>
-    
-  </v-container>
-    <Provas/>
+      <v-container>
+        <v-row align="center">
+          <v-col cols="6">
+            <h3 class="ml-8  text-black text-h6 font-weight-bold">Minhas Avaliações</h3>
+          </v-col>
+          <v-col cols="1" class="d-flex justify-end">
+            <addProvas />
+          </v-col>
+          <v-col cols="5" class="d-flex justify-end">
+            <buscaProva />
+          </v-col>
+        </v-row>
 
-    <v-container class="mt-8">
-    <v-row align="center">
-      <v-col cols="6"> 
-        <h3 class="ml-8 text-black text-h6 font-weight-bold">Minhas Questões</h3>
-      </v-col>
-      <v-col cols="1" class="d-flex justify-end">
-       <addQuestao/>
-      </v-col>
-      <v-col cols="5" class="d-flex justify-end">
-<buscaQuestoes/>
-      </v-col>
-    </v-row>
-    
-  </v-container>
-    <Questoes/>
+      </v-container>
+      <Provas />
 
-    <v-container class="mt-8 ">
-    <v-row align="center">
-      <v-col cols="6"> 
-        <h3 class="ml-8 text-black text-h6 font-weight-bold">Meus Tópicos</h3>
-      </v-col>
-      <v-col cols="1" class="d-flex justify-end">
-       <addTopico/>
-      </v-col>
-      <v-col cols="5" class="d-flex justify-end">
-<buscaTopico/>
-      </v-col>
-    </v-row>
-    
-  </v-container>
-    <Topicos/>
-    <br><br><br><br><br>
+      <v-container class="mt-8">
+        <v-row align="center">
+          <v-col cols="6">
+            <h3 class="ml-8 text-black text-h6 font-weight-bold">Minhas Questões</h3>
+          </v-col>
+          <v-col cols="1" class="d-flex justify-end">
+            <addQuestao />
+          </v-col>
+          <v-col cols="5" class="d-flex justify-end">
+            <buscaQuestoes />
+          </v-col>
+        </v-row>
 
- </v-main>
+      </v-container>
+      <Questoes />
+
+      <v-container class="mt-8 ">
+        <v-row align="center">
+          <v-col cols="6">
+            <h3 class="ml-8 text-black text-h6 font-weight-bold">Meus Tópicos</h3>
+          </v-col>
+          <v-col cols="1" class="d-flex justify-end">
+            <addTopico />
+          </v-col>
+          <v-col cols="5" class="d-flex justify-end">
+            <buscaTopico />
+          </v-col>
+        </v-row>
+
+      </v-container>
+      <Topicos />
+      <br><br><br><br><br>
+
+    </v-main>
   </v-app>
-<navBar />
+  <navBar />
 </template>
 
 <script>
@@ -102,7 +101,7 @@ export default defineComponent({
 
     const close = () => {
       if (route.path !== '/Inicio') {
-  
+
         clearLocalStorage();
         router.push('/Inicio');
       }
@@ -110,7 +109,7 @@ export default defineComponent({
 
     const clearLocalStorage = () => {
       localStorage.removeItem('token');
-     
+
     };
 
     return {

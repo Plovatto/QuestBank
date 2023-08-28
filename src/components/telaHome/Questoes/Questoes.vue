@@ -3,24 +3,24 @@
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item v-for="(card, cardIndex) in cards" :key="cardIndex">
         <v-card elevation="0" :class="{ 'hovered': hoveredCardIndex === cardIndex }"
-                @mouseover="hoveredCardIndex = cardIndex"
-                @mouseleave="hoveredCardIndex = null">
+          @mouseover="hoveredCardIndex = cardIndex" @mouseleave="hoveredCardIndex = null">
 
           <div class="bg-white ma-3 elevation-3 rounded-xl text-center card-content">
             <v-card-title class="text-center">
-          
+
             </v-card-title>
-            <v-card-text class="text-caption text-left"> 
+            <v-card-text class="text-caption text-left">
               <span class="font-weight-bold">Tópico:</span> {{ card.topico.topico_enunciado }} <br>
               <span class="font-weight-bold">Enunciado:</span> {{ card.enunciado }} <br>
-              <span class="font-weight-bold">Tipo:</span> {{ card.tipo}} <br>
-              <span class="font-weight-bold">Nível:</span> {{ card.nivel}} <br>
-              <span class="font-weight-bold">Criado por:</span> {{ card.professor.professor_nome}} <br>
-              
-              
+              <span class="font-weight-bold">Tipo:</span> {{ card.tipo }} <br>
+              <span class="font-weight-bold">Nível:</span> {{ card.nivel }} <br>
+              <span class="font-weight-bold">Criado por:</span> {{ card.professor.professor_nome }} <br>
+
+
             </v-card-text>
             <v-card-actions class="text-center">
-              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40" @click="verDetalhes(card)">Ver</v-btn>
+              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
+                @click="verDetalhes(card)">Ver</v-btn>
 
             </v-card-actions>
           </div>
@@ -46,20 +46,21 @@ export default {
       return Math.ceil(this.cards.length / this.currentCardsPerPage);
     },
     currentCardsPerPage() {
-      return 6; 
+      return 6;
     }
   },
   mounted() {
-    this.fetchCards(); 
+    this.fetchCards();
     this.startAutoSlide();
   },
-  methods: { verDetalhes(questao) {
-    this.$router.push({ name: 'QuestaoDetalhes', params: { id: questao.id_questao } });
-  },
+  methods: {
+    verDetalhes(questao) {
+      this.$router.push({ name: 'QuestaoDetalhes', params: { id: questao.id_questao } });
+    },
     startAutoSlide() {
       setInterval(() => {
         this.model = (this.model + 1) % this.numberOfSlides;
-      }, 5000); 
+      }, 5000);
     },
     async fetchCards() {
       try {
@@ -68,6 +69,7 @@ export default {
           this.cards = response.data.questoes;
         } else {
           console.error("Error fetching cards:", response.data.msg);
+
         }
       } catch (error) {
         console.error("Error fetching cards:", error);

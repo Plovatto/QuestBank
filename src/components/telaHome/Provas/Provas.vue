@@ -2,18 +2,17 @@
   <div class="carousel-container">
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item>
-        <v-card elevation="0" v-for="(alternativa, index) in alternativas" :key="index" class="card"
-                :class="{ 'hovered': hover && hoveredCardIndex === index }"
-                @mouseover="hover = true; hoveredCardIndex = index"
-                @mouseleave="hover = false; hoveredCardIndex = null">
+        <v-card elevation="0" v-for="(prova, index) in provas" :key="index" class="card"
+          :class="{ 'hovered': hover && hoveredCardIndex === index }" @mouseover="hover = true; hoveredCardIndex = index"
+          @mouseleave="hover = false; hoveredCardIndex = null">
 
           <div class="bg-white ma-3 elevation-3 rounded-xl text-center card-content">
             <v-card-title class="text-center">
-              <span class="font-weight-bold text-subtitle-2">{{ alternativa.enunciado }}</span>
+              <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado }}</span>
             </v-card-title>
             <v-card-text class="text-caption">
-              <span class="font-weight-bold">Enunciado da Questão:</span> {{ alternativa.enunciadoQuestao }}<br>
-              <span class="font-weight-bold">Correta:</span> {{ alternativa.correta }}
+              <span class="font-weight-bold">Tipo:</span> {{ prova.tipo }}<br>
+              <span class="font-weight-bold">Descrição:</span> {{ prova.descricao }}
             </v-card-text>
             <v-card-actions class="text-center">
               <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40">Ver</v-btn>
@@ -32,21 +31,21 @@ export default {
   data() {
     return {
       model: 0,
-      alternativas: [],
+      provas: [],
       hover: false,
       hoveredCardIndex: null
     };
   },
   computed: {
     numberOfSlides() {
-      return Math.ceil(this.alternativas.length / this.currentCardsPerPage);
+      return Math.ceil(this.provas.length / this.currentCardsPerPage);
     },
     currentCardsPerPage() {
       return 6;
     }
   },
   mounted() {
-    this.fetchAlternativas();
+    this.fetchProvas();
     this.startAutoSlide();
   },
   methods: {
@@ -55,16 +54,16 @@ export default {
         this.model = (this.model + 1) % this.numberOfSlides;
       }, 5000);
     },
-    async fetchAlternativas() {
+    async fetchProvas() {
       try {
-        const response = await axios.get('https://api-questbank.onrender.com/listarAlternativas');
+        const response = await axios.get("https://api-questbank.onrender.com/listarProva");
         if (response.data.status === 'success') {
-          this.alternativas = response.data.alternativas;
+          this.provas = response.data.provas;
         } else {
-          console.error('Error fetching alternativas:', response.data.msg);
+          console.error('Error fetching provas:', response.data.msg);
         }
       } catch (error) {
-        console.error('Error fetching alternativas:', error);
+        console.error('Error fetching provas:', error);
       }
     }
   }
