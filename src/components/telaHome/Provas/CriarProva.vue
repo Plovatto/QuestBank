@@ -13,14 +13,14 @@
               v-model="enunciado"></v-textarea>
 
             <label>Tipo</label>
-            <v-select class="mt-3" v-model="tipo" :items="['Objetiva', 'Discursiva', 'Ambas']" variant="solo"></v-select>
+            <v-select class="mt-3" v-model="tipo" :items="['Objetiva', 'Dissertativa', 'Ambas']" variant="solo"></v-select>
 
             <label>Descrição</label>
             <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
               variant="solo" v-model="descricao"></v-textarea>
 
             <label>Questões</label>
-            <v-textarea placeholder="Exemplo: " class="mt-3" rows="2" row-height="20" variant="solo"
+            <v-textarea placeholder="Exemplo: [1,2,3]" class="mt-3" rows="2" row-height="20" variant="solo"
               v-model="questoes"></v-textarea>
           </v-form>
         </v-card-text>
@@ -53,17 +53,20 @@ export default defineComponent({
 
     async function adicionarProva() {
       try {
+        const questoesArray = questoes.value.split(',');
+        const values = questoesArray.map((questaoId) => [questaoId]);
         const response = await axios.post("https://api-questbank.onrender.com/criarProva", {
+          questoes: values,
           enunciado: enunciado.value,
           descricao: descricao.value,
           tipo: tipo.value,
-          questoes: questoes.value,
           professorId: professorId,
         });
 
         console.log("Prova criada:", response.data);
       } catch (error) {
         console.error("Erro ao criar prova:", error);
+        console.log(questoes.value);
       }
     }
 

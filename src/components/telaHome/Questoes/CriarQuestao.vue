@@ -10,31 +10,31 @@
 
           <label>Enunciado</label>
           <v-form ref="form" @submit="adicionarQuestao">
-            <v-textarea placeholder="Exemplo: Como eu devo fazer uma estilização em CSS" class="mt-3" rows="2"
+            <v-textarea placeholder="Exemplo: Em uma sala existem 2 meninos e 4 meninas, quantas crianças existem no total?"  class="mt-3" rows="2"
               row-height="20" variant="solo" v-model="enunciado"></v-textarea>
 
             <label>Tópico do Enunciado</label>
-            <v-text-field placeholder="Exemplo: Manipulação de objetos" class="mt-3" variant="solo"
+            <v-text-field placeholder="Exemplo:  Operações matemáticas básicas" class="mt-3" variant="solo"
               v-model="topico_enunciado"></v-text-field>
 
             <label>Tipo</label>
-            <v-select class="mt-3" v-model="tipo" :items="['Objetiva', 'Discursiva']" variant="solo"></v-select>
+            <v-select class="mt-3" v-model="tipo" :items="['Objetiva', 'Dissertativa']" variant="solo"></v-select>
 
             <template v-if="tipo === 'Objetiva'">
               <v-text-field class="mt-3" placeholder="Insira as alternativas" variant="solo"></v-text-field>
-              <v-text-field class="mt-3" placeholder="Insira o enunciado da alternativa" variant="solo"></v-text-field>
+              <v-text-field class="mt-3" placeholder="Insira o enunciado associado a alternativa" variant="solo"></v-text-field>
               <v-checkbox class="mt-2"></v-checkbox>
             </template>
 
             <label>Imagem</label>
-            <v-file-input class="mt-3" type="file" placeholder="Insira a URL da imagem" variant="solo"
+            <v-file-input class="mt-3" type="file" placeholder="Insira a imagem" variant="solo"
               v-model="Enunciado_imagem"></v-file-input>
 
             <label>Nível</label>
             <v-select class="mt-3" v-model="nivel" :items="['Fácil', 'Médio', 'Difícil']" variant="solo"></v-select>
 
             <label>Resposta</label>
-            <v-text-field class="mt-3" placeholder="Exemplo: Brasília" variant="solo" v-model="resposta"></v-text-field>
+            <v-text-field class="mt-3" placeholder="Exemplo: 6 crianças " variant="solo" v-model="resposta"></v-text-field>
 
           </v-form>
         </v-card-text>

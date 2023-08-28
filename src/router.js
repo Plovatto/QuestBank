@@ -7,7 +7,6 @@ import Home from "./views/Home.vue";
 import Perfil from "./views/Perfil.vue";
 import CriarTopico from "@/components/telaHome/Topicos/CriarTopico.vue";
 import CriarQuestao from "@/components/telaHome/Questoes/CriarQuestao.vue";
-import CriarAlternativa from "@/components/telaHome/Questoes/CriarAlternativa.vue";
 import CriarProva from "@/components/telaHome/Provas/CriarProva.vue";
 import QuestaoDetalhes from "@/components/telaHome/Questoes/QuestaoDetalhes.vue";
 import telaConfim from "@/components/telaHome/telaConfim.vue";
@@ -26,11 +25,6 @@ const routes = [
   { path: "/Perfil", component: Perfil },
   { path: "/CriarTopico", name: "CriarTopico", component: CriarTopico },
   { path: "/CriarQuestao", name: "CriarQuestao", component: CriarQuestao },
-  {
-    path: "/CriarAlternativa",
-    name: "CriarAlternativa",
-    component: CriarAlternativa,
-  },
   { path: "/CriarProva", name: "CriarProva", component: CriarProva },
   {
     path: "/questao-detalhes/:id",
