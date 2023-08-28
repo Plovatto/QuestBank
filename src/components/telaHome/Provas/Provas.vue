@@ -56,7 +56,7 @@ export default {
     },
     async fetchProvas() {
       try {
-        const response = await axios.get("https://api-quest22.onrender.com/listarProva");
+        const response = await axios.get("https://api-questbank.onrender.com/listarProva");
         if (response.data.status === 'success') {
           this.provas = response.data.provas;
         } else {

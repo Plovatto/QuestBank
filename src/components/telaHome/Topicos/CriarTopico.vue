@@ -57,7 +57,7 @@ export default defineComponent({
 
 
       try {
-        const response = await axios.post('https://api-quest22.onrender.com/criarTopico', formData);
+        const response = await axios.post('https://api-questbank.onrender.com/criarTopico', formData);
         console.log('Tópico criado:', response.data);
 
       } catch (error) {

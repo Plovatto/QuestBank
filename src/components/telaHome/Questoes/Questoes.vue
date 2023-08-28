@@ -64,7 +64,7 @@ export default {
     },
     async fetchCards() {
       try {
-        const response = await axios.get("https://api-quest22.onrender.com/listarQuestao");
+        const response = await axios.get("https://api-questbank.onrender.com/listarQuestao");
         if (response.data.status === "success") {
           this.cards = response.data.questoes;
         } else {
