@@ -43,7 +43,7 @@ export default {
       hover: false,
       hoveredCardIndex: null,
       currentIndex: 0,
-      itemsPerPage: 7,
+      itemsPerPage: 6,
       showButton: false,
       showButtons: window.innerWidth <= 768, 
     };
@@ -97,7 +97,7 @@ export default {
     checkScreenSize() {
       this.showButtons = window.innerWidth <= 768;
 
-      this.itemsPerPage = this.showButtons ? 1 : 7;
+      this.itemsPerPage = this.showButtons ? 1 : 6;
     },
   },
 };
@@ -111,6 +111,8 @@ export default {
 
 .carousel-wrapper {
   display: flex;
+  align-items: center;
+    justify-content: center;
   transition: transform 0.5s ease-in-out;
 }
 
