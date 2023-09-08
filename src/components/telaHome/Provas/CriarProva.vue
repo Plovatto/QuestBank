@@ -55,7 +55,7 @@ export default defineComponent({
       try {
         const questoesArray = questoes.value.split(',');
         const values = questoesArray.map((questaoId) => [questaoId]);
-        const response = await axios.post("https://api-questbank.onrender.com/criarProva", {
+        const response = await axios.post("https://questbank-api.onrender.com/criarProva", {
           questoes: values,
           enunciado: enunciado.value,
           descricao: descricao.value,

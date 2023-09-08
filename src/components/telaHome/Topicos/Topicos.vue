@@ -71,7 +71,7 @@ export default {
   methods: {
     async fetchCards() {
       try {
-        const response = await axios.get("https://api-questbank.onrender.com/listarTopico");
+        const response = await axios.get("https://questbank-api.onrender.com/listarTopico");
         if (response.data.status === "success") {
           this.cards = response.data.topicos;
         } else {
