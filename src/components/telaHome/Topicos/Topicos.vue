@@ -43,10 +43,9 @@ export default {
       hover: false,
       hoveredCardIndex: null,
       currentIndex: 0,
-      itemsPerPage: 7, 
+      itemsPerPage: 7,
       showButton: false,
-      showButtons: false,
-      isSmallScreen: false, 
+      showButtons: window.innerWidth <= 768, 
     };
   },
   computed: {
@@ -67,13 +66,12 @@ export default {
     window.addEventListener("resize", this.checkScreenSize);
   },
   beforeDestroy() {
-
     window.removeEventListener("resize", this.checkScreenSize);
   },
   methods: {
     async fetchCards() {
       try {
-        const response = await axios.get("http://localhost:3000/listarTopico");
+        const response = await axios.get("https://api-questbank.onrender.com/listarTopico");
         if (response.data.status === "success") {
           this.cards = response.data.topicos;
         } else {
@@ -97,10 +95,9 @@ export default {
     },
 
     checkScreenSize() {
-   
-      this.isSmallScreen = window.innerWidth <= 768;
+      this.showButtons = window.innerWidth <= 768;
 
-      this.itemsPerPage = this.isSmallScreen ? 1 : 7;
+      this.itemsPerPage = this.showButtons ? 1 : 7;
     },
   },
 };
@@ -131,19 +128,7 @@ export default {
   margin-right: 20px; 
 }
 
-.carousel-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: #008cff; 
-  color: white;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 60%;
-  cursor: pointer;
-  z-index: 2;
-  display: none; 
-}
+
 
 .carousel-container:hover .carousel-button {
   display: block; 
@@ -155,15 +140,29 @@ export default {
 
 .next {
   right: 10px;
-}@media (max-width: 768px) {
-.carousel-wrapper{
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-  .bg-custom{
-    width: 18rem;
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #008cff;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 60%;
+  cursor: pointer;
+  z-index: 2;
+}
 
+@media (max-width: 768px) {
+  .carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .bg-custom {
+    width: 16rem;
   }
 }
 </style>
