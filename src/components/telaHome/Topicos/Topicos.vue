@@ -1,5 +1,12 @@
 <template>
-  <div class="carousel-container" @mouseenter="showButtons = true" @mouseleave="showButtons = false">
+  <div
+    class="carousel-container"
+    @mouseenter="showButtons = true"
+    @mouseleave="showButtons = false"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchend="onTouchEnd"
+  >
     <div class="carousel-wrapper" ref="carousel">
       <div class="carousel">
         <v-card
@@ -27,8 +34,12 @@
         </v-card>
       </div>
     </div>
-    <button class="carousel-button prev" @click="prevSlide" v-if="showButtons"> <v-icon  color="white" icon="mdi-chevron-left"></v-icon></button>
-    <button class="carousel-button next" @click="nextSlide" v-if="showButtons"><v-icon color="white"  icon="mdi-chevron-right"></v-icon></button>
+    <button class="carousel-button prev" @click="prevSlide" v-if="showButtons">
+      <v-icon color="white" icon="mdi-chevron-left"></v-icon>
+    </button>
+    <button class="carousel-button next" @click="nextSlide" v-if="showButtons">
+      <v-icon color="white" icon="mdi-chevron-right"></v-icon>
+    </button>
   </div>
 </template>
 
@@ -45,7 +56,9 @@ export default {
       currentIndex: 0,
       itemsPerPage: 6,
       showButton: false,
-      showButtons: window.innerWidth <= 768, 
+      showButtons: window.innerWidth <= 768,
+      touchStartX: 0,
+      touchEndX: 0,
     };
   },
   computed: {
@@ -60,9 +73,7 @@ export default {
   },
   mounted() {
     this.fetchCards();
-
     this.checkScreenSize();
-
     window.addEventListener("resize", this.checkScreenSize);
   },
   beforeDestroy() {
@@ -96,8 +107,27 @@ export default {
 
     checkScreenSize() {
       this.showButtons = window.innerWidth <= 768;
-
       this.itemsPerPage = this.showButtons ? 1 : 6;
+    },
+
+    onTouchStart(event) {
+      this.touchStartX = event.touches[0].clientX;
+    },
+
+    onTouchMove(event) {
+      this.touchEndX = event.touches[0].clientX;
+    },
+
+    onTouchEnd() {
+      const touchThreshold = 50; 
+
+      if (this.touchStartX - this.touchEndX > touchThreshold) {
+
+        this.nextSlide();
+      } else if (this.touchEndX - this.touchStartX > touchThreshold) {
+ 
+        this.prevSlide();
+      }
     },
   },
 };
