@@ -26,11 +26,11 @@
               <span class="font-weight-bold">Criado por:</span> {{ card.usuario.nome_pessoa }} <br>
             </v-card-text>
             <v-card-actions class="text-center">
-              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40">Ver</v-btn>
+              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
+                @click="verDetalhes(card)">Ver</v-btn>
+
             </v-card-actions>
           </div>
-         
-         
         </v-card>
       </div>
     </div>
@@ -82,7 +82,7 @@ export default {
   methods: {
     async fetchCards() {
       try {
-        const response = await axios.get("https://questbank-api.onrender.com/listarTopico");
+        const response = await axios.get("https://questbankapi.onrender.com/listarTopico");
         if (response.data.status === "success") {
           this.cards = response.data.topicos;
         } else {
@@ -104,7 +104,9 @@ export default {
         this.currentIndex++;
       }
     },
-
+    verDetalhes(topico) {
+      this.$router.push({ name: 'TopicosDetalhes', params: { id: topico.id_topico } });
+    },
     checkScreenSize() {
       this.showButtons = window.innerWidth <= 768;
       this.itemsPerPage = this.showButtons ? 1 : 6;
@@ -122,16 +124,17 @@ export default {
       const touchThreshold = 50; 
 
       if (this.touchStartX - this.touchEndX > touchThreshold) {
-
+      
         this.nextSlide();
       } else if (this.touchEndX - this.touchStartX > touchThreshold) {
- 
+       
         this.prevSlide();
       }
     },
   },
 };
 </script>
+
 <style>
 .carousel-container {
   position: relative;

@@ -15,7 +15,8 @@
               <span class="font-weight-bold">Descrição:</span> {{ prova.descricao }}
             </v-card-text>
             <v-card-actions class="text-center">
-              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40">Ver</v-btn>
+              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
+                @click="verDetalhes(prova)">Ver</v-btn>
             </v-card-actions>
           </div>
         </v-card>
@@ -44,11 +45,15 @@ export default {
       return 6;
     }
   },
+
   mounted() {
     this.fetchProvas();
     this.startAutoSlide();
   },
   methods: {
+    verDetalhes(prova) {
+      this.$router.push({ name: 'ProvasDetalhes', params: { id: prova.id_prova } });
+    },
     startAutoSlide() {
       setInterval(() => {
         this.model = (this.model + 1) % this.numberOfSlides;
@@ -56,14 +61,14 @@ export default {
     },
     async fetchProvas() {
       try {
-        const response = await axios.get("https://questbank-api.onrender.com/listarProva");
+        const response = await axios.get("https://questbankapi.onrender.com/listarProva");
         if (response.data.status === 'success') {
           this.provas = response.data.provas;
         } else {
-          console.error('Error fetching provas:', response.data.msg);
+          console.error('Erro', response.data.msg);
         }
       } catch (error) {
-        console.error('Error fetching provas:', error);
+        console.error('Erro', error);
       }
     }
   }

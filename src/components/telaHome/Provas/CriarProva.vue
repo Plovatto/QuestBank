@@ -13,7 +13,8 @@
               v-model="enunciado"></v-textarea>
 
             <label>Tipo</label>
-            <v-select class="mt-3" v-model="tipo" :items="['Objetiva', 'Dissertativa', 'Ambas']" variant="solo"></v-select>
+            <v-select class="mt-3" v-model="tipo" :items="['Objetiva', 'Dissertativa', 'Ambas']"
+              variant="solo"></v-select>
 
             <label>Descrição</label>
             <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
@@ -55,7 +56,7 @@ export default defineComponent({
       try {
         const questoesArray = questoes.value.split(',');
         const values = questoesArray.map((questaoId) => [questaoId]);
-        const response = await axios.post("https://questbank-api.onrender.com/criarProva", {
+        const response = await axios.post("https://questbankapi.onrender.com/criarProva", {
           questoes: values,
           enunciado: enunciado.value,
           descricao: descricao.value,

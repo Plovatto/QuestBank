@@ -9,7 +9,12 @@ import CriarQuestao from "@/components/telaHome/Questoes/CriarQuestao.vue";
 import CriarProva from "@/components/telaHome/Provas/CriarProva.vue";
 import QuestaoDetalhes from "@/components/telaHome/Questoes/QuestaoDetalhes.vue";
 import telaConfim from "@/components/telaHome/telaConfim.vue";
-
+import telaConfimEdit from "@/components/telaHome/telaConfimEdit.vue";
+import telaConfimExcluir from "@/components/telaHome/telaConfimExcluir.vue";
+import TopicosDetalhes from "@/components/telaHome/Topicos/TopicosDetalhes.vue";
+import ProvasDetalhes from "@/components/telaHome/Provas/ProvasDetalhes.vue";
+import EditarTopico from "@/components/telaHome/Topicos/EditarTopico.vue";
+import EditarProvas from "@/components/telaHome/Provas/EditarProvas.vue";
 import Logo from "./components/Logo.vue";
 const routes = [
   { path: "/", name: "Inicio", component: Inicio },
@@ -55,6 +60,30 @@ const routes = [
     beforeEnter: requireAuth,
   },
   { path: "/telaConfim", name: "telaConfim", component: telaConfim },
+  { path: "/telaConfimEdit", name: "telaConfimEdit", component: telaConfimEdit },
+  { path: "/telaConfimExcluir", name: "telaConfimExcluir", component: telaConfimExcluir },
+  {
+    path: "/provas-detalhes/:id",
+    name: "ProvasDetalhes",
+    component: ProvasDetalhes,
+    props: true,
+  },
+  {
+    path: "/topicos-detalhes/:id",
+    name: "TopicosDetalhes",
+    component: TopicosDetalhes,
+    props: true,
+  },
+  {
+    path: '/editar-topico/:id',
+    name: 'EditarTopico',
+    component: EditarTopico,
+  },
+  {
+    path: '/editar-provas/:id',
+    name: 'EditarProvas',
+    component: EditarProvas,
+  },
 ];
 
 const router = createRouter({

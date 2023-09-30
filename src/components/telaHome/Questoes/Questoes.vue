@@ -1,27 +1,38 @@
 <template>
-  <div class="carousel-container ">
+  <div class="carousel-container">
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item v-for="(card, cardIndex) in cards" :key="cardIndex">
-        <v-card elevation="0" :class="{ 'hovered': hoveredCardIndex === cardIndex }"
-          @mouseover="hoveredCardIndex = cardIndex" @mouseleave="hoveredCardIndex = null">
-
-          <div class="bg-white ma-3 elevation-3 rounded-xl text-center card-content">
-            <v-card-title class="text-center">
-
-            </v-card-title>
+        <v-card
+          elevation="0"
+          :class="{ hovered: hoveredCardIndex === cardIndex }"
+          @mouseover="hoveredCardIndex = cardIndex"
+          @mouseleave="hoveredCardIndex = null"
+        >
+          <div
+            class="bg-white ma-3 elevation-3 rounded-xl text-center card-content"
+          >
+            <v-card-title class="text-center"> </v-card-title>
             <v-card-text class="text-caption text-left">
-              <span class="font-weight-bold">Tópico:</span> {{ card.topico.topico_enunciado }} <br>
-              <span class="font-weight-bold">Enunciado:</span> {{ card.enunciado }} <br>
-              <span class="font-weight-bold">Tipo:</span> {{ card.tipo }} <br>
-              <span class="font-weight-bold">Nível:</span> {{ card.nivel }} <br>
-              <span class="font-weight-bold">Criado por:</span> {{ card.professor.professor_nome }} <br>
-
-
+              <span class="font-weight-bold">Tópico:</span>
+              {{ card.topico.topico_enunciado }} <br />
+              <span class="font-weight-bold">Enunciado:</span>
+              {{ card.enunciado }} <br />
+              <span class="font-weight-bold">Tipo:</span> {{ card.tipo }} <br />
+              <span class="font-weight-bold">Nível:</span> {{ card.nivel }}
+              <br />
+              <span class="font-weight-bold">Criado por:</span>
+              {{ card.professor.professor_nome }} <br />
             </v-card-text>
             <v-card-actions class="text-center">
-              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
-                @click="verDetalhes(card)">Ver</v-btn>
-
+              <v-btn
+                class="bg-blue"
+                elevation="2"
+                rounded="xl"
+                width="500"
+                height="40"
+                @click="verDetalhes(card)"
+                >Ver</v-btn
+              >
             </v-card-actions>
           </div>
         </v-card>
@@ -38,7 +49,7 @@ export default {
     return {
       model: 0,
       cards: [],
-      hoveredCardIndex: null
+      hoveredCardIndex: null,
     };
   },
   computed: {
@@ -47,7 +58,7 @@ export default {
     },
     currentCardsPerPage() {
       return 6;
-    }
+    },
   },
   mounted() {
     this.fetchCards();
@@ -55,7 +66,10 @@ export default {
   },
   methods: {
     verDetalhes(questao) {
-      this.$router.push({ name: 'QuestaoDetalhes', params: { id: questao.id_questao } });
+      this.$router.push({
+        name: "QuestaoDetalhes",
+        params: { id: questao.id_questao },
+      });
     },
     startAutoSlide() {
       setInterval(() => {
@@ -64,18 +78,19 @@ export default {
     },
     async fetchCards() {
       try {
-        const response = await axios.get("https://questbank-api.onrender.com/listarQuestao");
+        const response = await axios.get(
+          "https://questbankapi.onrender.com/listarQuestao"
+        );
         if (response.data.status === "success") {
           this.cards = response.data.questoes;
         } else {
-          console.error("Error fetching cards:", response.data.msg);
-
+          console.error("Erro", response.data.msg);
         }
       } catch (error) {
-        console.error("Error fetching cards:", error);
+        console.error("Erro", error);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

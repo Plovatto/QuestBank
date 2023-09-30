@@ -96,7 +96,7 @@ export default defineComponent({
       progressVisible.value = true;
 
       axios
-        .post('https://questbank-api.onrender.com/user/login', formData)
+        .post('https://questbankapi.onrender.com/user/login', formData)
         .then((response) => {
           console.log(response.data);
           if (response.data.auth) {
