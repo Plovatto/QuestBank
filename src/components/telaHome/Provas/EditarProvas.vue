@@ -1,5 +1,5 @@
 <template>
-    <v-container class="mt-8">
+    <v-container class="mt-15">
         <Nav />
         <v-card elevation="0">
             <v-card-title class="text-blue font-weight-bold text-center text-h5">Editar Avaliação</v-card-title>
@@ -12,7 +12,7 @@
                 </v-form>
             </v-card-text>
             <v-card-actions class="d-flex justify-center align-items-center">
-                <v-btn @click="editarProva" height="50" width="240" class="bg-blue rounded-pill text-h6">Salvar</v-btn>
+                <v-btn @click="editarProva" height="50" width="240" class="bg-blue rounded-pill text-h6">Salvar edição</v-btn>
             </v-card-actions>
         </v-card>
     </v-container>
@@ -40,7 +40,7 @@ export default {
     methods: {
         async carregarDetalhesProva() {
             try {
-                const response = await axios.get(`https://questbankapi.onrender.com/obterProva/${this.id_prova}`);
+                const response = await axios.get(`http://localhost:3000/prova/listar/${this.id_prova}`);
                 if (response.data.status === 'success') {
                     const prova = response.data.prova[0];
                     this.enunciado = prova.enunciado;
@@ -67,6 +67,7 @@ export default {
                     this.$router.push('/telaConfimEdit');
                 } else {
                     console.error('Erro ao editar a prova:', response.data.msg);
+                    this.$router.push('/telaErro');
                 }
             } catch (error) {
                 console.error('Erro ao editar a prova:', error);

@@ -70,7 +70,7 @@ export default defineComponent({
 
     async function adicionarQuestao() {
       try {
-        const response = await axios.post("https://questbankapi.onrender.com/criarQuestao", {
+        const response = await axios.post("https://questbankapi.onrender.com/questao/adicionar", {
           enunciado: enunciado.value,
           topico_enunciado: topico_enunciado.value,
           tipo: tipo.value,
@@ -91,6 +91,8 @@ export default defineComponent({
       if (route.path !== '/telaConfim') {
         adicionarQuestao();
         router.push('/telaConfim');
+      }else{
+        this.$router.push('/telaErro');
       }
     }
 

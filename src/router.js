@@ -11,10 +11,13 @@ import QuestaoDetalhes from "@/components/telaHome/Questoes/QuestaoDetalhes.vue"
 import telaConfim from "@/components/telaHome/telaConfim.vue";
 import telaConfimEdit from "@/components/telaHome/telaConfimEdit.vue";
 import telaConfimExcluir from "@/components/telaHome/telaConfimExcluir.vue";
+import telaErro from "@/components/telaHome/telaErro.vue";
 import TopicosDetalhes from "@/components/telaHome/Topicos/TopicosDetalhes.vue";
 import ProvasDetalhes from "@/components/telaHome/Provas/ProvasDetalhes.vue";
 import EditarTopico from "@/components/telaHome/Topicos/EditarTopico.vue";
 import EditarProvas from "@/components/telaHome/Provas/EditarProvas.vue";
+import EditarQuestao from "@/components/telaHome/Questoes/EditarQuestao.vue";
+import ResultadoPesquisa from '@/components/telaHome/Topicos/ResultadoPesquisa.vue';
 import Logo from "./components/Logo.vue";
 const routes = [
   { path: "/", name: "Inicio", component: Inicio },
@@ -62,6 +65,7 @@ const routes = [
   { path: "/telaConfim", name: "telaConfim", component: telaConfim },
   { path: "/telaConfimEdit", name: "telaConfimEdit", component: telaConfimEdit },
   { path: "/telaConfimExcluir", name: "telaConfimExcluir", component: telaConfimExcluir },
+  { path: "/telaErro", name: "telaErro", component: telaErro },
   {
     path: "/provas-detalhes/:id",
     name: "ProvasDetalhes",
@@ -84,6 +88,15 @@ const routes = [
     name: 'EditarProvas',
     component: EditarProvas,
   },
+  {    path: '/resultado-pesquisa',
+  component: ResultadoPesquisa,
+},
+  {
+    path: '/editar-questao/:id',
+    name: 'EditarQuestao',
+    component: EditarQuestao,
+  },
+  
 ];
 
 const router = createRouter({

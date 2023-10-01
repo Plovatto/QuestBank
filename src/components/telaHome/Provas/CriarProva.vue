@@ -56,7 +56,7 @@ export default defineComponent({
       try {
         const questoesArray = questoes.value.split(',');
         const values = questoesArray.map((questaoId) => [questaoId]);
-        const response = await axios.post("https://questbankapi.onrender.com/criarProva", {
+        const response = await axios.post("https://questbankapi.onrender.com/prova/adicionar", {
           questoes: values,
           enunciado: enunciado.value,
           descricao: descricao.value,
@@ -75,6 +75,8 @@ export default defineComponent({
       if (route.path !== '/telaConfim') {
         adicionarProva();
         router.push('/telaConfim');
+      }else{
+        this.$router.push('/telaErro');
       }
     }
 

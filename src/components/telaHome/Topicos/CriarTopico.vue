@@ -57,7 +57,7 @@ export default defineComponent({
 
 
       try {
-        const response = await axios.post('https://questbankapi.onrender.com/criarTopico', formData);
+        const response = await axios.post('https://questbankapi.onrender.com/topico/adicionar', formData);
         console.log('Tópico criado:', response.data);
 
       } catch (error) {
@@ -71,6 +71,8 @@ export default defineComponent({
 
         criarTopico();
         router.push('/telaConfim');
+      }else{
+        this.$router.push('/telaErro');
       }
     }
 

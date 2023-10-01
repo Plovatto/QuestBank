@@ -79,7 +79,7 @@ export default {
     async fetchCards() {
       try {
         const response = await axios.get(
-          "https://questbankapi.onrender.com/listarQuestao"
+          "http://localhost:3000/questao/listar"
         );
         if (response.data.status === "success") {
           this.cards = response.data.questoes;

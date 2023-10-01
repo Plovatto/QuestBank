@@ -11,7 +11,7 @@
                 </v-form>
             </v-card-text>
             <v-card-actions class="d-flex justify-center align-itens-center">
-                <v-btn height="50" width="240" class="bg-blue rounded-pill text-h6" @click="editarTopico">Salvar</v-btn>
+                <v-btn height="50" width="240" class="bg-blue rounded-pill text-h6" @click="editarTopico">Salvar edição</v-btn>
             </v-card-actions>
         </v-card>
     </v-container>
@@ -27,19 +27,19 @@ export default {
     },
     data() {
         return {
-            idTopico: null,
+            id_topico: null,
 
             enunciado: '',
         };
     },
     async mounted() {
-        this.idTopico = this.$route.params.id;
+        this.id_topico = this.$route.params.id;
         await this.carregarDadosDoTopico();
     },
     methods: {
         async carregarDadosDoTopico() {
             try {
-                const response = await axios.get(`https://questbankapi.onrender.com/listaId/${this.idTopico}`);
+                const response = await axios.get(`http://localhost:3000/topico/listar/${this.id_topico}`);
                 if (response.data.status === 'success') {
                     const topico = response.data.topico;
 
@@ -57,12 +57,13 @@ export default {
 
                     enunciado: this.enunciado,
                 };
-                const response = await axios.put(`https://questbankapi.onrender.com/topico/atualizar/${this.idTopico}`, dadosEditados);
+                const response = await axios.put(`http://localhost:3000/topico/atualizar/${this.id_topico}`, dadosEditados);
                 if (response.data.status === 'success') {
                     console.log('Tópico editado com sucesso');
                     this.$router.push('/telaConfimEdit');
                 } else {
                     console.error('Erro ao editar tópico:', response.data.msg);
+                    this.$router.push('/telaErro');
                 }
             } catch (error) {
                 console.error('Erro ao editar tópico:', error);

@@ -61,7 +61,7 @@ export default {
     },
     async fetchProvas() {
       try {
-        const response = await axios.get("https://questbankapi.onrender.com/listarProva");
+        const response = await axios.get("http://localhost:3000/prova/listar");
         if (response.data.status === 'success') {
           this.provas = response.data.provas;
         } else {

@@ -6,27 +6,29 @@
       <v-card class="mx-auto" max-width="800">
         <v-card-title class="text-blue font-weight-bold">Detalhes do Tópico</v-card-title>
         <v-card-text v-if="topico">
-          <p><span class="text-blue font-weight-bold">ID do Tópico:</span> {{ topico.id_topico }}</p>
-          <p><span class="text-blue font-weight-bold">Enunciado:</span> {{ topico.enunciado }}</p>
-          <p><span class="text-blue font-weight-bold">Criado por:</span> {{ topico.usuario.nome_pessoa }}</p>
-          <p><span class="text-blue font-weight-bold">Disciplina:</span> {{ topico.disciplina.nome_disciplina }}</p>
+          <p v-if="topico"><span class="text-blue font-weight-bold">ID do Tópico:</span> {{ topico.id_topico }}</p>
+          <p v-if="topico"><span class="text-blue font-weight-bold">Enunciado:</span> {{ topico.enunciado }}</p>
+          <p v-if="topico"><span class="text-blue font-weight-bold">Criado por:</span> {{ topico.usuario.nome_pessoa }}</p>
+          <p v-if="topico"><span class="text-blue font-weight-bold">Disciplina:</span> {{ topico.disciplina.nome_disciplina }}</p>
         </v-card-text>
         <br>
         <v-row justify="center">
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-blue" elevation="2" rounded="xl" max-width="500" width="100%" height="40"
-              @click="excluirTopico(topico.id_topico)">Excluir</v-btn>
+            <v-btn class="bg-blue" elevation="2" rounded="xl" max-width="500" width="100%" height="40">
+              <router-link v-if="topico" :to="'/editar-topico/' + topico.id_topico" class="bg-blue" elevation="2" rounded="xl"
+                max-width="500" width="100%" height="40" style="text-decoration: none;">Editar</router-link>
+            </v-btn>
           </v-col>
-          <v-col cols="auto" class="mb-2"> <v-btn class="bg-blue" elevation="2" rounded="xl" max-width="500" width="100%"
-              height="40">
-              <router-link to="/editar-topico/{{ topico.id_topico }}" class="bg-blue" elevation="2" rounded="xl"
-                max-width="500" width="100%" height="40">Editar</router-link></v-btn>
+          <v-col cols="auto" class="mb-2">
+            <v-btn class="bg-red" elevation="2" rounded="xl" max-width="500" width="100%" height="40"
+              @click="excluirTopico(topico ? topico.id_topico : null)">Excluir</v-btn>
           </v-col>
         </v-row>
       </v-card>
     </v-container>
   </div>
 </template>
+
 
 <script>
 import Nav from '@/components/Nav.vue';
@@ -49,7 +51,7 @@ export default {
   methods: {
     async fetchTopicDetails() {
       try {
-        const response = await axios.get(`https://questbankapi.onrender.com/listaId/${this.topicId}`);
+        const response = await axios.get(`http://localhost:3000/topico/listar/${this.topicId}`);
         if (response.data.status === 'success') {
           this.topico = response.data.topico;
         } else {
@@ -67,6 +69,7 @@ export default {
           this.$router.push('/telaConfimExcluir');
         } else {
           console.error('Erro', response.data.msg);
+          this.$router.push('/telaErro');
         }
       } catch (error) {
         console.error('Erro', error);

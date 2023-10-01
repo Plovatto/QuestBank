@@ -19,7 +19,7 @@
         >
           <div class="bg-custom bg-white ma-3 elevation-3 rounded-xl card-content">
             <v-card-title class="text-left">
-              <span class="font-weight-bold text-subtitle-2">{{ card.Disciplina.nome_disciplina }}</span>
+    <span class="font-weight-bold text-subtitle-2">{{ card.disciplina ? card.disciplina.nome_disciplina : 'N/A' }}</span>
             </v-card-title>
             <v-card-text class="text-caption text-left">
               <span class="font-weight-bold">Tópico:</span> {{ card.enunciado }} <br>
@@ -82,7 +82,7 @@ export default {
   methods: {
     async fetchCards() {
       try {
-        const response = await axios.get("https://questbankapi.onrender.com/listarTopico");
+        const response = await axios.get("http://localhost:3000/topico/listar");
         if (response.data.status === "success") {
           this.cards = response.data.topicos;
         } else {
