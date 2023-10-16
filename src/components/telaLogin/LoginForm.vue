@@ -36,6 +36,9 @@
 import { defineComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+axios.defaults.headers.common['x-access-token'] = localStorage.getItem('token');
+axios.defaults.headers.common['perfil'] = localStorage.getItem('userPerfil');
+
 
 export default defineComponent({
   setup() {
@@ -96,7 +99,7 @@ export default defineComponent({
       progressVisible.value = true;
 
       axios
-        .post('https://questbankapi.onrender.com/user/login', formData)
+        .post('https://api-quest-bank.vercel.app/user/login', formData)
         .then((response) => {
           console.log(response.data);
           if (response.data.auth) {
@@ -104,9 +107,10 @@ export default defineComponent({
             localStorage.setItem('userId', response.data.user.id);
             localStorage.setItem('userEmail', response.data.user.email);
             localStorage.setItem('userName', response.data.user.nome);
-
+            localStorage.setItem('userPerfil', response.data.user.perfil);
             console.log(localStorage);
-
+            const perfil = localStorage.getItem('userPerfil');
+            console.log('Perfil:', perfil);
             setTimeout(() => {
               router.push('/Home');
               progressVisible.value = false;

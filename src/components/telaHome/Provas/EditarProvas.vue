@@ -12,7 +12,8 @@
                 </v-form>
             </v-card-text>
             <v-card-actions class="d-flex justify-center align-items-center">
-                <v-btn @click="editarProva" height="50" width="240" class="bg-blue rounded-pill text-h6">Salvar edição</v-btn>
+                <v-btn @click="editarProva" height="50" width="240" class="bg-blue rounded-pill text-h6">Salvar
+                    edição</v-btn>
             </v-card-actions>
         </v-card>
     </v-container>
@@ -40,7 +41,7 @@ export default {
     methods: {
         async carregarDetalhesProva() {
             try {
-                const response = await axios.get(`http://localhost:3000/prova/listar/${this.id_prova}`);
+                const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/${this.id_prova}`);
                 if (response.data.status === 'success') {
                     const prova = response.data.prova[0];
                     this.enunciado = prova.enunciado;
@@ -61,7 +62,7 @@ export default {
                     descricao: this.descricao,
                 };
 
-                const response = await axios.put(`https://questbankapi.onrender.com/editarProva/${this.id_prova}`, dadosEditados);
+                const response = await axios.put(`https://api-quest-bank.vercel.app/editarProva/${this.id_prova}`, dadosEditados);
                 if (response.data.status === 'success') {
                     console.log('Prova editada com sucesso');
                     this.$router.push('/telaConfimEdit');

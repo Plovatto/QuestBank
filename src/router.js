@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import jwt_decode from "jwt-decode";
 import Login from "@/views/Login.vue";
 import Redefinir from "@/views/Redefinir.vue";
 import Inicio from "@/views/Inicio.vue";
@@ -7,6 +8,7 @@ import Perfil from "@/views/Perfil.vue";
 import CriarTopico from "@/components/telaHome/Topicos/CriarTopico.vue";
 import CriarQuestao from "@/components/telaHome/Questoes/CriarQuestao.vue";
 import CriarProva from "@/components/telaHome/Provas/CriarProva.vue";
+import CriarAlternativa from "@/components/telaHome/Alternativas/CriarAlternativa.vue";
 import QuestaoDetalhes from "@/components/telaHome/Questoes/QuestaoDetalhes.vue";
 import telaConfim from "@/components/telaHome/telaConfim.vue";
 import telaConfimEdit from "@/components/telaHome/telaConfimEdit.vue";
@@ -17,7 +19,8 @@ import ProvasDetalhes from "@/components/telaHome/Provas/ProvasDetalhes.vue";
 import EditarTopico from "@/components/telaHome/Topicos/EditarTopico.vue";
 import EditarProvas from "@/components/telaHome/Provas/EditarProvas.vue";
 import EditarQuestao from "@/components/telaHome/Questoes/EditarQuestao.vue";
-import ResultadoPesquisa from '@/components/telaHome/Topicos/ResultadoPesquisa.vue';
+import AlternativaDetalhes from "@/components/telaHome/Alternativas/AlternativaDetalhes";
+import EditarAlternativas from "@/components/telaHome/Alternativas/EditarAlternativas";
 import Logo from "./components/Logo.vue";
 const routes = [
   { path: "/", name: "Inicio", component: Inicio },
@@ -50,6 +53,12 @@ const routes = [
     beforeEnter: requireAuth,
   },
   {
+    path: "/CriarAlternativa",
+    name: "CriarAlternativa",
+    component: CriarAlternativa,
+    beforeEnter: requireAuth,
+  },
+  {
     path: "/CriarProva",
     name: "CriarProva",
     component: CriarProva,
@@ -59,6 +68,13 @@ const routes = [
     path: "/questao-detalhes/:id",
     name: "QuestaoDetalhes",
     component: QuestaoDetalhes,
+    props: true,
+    beforeEnter: requireAuth,
+  },
+  {
+    path: "/alternativa-detalhes/:id",
+    name: "AlternativaDetalhes",
+    component: AlternativaDetalhes,
     props: true,
     beforeEnter: requireAuth,
   },
@@ -88,8 +104,9 @@ const routes = [
     name: 'EditarProvas',
     component: EditarProvas,
   },
-  {    path: '/resultado-pesquisa',
-  component: ResultadoPesquisa,
+  {path: '/editar-alternativas/:id',
+  name: 'EditarAlternativas',
+  component: EditarAlternativas,
 },
   {
     path: '/editar-questao/:id',
@@ -104,20 +121,42 @@ const router = createRouter({
   routes,
 });
 
-function requireAuth(to, from, next) {
-  const token = localStorage.getItem("token");
-  console.log(token);
-  if (!token && to.name !== "Login") {
+function isTokenExpired(token) {
+  const decoded = jwt_decode(token);
+  const currentTimestamp = Math.floor(Date.now() / 1000);
 
-    next("/Login"); 
-  } else {
-    
-    next();
-  }
+  return decoded.exp < currentTimestamp;
 }
 
+function requireAuth(to, from, next) {
+  const token = localStorage.getItem("token");
+  const perfil = localStorage.getItem("userPerfil"); 
+
+  if (!token && to.name !== "Login") {
+ 
+    router.push("/Login");
+  } else if (to.name !== "Login") {
+    if (isTokenExpired(token)) {
+      
+      router.push("/Login");
+    } else {
+     
+      next();
+    }
+  } else if (!token && to.name === "Login") {
+ 
+    next();
+  } else if (perfil !== "professor" && perfil !== "admin") {
+   
+    router.push("/Login");
+  } else {
+  
+    next();
+  }  
+  
+  
+}
 router.beforeEach((to, from, next) => {
   requireAuth(to, from, next);
-});
-
+}); 
 export default router;

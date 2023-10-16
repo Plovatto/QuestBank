@@ -1,25 +1,14 @@
 <template>
-  <div
-    class="carousel-container"
-    @mouseenter="showButtons = true"
-    @mouseleave="showButtons = false"
-    @touchstart="onTouchStart"
-    @touchmove="onTouchMove"
-    @touchend="onTouchEnd"
-  >
+  <div class="carousel-container" @mouseenter="showButtons = true" @mouseleave="showButtons = false"
+    @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
     <div class="carousel-wrapper" ref="carousel">
       <div class="carousel">
-        <v-card
-          v-for="(card, cardIndex) in visibleCards"
-          :key="cardIndex"
-          class="card"
-          @mouseover="showButton = true" 
-          @mouseleave="showButton = false"
-          elevation="0" 
-        >
+        <v-card v-for="(card, cardIndex) in visibleCards" :key="cardIndex" class="card" @mouseover="showButton = true"
+          @mouseleave="showButton = false" elevation="0">
           <div class="bg-custom bg-white ma-3 elevation-3 rounded-xl card-content">
             <v-card-title class="text-left">
-    <span class="font-weight-bold text-subtitle-2">{{ card.disciplina ? card.disciplina.nome_disciplina : 'N/A' }}</span>
+              <span class="font-weight-bold text-subtitle-2">{{ card.disciplina ? card.disciplina.nome_disciplina : 'N/A'
+              }}</span>
             </v-card-title>
             <v-card-text class="text-caption text-left">
               <span class="font-weight-bold">Tópico:</span> {{ card.enunciado }} <br>
@@ -82,7 +71,7 @@ export default {
   methods: {
     async fetchCards() {
       try {
-        const response = await axios.get("http://localhost:3000/topico/listar");
+        const response = await axios.get("https://api-quest-bank.vercel.app/topico/listar");
         if (response.data.status === "success") {
           this.cards = response.data.topicos;
         } else {
@@ -121,13 +110,13 @@ export default {
     },
 
     onTouchEnd() {
-      const touchThreshold = 50; 
+      const touchThreshold = 50;
 
       if (this.touchStartX - this.touchEndX > touchThreshold) {
-      
+
         this.nextSlide();
       } else if (this.touchEndX - this.touchStartX > touchThreshold) {
-       
+
         this.prevSlide();
       }
     },
@@ -145,7 +134,7 @@ export default {
 .carousel-wrapper {
   display: flex;
   align-items: center;
-    justify-content: center;
+  justify-content: center;
   transition: transform 0.5s ease-in-out;
 }
 
@@ -155,18 +144,18 @@ export default {
 }
 
 .carousel-item {
-  flex: 0 0 100%; 
+  flex: 0 0 100%;
   padding: 20px;
   box-sizing: border-box;
   background-color: #f0f0f0;
   border-radius: 8px;
-  margin-right: 20px; 
+  margin-right: 20px;
 }
 
 
 
 .carousel-container:hover .carousel-button {
-  display: block; 
+  display: block;
 }
 
 .prev {
@@ -176,6 +165,7 @@ export default {
 .next {
   right: 10px;
 }
+
 .carousel-button {
   position: absolute;
   top: 50%;
@@ -195,7 +185,7 @@ export default {
     align-items: center;
     justify-content: center;
   }
-  
+
   .bg-custom {
     width: 16rem;
   }

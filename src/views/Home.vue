@@ -56,6 +56,21 @@
 
       </v-container>
       <Topicos />
+      <v-container class="mt-8 ">
+        <v-row align="center">
+          <v-col cols="6">
+            <h3 class="ml-8 text-black text-h6 font-weight-bold">Minhas Alternativas</h3>
+          </v-col>
+          <v-col cols="1" class="d-flex justify-end">
+            <addAlternativa />
+          </v-col>
+          <v-col cols="5" class="d-flex justify-end">
+            <buscaAlternativa />
+          </v-col>
+        </v-row>
+
+      </v-container>
+      <Alternativas/>
       <br><br><br><br><br>
 
     </v-main>
@@ -67,11 +82,12 @@
 import buscaProva from '@/components/telaHome/Provas/buscaProva.vue';
 import addProvas from '@/components/telaHome/Provas/addProvas.vue';
 import Provas from '@/components/telaHome/Provas/Provas.vue';
-
+import Alternativas from '@/components/telaHome/Alternativas/Alternativas.vue';
 import buscaQuestoes from '@/components/telaHome/Questoes/buscaQuestoes.vue';
 import addQuestao from '@/components/telaHome/Questoes/addQuestao.vue';
 import Questoes from '@/components/telaHome/Questoes/Questoes.vue';
-
+import addAlternativa from '@/components/telaHome/Alternativas/addAlternativa.vue';
+import buscaAlternativa from '@/components/telaHome/Alternativas/buscaAlternativa.vue';
 import Topicos from '@/components/telaHome/Topicos/Topicos.vue';
 import addTopico from '@/components/telaHome/Topicos/addTopico.vue';
 import buscaTopico from '@/components/telaHome/Topicos/buscaTopicos.vue';
@@ -90,9 +106,12 @@ export default defineComponent({
     buscaQuestoes,
     addQuestao,
     Questoes,
+    Alternativas,
     Topicos,
     addTopico,
     buscaTopico,
+    buscaAlternativa,
+    addAlternativa
   },
 
   setup() {

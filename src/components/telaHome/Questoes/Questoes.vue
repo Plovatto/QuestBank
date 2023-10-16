@@ -2,15 +2,9 @@
   <div class="carousel-container">
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item v-for="(card, cardIndex) in cards" :key="cardIndex">
-        <v-card
-          elevation="0"
-          :class="{ hovered: hoveredCardIndex === cardIndex }"
-          @mouseover="hoveredCardIndex = cardIndex"
-          @mouseleave="hoveredCardIndex = null"
-        >
-          <div
-            class="bg-white ma-3 elevation-3 rounded-xl text-center card-content"
-          >
+        <v-card elevation="0" :class="{ hovered: hoveredCardIndex === cardIndex }"
+          @mouseover="hoveredCardIndex = cardIndex" @mouseleave="hoveredCardIndex = null">
+          <div class="bg-white ma-3 elevation-3 rounded-xl text-center card-content">
             <v-card-title class="text-center"> </v-card-title>
             <v-card-text class="text-caption text-left">
               <span class="font-weight-bold">Tópico:</span>
@@ -24,15 +18,8 @@
               {{ card.professor.professor_nome }} <br />
             </v-card-text>
             <v-card-actions class="text-center">
-              <v-btn
-                class="bg-blue"
-                elevation="2"
-                rounded="xl"
-                width="500"
-                height="40"
-                @click="verDetalhes(card)"
-                >Ver</v-btn
-              >
+              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
+                @click="verDetalhes(card)">Ver</v-btn>
             </v-card-actions>
           </div>
         </v-card>
@@ -79,7 +66,7 @@ export default {
     async fetchCards() {
       try {
         const response = await axios.get(
-          "http://localhost:3000/questao/listar"
+          "https://api-quest-bank.vercel.app/questao/listar"
         );
         if (response.data.status === "success") {
           this.cards = response.data.questoes;

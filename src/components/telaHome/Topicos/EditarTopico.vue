@@ -11,7 +11,8 @@
                 </v-form>
             </v-card-text>
             <v-card-actions class="d-flex justify-center align-itens-center">
-                <v-btn height="50" width="240" class="bg-blue rounded-pill text-h6" @click="editarTopico">Salvar edição</v-btn>
+                <v-btn height="50" width="240" class="bg-blue rounded-pill text-h6" @click="editarTopico">Salvar
+                    edição</v-btn>
             </v-card-actions>
         </v-card>
     </v-container>
@@ -39,7 +40,7 @@ export default {
     methods: {
         async carregarDadosDoTopico() {
             try {
-                const response = await axios.get(`http://localhost:3000/topico/listar/${this.id_topico}`);
+                const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/${this.id_topico}`);
                 if (response.data.status === 'success') {
                     const topico = response.data.topico;
 
@@ -57,7 +58,7 @@ export default {
 
                     enunciado: this.enunciado,
                 };
-                const response = await axios.put(`http://localhost:3000/topico/atualizar/${this.id_topico}`, dadosEditados);
+                const response = await axios.put(`https://api-quest-bank.vercel.app/topico/atualizar/${this.id_topico}`, dadosEditados);
                 if (response.data.status === 'success') {
                     console.log('Tópico editado com sucesso');
                     this.$router.push('/telaConfimEdit');
