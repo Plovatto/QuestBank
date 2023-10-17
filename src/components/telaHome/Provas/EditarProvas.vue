@@ -28,22 +28,22 @@ export default {
     },
     data() {
         return {
-            id_prova: null,
+            id_prova: '',
             enunciado: '',
             tipo: '',
             descricao: '',
         };
     },
     async mounted() {
-        this.id_prova = this.$route.params.id;
         await this.carregarDetalhesProva();
+        this.id_prova = this.$route.params.id;
     },
     methods: {
         async carregarDetalhesProva() {
             try {
-                const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/${this.id_prova}`);
+                const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/${this.$route.params.id}`);
                 if (response.data.status === 'success') {
-                    const prova = response.data.prova[0];
+                    const prova = response.data.prova;
                     this.enunciado = prova.enunciado;
                     this.tipo = prova.tipo;
                     this.descricao = prova.descricao;
@@ -61,8 +61,9 @@ export default {
                     tipo: this.tipo,
                     descricao: this.descricao,
                 };
+                console.log(dadosEditados);
 
-                const response = await axios.put(`https://api-quest-bank.vercel.app/editarProva/${this.id_prova}`, dadosEditados);
+                const response = await axios.put(`https://api-quest-bank.vercel.app/prova/atualizar/${this.id_prova}`, dadosEditados);
                 if (response.data.status === 'success') {
                     console.log('Prova editada com sucesso');
                     this.$router.push('/telaConfimEdit');
@@ -71,7 +72,13 @@ export default {
                     this.$router.push('/telaErro');
                 }
             } catch (error) {
-                console.error('Erro ao editar a prova:', error);
+                if (error.response && error.response.status === 404) {
+                    console.error('Prova não encontrada');
+                    console.log(error);
+                    this.$router.push('/telaErro');
+                } else {
+                    console.error('Erro ao editar a prova:', error);
+                }
             }
         },
     },

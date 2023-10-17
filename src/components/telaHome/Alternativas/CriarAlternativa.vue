@@ -19,7 +19,7 @@
                     <v-textarea placeholder="Exemplo: a) 2 + 2 = 4" class="mt-3" rows="2" row-height="20" variant="solo"
                         v-model="enunciado"></v-textarea>
                     <v-checkbox color="success" v-model="correta" label="Marque se for a alternativa correta" class="pr-0"
-                        true-value="true" false-value="false"></v-checkbox>
+                        true-value="1" false-value="0"></v-checkbox>
                 </v-form>
             </v-card-text>
             <v-card-actions class="d-flex justify-center align-itens-center">
@@ -47,12 +47,11 @@ export default defineComponent({
         const router = useRouter();
 
         const criarAlternativa = async () => {
-
             const enunciadoDaQuestao = enunciadoQuestao.value ? enunciadoQuestao.value.enunciado : '';
 
             const formData = {
                 enunciado: enunciado.value,
-                correta: correta.value,
+                correta: correta,
                 enunciadoQuestao: enunciadoDaQuestao,
             };
 
