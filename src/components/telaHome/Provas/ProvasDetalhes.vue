@@ -43,7 +43,9 @@
       </v-card> 
       <br><v-row justify="center"> 
         <v-col cols="auto">
-          <v-btn class="bg-green" elevation="2" rounded="xl" min-width="210" width="100%" height="40" @click="gerarPDF(prova.id_prova)">Gerar PDF</v-btn>
+          <v-btn class="bg-green" elevation="2" rounded="xl" min-width="210" width="100%" height="40" >
+            <a v-if="prova && prova.id_prova" class="bg-green" style="text-decoration: none;" elevation="2" rounded="xl" min-width="210" width="100%" height="40" :href="`https://api-questbankv2.onrender.com/prova/download/${prova.id_prova}`">Gerar PDF</a>
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -96,7 +98,7 @@ export default {
     },
     async gerarPDF(provaId) {
       try {
-        const response = await axios.get(`https://api-quest-bank.vercel.app/prova/download/${provaId}`);
+        const response = await axios.get(`https://api-questbankv2.onrender.com/prova/download/${provaId}`);
         if (response.data.status === 'success') {
           window.open(response.data.url, '_blank');
         } else {
