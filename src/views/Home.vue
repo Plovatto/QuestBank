@@ -316,3 +316,19 @@ export default defineComponent({
 
 });
 </script>
+<style>
+@media (max-width: 560px) {
+
+
+  .marg {
+    margin-left: 8rem;
+  }
+}
+
+@media (max-width: 450px) {
+  .marg {
+    margin-left: 4rem;
+  }
+}
+
+</style>
