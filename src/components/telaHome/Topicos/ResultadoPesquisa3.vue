@@ -24,10 +24,8 @@ export default {
     hovered3: Boolean,
   },
   methods: {
-    verDetalhes(prova) {
-      if (prova && prova.id_prova) {
-        this.$router.push({ name: 'ProvasDetalhes', params: { id: prova.id_prova } });
-      }
+    verDetalhes(topico) {
+      this.$router.push({ name: 'TopicosDetalhes', params: { id: topico.id_topico } });
     },
   },
 };

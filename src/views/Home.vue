@@ -36,10 +36,10 @@
         <Provas />
       </v-row>
 
-      <v-container fluid class="marg">
+      <v-container fluid>
         <v-row>
           <v-col v-for="(result, index) in searchResults" :key="index" cols="12" sm="6" md="4" lg="2" class="my-2">
-            <ResultadoPesquisa :result="result" :hovered="hoveredCardIndex === index" @verDetalhes="verDetalhes" />
+            <ResultadoPesquisa  class="marg" :result="result" :hovered="hoveredCardIndex === index" @verDetalhes="verDetalhes" />
           </v-col>
         </v-row>
       </v-container>
@@ -77,10 +77,10 @@
         <Questoes />
       </v-row>
 
-      <v-container fluid class="marg">
+      <v-container fluid>
         <v-row>
           <v-col v-for="(result2, index) in searchResults2" :key="index" cols="12" sm="6" md="4" lg="2" class="my-2">
-            <ResultadoPesquisa2 :result2="result2" :hovered="hoveredCardIndex2 === index" @verDetalhes="verDetalhes2" />
+            <ResultadoPesquisa2 class="marg" :result2="result2" :hovered="hoveredCardIndex2 === index" @verDetalhes="verDetalhes2" />
           </v-col>
         </v-row>
       </v-container>
@@ -118,10 +118,10 @@
         <Topicos />
       </v-row>
 
-      <v-container fluid class="marg">
+      <v-container fluid >
         <v-row>
           <v-col v-for="(result3, index) in searchResults3" :key="index" cols="12" sm="6" md="4" lg="2" class="my-2">
-            <ResultadoPesquisa3 :result3="result3" :hovered3="hoveredCardIndex3 === index" @verDetalhes="verDetalhes3" />
+            <ResultadoPesquisa3 class="marg" :result3="result3" :hovered3="hoveredCardIndex3 === index" @verDetalhes="verDetalhes3" />
           </v-col>
         </v-row>
       </v-container>
@@ -327,7 +327,7 @@ export default defineComponent({
 
 @media (max-width: 450px) {
   .marg {
-    margin-left: 4rem;
+    margin-left:4rem;
   }
 }
 

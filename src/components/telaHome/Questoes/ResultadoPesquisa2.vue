@@ -25,10 +25,11 @@ export default {
     hovered2: Boolean,
   },
   methods: {
-    verDetalhes(prova) {
-      if (prova && prova.id_prova) {
-        this.$router.push({ name: 'ProvasDetalhes', params: { id: prova.id_prova } });
-      }
+    verDetalhes(questao) {
+      this.$router.push({
+        name: "QuestaoDetalhes",
+        params: { id: questao.id_questao },
+      });
     },
   },
 };
