@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import jwt_decode from "jwt-decode";
 import Login from "@/views/Login.vue";
-import Redefinir from "@/views/Redefinir.vue";
+import redefinir from "@/views/Redefinir.vue";
 import Inicio from "@/views/Inicio.vue";
 import Home from "@/views/Home.vue";
 import Perfil from "@/views/Perfil.vue";
@@ -11,7 +11,7 @@ import CriarProva from "@/components/telaHome/Provas/CriarProva.vue";
 import CriarAlternativa from "@/components/telaHome/Alternativas/CriarAlternativa.vue";
 import QuestaoDetalhes from "@/components/telaHome/Questoes/QuestaoDetalhes.vue";
 import telaConfim from "@/components/telaHome/telaConfim.vue";
-import telaConfimEdit from "@/components/telaHome/telaConfimEdit.vue";
+
 import telaConfimExcluir from "@/components/telaHome/telaConfimExcluir.vue";
 import telaErro from "@/components/telaHome/telaErro.vue";
 import TopicosDetalhes from "@/components/telaHome/Topicos/TopicosDetalhes.vue";
@@ -26,7 +26,7 @@ const routes = [
   { path: "/", name: "Inicio", component: Inicio },
   { path: "/Login", name: "Login", component: Login },
   { path: "/Logo", name: "Logo", component: Logo },
-  { path: "/Redefinir", name: "Redefinir", component: Redefinir },
+  { path: "/redefinir", name: "redefinir", component: redefinir },
 
   {
     path: "/Home",
@@ -79,7 +79,7 @@ const routes = [
     beforeEnter: requireAuth,
   },
   { path: "/telaConfim", name: "telaConfim", component: telaConfim },
-  { path: "/telaConfimEdit", name: "telaConfimEdit", component: telaConfimEdit },
+
   { path: "/telaConfimExcluir", name: "telaConfimExcluir", component: telaConfimExcluir },
   { path: "/telaErro", name: "telaErro", component: telaErro },
   {
@@ -131,26 +131,30 @@ function isTokenExpired(token) {
 function requireAuth(to, from, next) {
   const token = localStorage.getItem("token");
   const perfil = localStorage.getItem("userPerfil"); 
-
-  if (!token && to.name !== "Login") {
- 
+  const id = localStorage.getItem("userId"); 
+  if (!token && to.name !== "Login" && to.name !== "redefinir") {
+    console.log(token);
+    console.log(id);
     router.push("/Login");
-  } else if (to.name !== "Login") {
+  } else if (to.name !== "Login" && to.name !== "redefinir") {
     if (isTokenExpired(token)) {
-      
+      console.log(id);
+      console.log(token);
       router.push("/Login");
     } else {
-     
+     console.log(token);
+     console.log(id);
       next();
     }
-  } else if (!token && to.name === "Login") {
- 
+  } else if (!token && to.name === "Login" && to.name !== "redefinir") {
+    console.log(token);
+    console.log(id);
     next();
   } else if (perfil !== "professor" && perfil !== "admin") {
    
     router.push("/Login");
   } else {
-  
+    console.log(id);
     next();
   }  
   

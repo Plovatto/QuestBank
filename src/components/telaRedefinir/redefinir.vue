@@ -128,7 +128,7 @@ export default defineComponent({
             progressVisible.value = true;
 
             axios
-                .put('https://api-quest-bank.vercel.app/reset', formData)
+                .put('https://api-quest-bank.vercel.app/user/esqueceuSenha', formData)
                 .then((response) => {
                     console.log(response.data);
 

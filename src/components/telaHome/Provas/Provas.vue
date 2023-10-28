@@ -1,19 +1,23 @@
 <template>
-  <div class="carousel-container">
+  <div class="carousel-container mt-3">
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item>
         <v-card elevation="0" v-for="(prova, index) in provas" :key="index" class="card"
           :class="{ 'hovered': hover && hoveredCardIndex === index }" @mouseover="hover = true; hoveredCardIndex = index"
           @mouseleave="hover = false; hoveredCardIndex = null">
 
-          <div class="bg-white ma-3 elevation-3 rounded-xl text-center card-content">
-            <v-card-title class="text-center">
+          <div class="bg-white ma-3 elevation-3 rounded-xl text-start card-content">
+            <v-card-title class="text-start ">
               <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado }}</span>
             </v-card-title>
             <v-card-text class="text-caption">
               <span class="font-weight-bold">Tipo:</span> {{ prova.tipo }}<br>
-              <span class="font-weight-bold">Descrição:</span> {{ prova.descricao }}
+              <span class="font-weight-bold">Descrição:</span> {{ prova.descricao }} <br />
+              <span class="font-weight-bold">Criado por:</span>
+
+              {{ prova.criado_por.professor_nome }} <br />
             </v-card-text>
+
             <v-card-actions class="text-center">
               <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
                 @click="verDetalhes(prova)">Ver</v-btn>
@@ -61,7 +65,8 @@ export default {
     },
     async fetchProvas() {
       try {
-        const response = await axios.get("https://api-quest-bank.vercel.app/prova/listar");
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/?idProfessor=${userId}`);
         if (response.data.status === 'success') {
           this.provas = response.data.provas;
         } else {

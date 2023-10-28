@@ -12,7 +12,7 @@
         :error-messages="invalidPassword ? ['A Senha é obrigatória.'] : []" @input="handlePasswordInput"></v-text-field>
 
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-end">
-        <a @click="goToLogin" class="text-caption text-decoration-none text-blue" rel="noopener noreferrer"
+        <a @click="abrir" class="text-caption text-decoration-none text-blue" rel="noopener noreferrer"
           target="_blank">
           Esqueceu a senha?
         </a>
@@ -38,8 +38,9 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 axios.defaults.headers.common['x-access-token'] = localStorage.getItem('token');
 axios.defaults.headers.common['perfil'] = localStorage.getItem('userPerfil');
-
-
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.common['Content-Type','application/pdf'];
+axios.defaults.headers.common['mode']='no-cors';
 export default defineComponent({
   setup() {
     const route = useRoute();
@@ -71,12 +72,10 @@ export default defineComponent({
       }
     };
 
-    const goToLogin = () => {
-      if (route.path !== '/Redefinir') {
-        router.push('/Redefinir');
-      }
-    };
 
+    const abrir = () => {
+      router.push({ name: 'redefinir' });
+    };
     const login = () => {
       if (!email.value.trim() || !password.value.trim()) {
         invalidEmail.value = !email.value.trim();
@@ -137,12 +136,12 @@ export default defineComponent({
       invalidEmail,
       invalidPassword,
       invalid,
-      goToLogin,
+      abrir,
       progressVisible,
       handleEmailInput,
       handlePasswordInput,
       login,
     };
-  },
+  }
 });
 </script>

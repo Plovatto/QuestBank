@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel-container">
+  <div class="carousel-container mt-3">
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item v-for="(card, cardIndex) in cards" :key="cardIndex">
         <v-card elevation="0" :class="{ hovered: hoveredCardIndex === cardIndex }"
@@ -65,9 +65,8 @@ export default {
     },
     async fetchCards() {
       try {
-        const response = await axios.get(
-          "https://api-quest-bank.vercel.app/questao/listar"
-        );
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
         if (response.data.status === "success") {
           this.cards = response.data.questoes;
         } else {

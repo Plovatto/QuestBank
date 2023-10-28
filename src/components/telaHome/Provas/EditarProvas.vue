@@ -16,6 +16,15 @@
                     edição</v-btn>
             </v-card-actions>
         </v-card>
+        <v-dialog v-model="dialog" max-width="500" >
+        <v-card>
+            <br>
+            
+          <v-card-title style="font-size: 20px;" class="font-weight-bold text-blue ml-2 mr-4">Editada com sucesso!<v-icon class="ml-2" color="info" icon="mdi-check-circle" size="small"></v-icon></v-card-title>
+          <v-card-text  class="text-blue">A prova foi editada com sucesso.</v-card-text>
+        <br><br>
+        </v-card>
+      </v-dialog>
     </v-container>
 </template>
 <script>
@@ -28,22 +37,25 @@ export default {
     },
     data() {
         return {
-            id_prova: null,
+            id_prova: '',
             enunciado: '',
             tipo: '',
             descricao: '',
+            dialog: false,
+        dialogTitle: '',
+        dialogMessage: '',
         };
     },
     async mounted() {
-        this.id_prova = this.$route.params.id;
         await this.carregarDetalhesProva();
+        this.id_prova = this.$route.params.id;
     },
     methods: {
         async carregarDetalhesProva() {
             try {
-                const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/${this.id_prova}`);
+                const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/${this.$route.params.id}`);
                 if (response.data.status === 'success') {
-                    const prova = response.data.prova[0];
+                    const prova = response.data.prova;
                     this.enunciado = prova.enunciado;
                     this.tipo = prova.tipo;
                     this.descricao = prova.descricao;
@@ -61,19 +73,32 @@ export default {
                     tipo: this.tipo,
                     descricao: this.descricao,
                 };
+                console.log(dadosEditados);
 
-                const response = await axios.put(`https://api-quest-bank.vercel.app/editarProva/${this.id_prova}`, dadosEditados);
+                const response = await axios.put(`https://api-quest-bank.vercel.app/prova/atualizar/${this.id_prova}`, dadosEditados);
                 if (response.data.status === 'success') {
                     console.log('Prova editada com sucesso');
-                    this.$router.push('/telaConfimEdit');
+                    this.dialog = true;
+      setTimeout(() => {
+        this.redirectToDetails();
+      }, 2000);
+                   
                 } else {
                     console.error('Erro ao editar a prova:', response.data.msg);
                     this.$router.push('/telaErro');
                 }
             } catch (error) {
-                console.error('Erro ao editar a prova:', error);
+                if (error.response && error.response.status === 404) {
+                    console.error('Prova não encontrada');
+                    console.log(error);
+                    this.$router.push('/telaErro');
+                } else {
+                    console.error('Erro ao editar a prova:', error);
+                }
             }
-        },
+        },redirectToDetails() {
+  this.$router.push(`/provas-detalhes/${this.id_prova}`);
+},
     },
 };
 </script>

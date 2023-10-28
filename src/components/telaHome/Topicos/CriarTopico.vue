@@ -6,8 +6,7 @@
       <v-card-title class="text-blue font-weight-bold text-center text-h5">Adicionar Tópico</v-card-title>
       <v-card-text>
         <label>Disciplina</label>
-        <v-form ref="form" @submit="criarTopico">
-
+        <v-form ref="form" @submit.prevent="submitForm">
           <select class="mt-3 custom-select" id="disciplina" name="disciplina" v-model="selectedDisciplina">
             <option value="">Selecione uma disciplina</option>
             <option v-for="disciplina in disciplinas" :value="disciplina.nome">{{ disciplina.nome }}</option>
@@ -17,9 +16,10 @@
           <v-textarea placeholder="Exemplo: Operações matemáticas básicas" class="mt-3" rows="2" row-height="20"
             variant="solo" v-model="enunciado"></v-textarea>
         </v-form>
+        <v-alert v-if="showError" type="error" class="mt-3">{{ errorMessage }}</v-alert>
       </v-card-text>
       <v-card-actions class="d-flex justify-center align-itens-center">
-        <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="topico">Salvar</v-btn>
+        <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="submitForm">Salvar</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -41,6 +41,8 @@ export default defineComponent({
     const professorId = localStorage.getItem('userId');
     const route = useRoute();
     const router = useRouter();
+    const showError = ref(false);
+    const errorMessage = ref('');
 
     const criarTopico = async () => {
       const formData = {
@@ -57,12 +59,21 @@ export default defineComponent({
       }
     };
 
-    const topico = () => {
-      if (route.path !== '/telaConfim') {
-        criarTopico();
-        router.push('/telaConfim');
+    const submitForm = () => {
+      if (selectedDisciplina.value && enunciado.value) {
+        if (route.path !== '/telaConfim') {
+          criarTopico();
+          router.push('/telaConfim');
+        } else {
+          router.push('/telaErro');
+        }
       } else {
-        router.push('/telaErro');
+        errorMessage.value = 'Por favor, preencha todos os campos obrigatórios.';
+        showError.value = true;
+        setTimeout(() => {
+          showError.value = false;
+          errorMessage.value = '';
+        }, 3000);
       }
     };
 
@@ -82,7 +93,9 @@ export default defineComponent({
       selectedDisciplina,
       disciplinas,
       criarTopico,
-      topico,
+      submitForm,
+      showError,
+      errorMessage,
     };
   },
 });

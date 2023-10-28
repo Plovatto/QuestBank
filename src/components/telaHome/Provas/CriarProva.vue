@@ -6,13 +6,7 @@
       <v-card-title class="text-blue font-weight-bold text-center text-h5">Adicionar Prova</v-card-title>
       <v-card-text>
         <v-form ref="form" @submit="criarProva">
-          <div>
-            <label>Questões</label>
-            <br>
-            <select class="custom-select2 mt-3" v-model="selectedQuestoes" multiple>
-              <option v-for="questao in questoes" :value="questao">{{ questao.enunciado }}</option>
-            </select>
-          </div>
+
           <br><br>
           <label>Nome da prova</label>
           <v-textarea placeholder="Exemplo: Prova 1" class="mt-3" rows="2" row-height="20" variant="solo"
@@ -23,7 +17,20 @@
           <label>Descrição</label>
           <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
             variant="solo" v-model="descricao"></v-textarea>
+          <div>
+            <label>Questões </label>
+            <add />
+
+
+
+            <br>
+            <select class="custom-select2 mt-3" v-model="selectedQuestoes" multiple required>
+              <option v-for="questao in questoes" :value="questao">{{ questao.enunciado }}</option>
+            </select>
+
+          </div>
         </v-form>
+        <v-alert v-if="showError" type="error" class="mt-3">{{ errorMessage }}</v-alert>
       </v-card-text>
       <v-card-actions class="d-flex justify-center align-items-center">
         <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="prova">Salvar</v-btn>
@@ -37,10 +44,14 @@ import Nav from "@/components/Nav.vue";
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
-
+import add from "@/components/telaHome/Questoes/addQuestao.vue";
 export default defineComponent({
   components: {
-    Nav,
+    Nav, add
+  }, data() {
+    return {
+      mostrarH1: false
+    }
   },
   setup() {
     const selectedQuestoes = ref([]);
@@ -51,7 +62,9 @@ export default defineComponent({
     const professorId = localStorage.getItem('userId');
     const route = useRoute();
     const router = useRouter();
-
+    const showError = ref(false);
+    const exibirCriarQuestoes = ref(false);
+    const errorMessage = ref('');
     const criarProva = async () => {
       const idsDasQuestoes = selectedQuestoes.value.map(questao => questao.id_questao);
 
@@ -60,7 +73,7 @@ export default defineComponent({
         tipo: tipo.value,
         descricao: descricao.value,
         professorId: professorId,
-        questoes: idsDasQuestoes,
+        questoes: idsDasQuestoes
       };
 
       try {
@@ -73,17 +86,27 @@ export default defineComponent({
 
 
     const prova = () => {
-      if (route.path !== '/telaConfim') {
-        criarProva();
-        router.push('/telaConfim');
+      if (descricao.value && enunciado.value && tipo.value) {
+        if (route.path !== '/telaConfim') {
+          criarProva();
+          router.push('/telaConfim');
+        } else {
+          router.push('/telaErro');
+        }
       } else {
-        router.push('/telaErro');
+        errorMessage.value = 'Por favor, preencha todos os campos obrigatórios.';
+        showError.value = true;
+        setTimeout(() => {
+          showError.value = false;
+          errorMessage.value = '';
+        }, 3000);
       }
     };
 
     const carregarQuestoes = async () => {
       try {
-        const response = await axios.get('https://api-quest-bank.vercel.app/questao/listar');
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
         questoes.value = response.data.questoes;
       } catch (error) {
         console.error('Erro ao carregar questões:', error);
@@ -97,10 +120,13 @@ export default defineComponent({
       enunciado,
       tipo,
       descricao,
+
       professorId,
       prova,
       criarProva,
       questoes,
+      showError,
+      errorMessage,
     };
   },
 });

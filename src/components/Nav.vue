@@ -7,9 +7,9 @@
     </v-app-bar-title>
 
     <template v-slot:append>
-      <v-icon @click="Irhome" color="blue">mdi-close-circle</v-icon>
+      <v-icon @click="voltarParaTelaAnterior" color="blue" size="x-large">mdi-rotate-left</v-icon>
 
-
+      <v-icon class="ml-3" icon @click="Irhome" color="blue" size="x-large">mdi-close-circle</v-icon>
     </template>
   </v-app-bar>
 </template>
@@ -22,20 +22,18 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
 
+    const voltarParaTelaAnterior = () => {
+      router.go(-1);
+    };
     const Irhome = () => {
       if (route.path !== '/Home') {
         router.push('/Home');
-      }
-
-    }; return {
-      Irhome,
+      }};
+    return {
+      voltarParaTelaAnterior,Irhome
     };
-
-  }
+  },
 });
-
-
 </script>
-
 
 

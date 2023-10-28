@@ -1,11 +1,10 @@
 <template>
-  <div class="carousel-container" @mouseenter="showButtons = true" @mouseleave="showButtons = false"
-    @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
-    <div class="carousel-wrapper" ref="carousel">
-      <div class="carousel">
-        <v-card v-for="(card, cardIndex) in visibleCards" :key="cardIndex" class="card" @mouseover="showButton = true"
-          @mouseleave="showButton = false" elevation="0">
-          <div class="bg-custom bg-white ma-3 elevation-3 rounded-xl card-content">
+  <div class="carousel-container mt-3">
+    <v-slide-group width="100%" v-model="model" show-arrows>
+      <v-slide-group-item v-for="(card, cardIndex) in cards" :key="cardIndex">
+        <v-card elevation="0" :class="{ hovered: hoveredCardIndex === cardIndex }"
+          @mouseover="hoveredCardIndex = cardIndex" @mouseleave="hoveredCardIndex = null">
+          <div class="bg-white ma-3 elevation-3 rounded-xl text-center card-content">
             <v-card-title class="text-left">
               <span class="font-weight-bold text-subtitle-2">{{ card.disciplina ? card.disciplina.nome_disciplina : 'N/A'
               }}</span>
@@ -14,21 +13,15 @@
               <span class="font-weight-bold">Tópico:</span> {{ card.enunciado }} <br>
               <span class="font-weight-bold">Criado por:</span> {{ card.usuario.nome_pessoa }} <br>
             </v-card-text>
+
             <v-card-actions class="text-center">
               <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
                 @click="verDetalhes(card)">Ver</v-btn>
-
             </v-card-actions>
           </div>
         </v-card>
-      </div>
-    </div>
-    <button class="carousel-button prev" @click="prevSlide" v-if="showButtons">
-      <v-icon color="white" icon="mdi-chevron-left"></v-icon>
-    </button>
-    <button class="carousel-button next" @click="nextSlide" v-if="showButtons">
-      <v-icon color="white" icon="mdi-chevron-right"></v-icon>
-    </button>
+      </v-slide-group-item>
+    </v-slide-group>
   </div>
 </template>
 
@@ -41,37 +34,28 @@ export default {
       model: 0,
       cards: [],
       hover: false,
-      hoveredCardIndex: null,
-      currentIndex: 0,
       itemsPerPage: 6,
-      showButton: false,
-      showButtons: window.innerWidth <= 768,
-      touchStartX: 0,
-      touchEndX: 0,
+
     };
   },
   computed: {
     numberOfSlides() {
-      return Math.ceil(this.cards.length / this.itemsPerPage);
+      return Math.ceil(this.provas.length / this.currentCardsPerPage);
     },
-    visibleCards() {
-      const start = this.currentIndex * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.cards.slice(start, end);
-    },
+    currentCardsPerPage() {
+      return 6;
+    }
   },
   mounted() {
     this.fetchCards();
-    this.checkScreenSize();
-    window.addEventListener("resize", this.checkScreenSize);
+
   },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.checkScreenSize);
-  },
+
   methods: {
     async fetchCards() {
       try {
-        const response = await axios.get("https://api-quest-bank.vercel.app/topico/listar");
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/?idProfessor=${userId}`);
         if (response.data.status === "success") {
           this.cards = response.data.topicos;
         } else {
@@ -82,44 +66,11 @@ export default {
       }
     },
 
-    prevSlide() {
-      if (this.currentIndex > 0) {
-        this.currentIndex--;
-      }
-    },
 
-    nextSlide() {
-      if (this.currentIndex < this.numberOfSlides - 1) {
-        this.currentIndex++;
-      }
-    },
     verDetalhes(topico) {
       this.$router.push({ name: 'TopicosDetalhes', params: { id: topico.id_topico } });
     },
-    checkScreenSize() {
-      this.showButtons = window.innerWidth <= 768;
-      this.itemsPerPage = this.showButtons ? 1 : 6;
-    },
 
-    onTouchStart(event) {
-      this.touchStartX = event.touches[0].clientX;
-    },
-
-    onTouchMove(event) {
-      this.touchEndX = event.touches[0].clientX;
-    },
-
-    onTouchEnd() {
-      const touchThreshold = 50;
-
-      if (this.touchStartX - this.touchEndX > touchThreshold) {
-
-        this.nextSlide();
-      } else if (this.touchEndX - this.touchStartX > touchThreshold) {
-
-        this.prevSlide();
-      }
-    },
   },
 };
 </script>
