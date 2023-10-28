@@ -23,13 +23,13 @@
           <br>
           <div>
             <v-row>
-              <v-col cols="3">
+              <v-col cols="7">
 <br>
-                <v-card-title class="text-blue font-weight-bold mt-1">Alternativas 1</v-card-title>
+                <v-card-title class="text-blue font-weight-bold mt-1">Alternativas</v-card-title>
 
 
               </v-col>
-              <v-col cols="2"><br>
+              <v-col cols="1"><br>
                 <alternativa class="mt-4" />
               </v-col>
             </v-row>
