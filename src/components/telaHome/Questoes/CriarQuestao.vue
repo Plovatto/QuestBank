@@ -4,8 +4,8 @@
     <v-container>
       <Nav />
       <v-card elevation="0">
-        <v-card-title class="text-blue font-weight-bold text-center text-h5">Adicionar Questão</v-card-title>
-        <br />
+        <v-card-title class="text-blue font-weight-bold text-center text-h6">Adicionar Questão</v-card-title>
+        <br /><br>
         <v-card-text>
 
           <label>Enunciado</label>
@@ -43,6 +43,7 @@
         </v-card-text>
         <v-card-actions class="d-flex justify-center align-items-center">
           <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="questao">Salvar</v-btn>
+          <v-btn :height="50" :width="240" class="bg-red rounded-pill text-h6" @click="limparCampos">Limpar Campos</v-btn>
         </v-card-actions>
       </v-card>
     </v-container>
@@ -51,10 +52,11 @@
 
 <script>
 import Nav from "@/components/Nav.vue";
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import add from "@/components/telaHome/Topicos/addTopico.vue";
+
 export default defineComponent({
   components: {
     Nav, add
@@ -73,14 +75,45 @@ export default defineComponent({
     const topicos = ref([]);
     const showError = ref(false);
     const errorMessage = ref('');
-    function handleFileChange(event) {
+
+    const saveFormDataToLocalStorage = () => {
+      const formData = {
+        enunciado: enunciado.value,
+        topico_enunciado: topico_enunciado.value,
+        tipo: tipo.value,
+        Enunciado_imagem: imagemFileName.value,
+        nivel: nivel.value,
+        resposta: resposta.value,
+        professor_nome: professor_nome,
+      };
+      localStorage.setItem('questao_form_data', JSON.stringify(formData));
+    };
+
+    
+    watch([enunciado, topico_enunciado, tipo, imagemFileName, nivel, resposta], () => {
+     
+      saveFormDataToLocalStorage();
+    });
+
+    const formDataFromLocalStorage = localStorage.getItem('questao_form_data');
+    if (formDataFromLocalStorage) {
+      const formData = JSON.parse(formDataFromLocalStorage);
+      enunciado.value = formData.enunciado;
+      topico_enunciado.value = formData.topico_enunciado;
+      tipo.value = formData.tipo;
+      imagemFileName.value = formData.Enunciado_imagem;
+      nivel.value = formData.nivel;
+      resposta.value = formData.resposta;
+    }
+
+    const handleFileChange = (event) => {
       const file = event.target.files[0];
       if (file) {
         imagemFileName.value = file.name;
       } else {
         imagemFileName.value = "";
       }
-    }
+    };
 
     const carregarTopicos = async () => {
       try {
@@ -99,7 +132,6 @@ export default defineComponent({
     onMounted(() => {
       carregarTopicos();
     });
-    console.log("Tópico selecionado:", topico_enunciado.value);
 
     const adicionarQuestao = async () => {
       try {
@@ -113,6 +145,17 @@ export default defineComponent({
           professor_nome: professor_nome,
         });
         console.log("Questão criada:", response.data);
+
+    
+        localStorage.removeItem('questao_form_data');
+
+        limparCampos();
+
+        if (route.path !== '/telaConfim') {
+          router.push('/telaConfim');
+        } else {
+          router.push('/telaErro');
+        }
       } catch (error) {
         console.error("Erro ao criar questão:", error);
       }
@@ -120,12 +163,7 @@ export default defineComponent({
 
     const questao = () => {
       if (nivel.value && enunciado.value && tipo.value && topico_enunciado.value) {
-        if (route.path !== '/telaConfim') {
-          adicionarQuestao();
-          router.push('/telaConfim');
-        } else {
-          router.push('/telaErro');
-        }
+        adicionarQuestao();
       } else {
         errorMessage.value = 'Por favor, preencha todos os campos obrigatórios.';
         showError.value = true;
@@ -134,6 +172,16 @@ export default defineComponent({
           errorMessage.value = '';
         }, 3000);
       }
+    };
+
+    const limparCampos = () => {
+      enunciado.value = "";
+      topico_enunciado.value = "";
+      tipo.value = "";
+      imagemFileName.value = "";
+      nivel.value = "";
+      resposta.value = "";
+      localStorage.removeItem('questao_form_data');
     };
 
     return {
@@ -150,6 +198,7 @@ export default defineComponent({
       questao,
       showError,
       errorMessage,
+      limparCampos,
     };
   },
 });

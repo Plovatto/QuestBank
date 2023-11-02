@@ -32,6 +32,9 @@
 import axios from "axios";
 
 export default {
+  props: {
+    selectedOption2: String, 
+  },
   data() {
     return {
       model: 0,
@@ -50,6 +53,10 @@ export default {
   mounted() {
     this.fetchCards();
     this.startAutoSlide();
+  },  watch: {
+    selectedOption2() {
+      this.fetchCards();
+    },
   },
   methods: {
     verDetalhes(questao) {
@@ -65,17 +72,28 @@ export default {
     },
     async fetchCards() {
       try {
-        const userId = localStorage.getItem('userId');
-        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
-        if (response.data.status === "success") {
-          this.cards = response.data.questoes;
-        } else {
-          console.error("Erro", response.data.msg);
-        }
-      } catch (error) {
-        console.error("Erro", error);
+    if (this.selectedOption2 === "userId") {
+      const userId = localStorage.getItem('userId');
+      const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
+      if (response.data.status === "success") {
+        this.cards = response.data.questoes;
+      } else {
+        console.error("Error", response.data.msg);
       }
-    },
+    } else if (this.selectedOption2 === "todos") {
+      const response = await axios.get("https://api-quest-bank.vercel.app/questoes/listar");
+      console.log('API Response:', response); 
+      if (response.data.status === "success") {
+        this.cards = response.data.questoes;
+      } else {
+        console.error("Error", response.data.msg);
+      }
+    }
+  } catch (error) {
+    console.error("Error", error);
+  }
+
+}
   },
 };
 </script>

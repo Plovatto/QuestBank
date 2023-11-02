@@ -1,5 +1,7 @@
-<template>
-  <div class="carousel-container mt-3">
+<template> 
+
+ <div class="carousel-container mt-3">
+ 
     <v-slide-group width="100%" v-model="model" show-arrows>
       <v-slide-group-item v-for="(card, cardIndex) in cards" :key="cardIndex">
         <v-card elevation="0" :class="{ hovered: hoveredCardIndex === cardIndex }"
@@ -28,14 +30,19 @@
 <script>
 import axios from "axios";
 
+
+
 export default {
+  props: {
+    selectedOption: String, 
+  },
   data() {
     return {
       model: 0,
       cards: [],
       hover: false,
       itemsPerPage: 6,
-
+ 
     };
   },
   computed: {
@@ -44,33 +51,49 @@ export default {
     },
     currentCardsPerPage() {
       return 6;
-    }
+    },
+
   },
   mounted() {
     this.fetchCards();
-
+  },
+  watch: {
+    selectedOption() {
+      this.fetchCards();
+    },
+   
   },
 
   methods: {
     async fetchCards() {
-      try {
-        const userId = localStorage.getItem('userId');
-        const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/?idProfessor=${userId}`);
-        if (response.data.status === "success") {
-          this.cards = response.data.topicos;
-        } else {
-          console.error("Error fetching cards:", response.data.msg);
-        }
-      } catch (error) {
-        console.error("Error fetching cards:", error);
+  console.log('fetchCards called with selectedOption:', this.selectedOption);
+  try {
+    if (this.selectedOption === "userId") {
+      const userId = localStorage.getItem('userId');
+      const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/?idProfessor=${userId}`);
+      console.log('Response from API:', response);
+      if (response.data.status === "success") {
+        this.cards = response.data.topicos;
+      } else {
+        console.error("Error", response.data.msg);
       }
-    },
-
-
+    } else if (this.selectedOption === "todos") {
+  const response = await axios.get(`https://api-quest-bank.vercel.app/topicos/listar/`);
+  console.log('Response from API:', response);
+  console.log('Response data:', response.data);
+  if (response.data.status === "sucess") {
+    this.cards = response.data.topicos;
+  } else {
+    console.error("Error ", response.data.msg);
+  }
+}
+  } catch (error) {
+    console.error("Error", error);
+  }
+},
     verDetalhes(topico) {
       this.$router.push({ name: 'TopicosDetalhes', params: { id: topico.id_topico } });
     },
-
   },
 };
 </script>

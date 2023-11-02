@@ -1,17 +1,30 @@
 <template>
   <v-app>
-    <v-app-bar flat>
-      <img height="30" src="@/assets/logo.svg" class="ml-8">
-      <v-app-bar-title class="text-blue text-h5 font-weight-bold">
-        Quest Bank
-      </v-app-bar-title>
-    </v-app-bar>
+    <v-app-bar flat style="position: fixed;">
+  <img height="30" src="@/assets/logo.svg" class="ml-3">
+  <v-app-bar-title id="ap" class="text-blue text-h5 font-weight-bold">
+    Quest Bank
+  </v-app-bar-title>
+  <v-btn @click="home" id="ap" class="text-blue d-sm-hidden" value="recent">
+    <v-icon class="mr-1" color="blue">mdi-home</v-icon>
+    Inicio
+  </v-btn>
+  <v-btn @click="perfil"  id="ap2" value="nearby" class="text-blue d-sm-hidden">
+    <v-icon class="mr-1" color="blue">mdi-account</v-icon>
+    Perfil
+  </v-btn>
+</v-app-bar>
+
+
 
     <v-main>
       <v-container>
         <v-row align="center">
           <v-col cols="auto">
-            <h3 class="ml-5 text-black text-h6 font-weight-bold">Minhas Avaliações</h3>
+            <select class="text-black text-h6 font-weight-bold" v-model="selectedOption3">
+          <option class="text-black text-h6 font-weight-bold" value="userId">Minhas Provas</option>
+          <option value="todos">Todas as Provas</option>
+        </select>
           </v-col>
           <v-col cols="3" sm="auto" lg="3" class="d-flex justify-end"></v-col>
           <v-col cols="auto" class="d-flex justify-end">
@@ -19,9 +32,13 @@
           </v-col>
           <v-col cols="12" sm="6" md="6" class="d-flex justify-end">
             <v-card-text>
-              <v-text-field class="text-capitalize" :loading="loading" width="500" elevation="2" density="compact"
-                variant="outlined" label="Pesquisar" append-inner-icon="mdi-magnify" single-line hide-details rounded="lg"
-                v-model="searchTerm" @input="onSearchInput"></v-text-field>
+              <v-text-field class="text-capitalize pl-3" :loading="loading" width="500" elevation="2" density="compact"
+  variant="outlined" label="Pesquisar" append-inner-icon="mdi-magnify" single-line hide-details rounded="lg"
+  v-model="searchTerm" @input="onSearchInput">
+  <v-btn class="bg-red mt-1 mr-3" width="20" height="20" icon @click="clearSearchTerm" v-show="searchTerm">
+    <v-icon size="x-small">mdi-close</v-icon>
+  </v-btn>
+</v-text-field>
             </v-card-text>
           </v-col>
         </v-row>
@@ -33,16 +50,16 @@
       </v-row>
 
       <v-row v-if="searchTerm.length === 0" class="carousel-container">
-        <Provas />
+        <Provas :selectedOption3="selectedOption3"/>
       </v-row>
 
-      <v-container fluid>
-        <v-row>
-          <v-col v-for="(result, index) in searchResults" :key="index" cols="12" sm="6" md="4" lg="2" class="my-2">
-            <ResultadoPesquisa  class="marg" :result="result" :hovered="hoveredCardIndex === index" @verDetalhes="verDetalhes" />
-          </v-col>
-        </v-row>
-      </v-container>
+      <v-container fluid v-if="searchTerm.length !== 0">
+      <v-row>
+        <v-col v-for="(result, index) in searchResults" :key="index" cols="12" sm="6" md="4" lg="2" class="my-2">
+          <ResultadoPesquisa class="marg" :result="result" :hovered="hoveredCardIndex === index" @verDetalhes="verDetalhes" />
+        </v-col>
+      </v-row>
+    </v-container>
 
 <br>
 
@@ -52,7 +69,10 @@
       <v-container>
         <v-row align="center">
           <v-col cols="auto">
-            <h3 class="ml-5 text-black text-h6 font-weight-bold">Minhas Questões</h3>
+            <select class="text-black text-h6 font-weight-bold" v-model="selectedOption2">
+          <option class="text-black text-h6 font-weight-bold" value="userId">Minhas Questões</option>
+          <option value="todos">Todas as Questões</option>
+        </select>
           </v-col>
           <v-col cols="3" sm="auto" lg="3" class="d-flex justify-end"></v-col>
           <v-col cols="auto" class="d-flex justify-end">
@@ -60,10 +80,16 @@
           </v-col>
           <v-col cols="12" sm="6" md="6" class="d-flex justify-end">
             <v-card-text>
-              <v-text-field class="text-capitalize" :loading="loading2" width="500" elevation="2" density="compact"
-                variant="outlined" label="Pesquisar" append-inner-icon="mdi-magnify" single-line hide-details rounded="lg"
-                v-model="searchTerm2" @input="onSearchInput2"></v-text-field>
-            </v-card-text>
+              <v-text-field class="text-capitalize pl-3 " :loading="loading2" width="500" elevation="2" density="compact"
+  variant="outlined" label="Pesquisar" append-inner-icon="mdi-magnify" single-line hide-details rounded="lg"
+  v-model="searchTerm2" @input="onSearchInput2">
+
+    <v-btn  class="bg-red mt-1 mr-3" width="20" height="20" icon @click="clearSearchTerm2" v-show="searchTerm2">
+      <v-icon size="x-small" >mdi-close</v-icon>
+    </v-btn>
+
+</v-text-field>
+</v-card-text>
           </v-col>
         </v-row>
       </v-container>
@@ -74,10 +100,10 @@
       </v-row>
 
       <v-row v-if="searchTerm2.length === 0" class="carousel-container">
-        <Questoes />
-      </v-row>
+        <Questoes  :selectedOption2="selectedOption2"/>
+      </v-row> 
 
-      <v-container fluid>
+      <v-container fluid v-if="searchTerm2.length !== 0">
         <v-row>
           <v-col v-for="(result2, index) in searchResults2" :key="index" cols="12" sm="6" md="4" lg="2" class="my-2">
             <ResultadoPesquisa2 class="marg" :result2="result2" :hovered="hoveredCardIndex2 === index" @verDetalhes="verDetalhes2" />
@@ -91,8 +117,11 @@
 
       <v-container>
         <v-row align="center">
-          <v-col cols="auto">
-            <h3 class="ml-5 text-black text-h6 font-weight-bold">Meus Tópicos</h3>
+          <v-col  cols="auto">
+            <select class="text-black text-h6 font-weight-bold" v-model="selectedOption">
+          <option class="text-black text-h6 font-weight-bold" value="userId">Meus Tópicos</option>
+          <option value="todos">Todos os Tópicos</option>
+        </select>
           </v-col>
           <v-col cols="3" sm="auto" lg="3" class="d-flex justify-end"></v-col>
           <v-col cols="auto" class="d-flex justify-end">
@@ -100,9 +129,12 @@
           </v-col>
           <v-col cols="12" sm="6" md="6" class="d-flex justify-end">
             <v-card-text>
-              <v-text-field class="text-capitalize" :loading="loading3" width="500" elevation="2" density="compact"
+              <v-text-field class="text-capitalize pl-3" :loading="loading3" width="500" elevation="2" density="compact"
                 variant="outlined" label="Pesquisar" append-inner-icon="mdi-magnify" single-line hide-details rounded="lg"
-                v-model="searchTerm3" @input="onSearchInput3"></v-text-field>
+                v-model="searchTerm3" @input="onSearchInput3"><v-btn  class="bg-red mt-1 mr-3" width="20" height="20" icon @click="clearSearchTerm3" v-show="searchTerm3">
+      <v-icon size="x-small" >mdi-close</v-icon>
+    </v-btn></v-text-field>
+                
             </v-card-text>
           </v-col>
         </v-row>
@@ -115,10 +147,10 @@
 
 
       <v-row v-if="searchTerm3.length === 0" class="carousel-container">
-        <Topicos />
+        <Topicos :selectedOption="selectedOption" />
       </v-row>
 
-      <v-container fluid >
+      <v-container fluid v-if="searchTerm3.length !== 0">
         <v-row>
           <v-col v-for="(result3, index) in searchResults3" :key="index" cols="12" sm="6" md="4" lg="2" class="my-2">
             <ResultadoPesquisa3 class="marg" :result3="result3" :hovered3="hoveredCardIndex3 === index" @verDetalhes="verDetalhes3" />
@@ -135,7 +167,7 @@
 
 
 
-<navBar/>
+
     </v-main>
   </v-app>
 </template>
@@ -151,7 +183,7 @@ import addTopico from '@/components/telaHome/Topicos/addTopico.vue';
 import ResultadoPesquisa from '@/components/telaHome/Provas/ResultadoPesquisa.vue';
 import ResultadoPesquisa2 from '@/components/telaHome/Questoes/ResultadoPesquisa2.vue';
 import ResultadoPesquisa3 from '@/components/telaHome/Topicos/ResultadoPesquisa3.vue';
-import navBar from '@/components/navBar.vue';
+
 
 import { defineComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -160,7 +192,7 @@ export default defineComponent({
   components: {
     addProvas,
     Provas,
-    navBar,
+    
     addQuestao,
     Questoes,
     Topicos,
@@ -171,12 +203,16 @@ export default defineComponent({
   },
   data() {
     return {
+      showClearButton: false,
+      selectedOption: 'userId',
+      selectedOption2: 'userId',
+      selectedOption3: 'userId',
       searchTerm: '',
       searchResults: [],
       loading: false,
       hoveredCardIndex: null,
       showError: false,
-
+      searchText: '',
       searchTerm2: '',
       searchResults2: [],
       loading2: false,
@@ -209,27 +245,36 @@ export default defineComponent({
     },
   },
   methods: {
-    async performSearch() {
-      if (this.searchTerm !== '') {
-        this.loading = true;
-        try {
-          const response = await axios.get(`https://api-quest-bank.vercel.app/prova/buscar/${this.searchTerm}`);
+    clearSearchTerm() {
+    this.searchTerm = '';
+  },
+  clearSearchTerm2() {
+    this.searchTerm2 = '';
+  },
+  clearSearchTerm3() {
+    this.searchTerm3 = '';
+  },
+  async performSearch() {
+  if (this.searchTerm !== '') {
+    this.loading = true;
+    try {
+      const response = await axios.get(`https://api-quest-bank.vercel.app/prova/buscar/${this.searchTerm}`);
 
-          if (response.data.status === 'success') {
-            this.searchResults = response.data.provas;
-          } else {
-            console.error('Erro na pesquisa:', response.data.msg);
-          }
-        } catch (error) {
-          console.error('Erro na pesquisa:', error);
-        } finally {
-          this.loading = false;
-          this.showErrorMessageAfterDelay(4000);
-        }
+      if (response.data.status === 'success') {
+        this.searchResults = response.data.provas;
+        this.showError = this.searchResults.length === 0; 
       } else {
-        this.searchResults = [];
+        console.error('Erro na pesquisa:', response.data.msg);
       }
-    },
+    } catch (error) {
+      console.error('Erro na pesquisa:', error);
+    } finally {
+      this.loading = false;
+    }
+  } else {
+    this.searchResults = [];
+  }
+},
 
 
     async performSearch2() {
@@ -299,24 +344,50 @@ export default defineComponent({
         this.showError2 = this.searchResults2.length === 0;
       }, delay2);
     },
-
     onSearchInput() {
-      if (this.searchTerm === '') {
-        this.showProvas = true;
-      }
-      this.performSearch();
-    },
+    this.searchText = this.searchTerm;
+
+    if (this.searchTerm === '') {
+        this.showProvas = true; 
+        this.searchResults = []; 
+    } else {
+        this.performSearch(); 
+    }
+},
     onSearchInput2() {
       if (this.searchTerm2 === '') {
         this.showQuestoes = true;
       }
       this.performSearch2();
     },
+  },setup(){
+    const route = useRoute();
+    const router = useRouter();
+
+    const perfil = () => {
+      if (route.path !== '/Perfil') {
+        router.push('/Perfil');
+      }
+    };
+
+    const home = () => {
+      if (route.path !== '/Home') {
+        router.push('/Home');
+      }
+    };
+    return {
+      perfil,
+      home,
+    };
   }
 
 });
 </script>
 <style>
+  #ap2{
+  
+    margin-right: 40px;
+  }
 @media (max-width: 560px) {
 
 
@@ -328,6 +399,18 @@ export default defineComponent({
 @media (max-width: 450px) {
   .marg {
     margin-left:4rem;
+  }
+}
+@media (max-width: 480px) {
+#ap{
+    font-size: 11px; 
+    width: 60px;
+    margin-right:10px;
+  }
+  #ap2{
+    font-size: 11px; 
+    width: 60px;
+    margin-right: 14px;
   }
 }
 

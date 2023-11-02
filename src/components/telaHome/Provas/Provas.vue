@@ -33,6 +33,9 @@
 import axios from 'axios';
 
 export default {
+  props: {
+    selectedOption3: String,
+  },
   data() {
     return {
       model: 0,
@@ -53,6 +56,10 @@ export default {
   mounted() {
     this.fetchProvas();
     this.startAutoSlide();
+  }, watch: {
+    selectedOption3() {
+      this.fetchProvas();
+    },
   },
   methods: {
     verDetalhes(prova) {
@@ -65,15 +72,25 @@ export default {
     },
     async fetchProvas() {
       try {
-        const userId = localStorage.getItem('userId');
-        const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/?idProfessor=${userId}`);
-        if (response.data.status === 'success') {
-          this.provas = response.data.provas;
-        } else {
-          console.error('Erro', response.data.msg);
+        if (this.selectedOption3 === "userId") {
+          const userId = localStorage.getItem('userId');
+          const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/?idProfessor=${userId}`);
+          if (response.data.status === "success") {
+            this.provas = response.data.provas;
+          } else {
+            console.error("Error", response.data.msg);
+          }
+        } else if (this.selectedOption3 === "todos") {
+          const response = await axios.get("https://api-questbankv2.onrender.com/provas/listar");
+          console.log('API Response:', response);
+          if (response.data.status === "success") {
+            this.provas = response.data.provas;
+          } else {
+            console.error("Error", response.data.msg);
+          }
         }
       } catch (error) {
-        console.error('Erro', error);
+        console.error("Error", error);
       }
     }
   }

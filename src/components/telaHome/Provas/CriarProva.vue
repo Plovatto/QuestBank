@@ -3,9 +3,9 @@
   <br>
   <v-container class="mt-8">
     <v-card elevation="0">
-      <v-card-title class="text-blue font-weight-bold text-center text-h5">Adicionar Prova</v-card-title>
+      <v-card-title class="text-blue font-weight-bold text-center text-h6">Adicionar Prova</v-card-title>
       <v-card-text>
-        <v-form ref="form" @submit="criarProva">
+        <v-form ref="form" @submit="prova">
 
           <br><br>
           <label>Nome da prova</label>
@@ -18,22 +18,20 @@
           <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
             variant="solo" v-model="descricao"></v-textarea>
           <div>
-            <label>Questões </label>
+            <label>Questões</label>
             <add />
-
-
 
             <br>
             <select class="custom-select2 mt-3" v-model="selectedQuestoes" multiple required>
               <option v-for="questao in questoes" :value="questao">{{ questao.enunciado }}</option>
             </select>
-
           </div>
         </v-form>
         <v-alert v-if="showError" type="error" class="mt-3">{{ errorMessage }}</v-alert>
       </v-card-text>
       <v-card-actions class="d-flex justify-center align-items-center">
         <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="prova">Salvar</v-btn>
+        <v-btn :height="50" :width="240" class="bg-red rounded-pill text-h6" @click="limparCampos">Limpar Campos</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -41,17 +39,13 @@
 
 <script>
 import Nav from "@/components/Nav.vue";
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import add from "@/components/telaHome/Questoes/addQuestao.vue";
 export default defineComponent({
   components: {
     Nav, add
-  }, data() {
-    return {
-      mostrarH1: false
-    }
   },
   setup() {
     const selectedQuestoes = ref([]);
@@ -63,8 +57,42 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const showError = ref(false);
-    const exibirCriarQuestoes = ref(false);
     const errorMessage = ref('');
+
+    const limparCampos = () => {
+      enunciado.value = '';
+      tipo.value = '';
+      descricao.value = '';
+      selectedQuestoes.value = [];
+    };
+
+    watch([enunciado, tipo, descricao, selectedQuestoes], () => {
+      saveFormDataToLocalStorage();
+    });
+
+    const saveFormDataToLocalStorage = () => {
+      const formData = {
+        enunciado: enunciado.value,
+        tipo: tipo.value,
+        descricao: descricao.value,
+        questoes: selectedQuestoes.value,
+      };
+      localStorage.setItem('prova_form_data', JSON.stringify(formData));
+    };
+
+    watch([enunciado, tipo, descricao, selectedQuestoes], () => {
+
+      saveFormDataToLocalStorage();
+    });
+    const formDataFromLocalStorage = localStorage.getItem('prova_form_data');
+    if (formDataFromLocalStorage) {
+      const formData = JSON.parse(formDataFromLocalStorage);
+      enunciado.value = formData.enunciado;
+      tipo.value = formData.tipo;
+      descricao.value = formData.descricao;
+      selectedQuestoes.value = formData.questoes;
+    }
+
     const criarProva = async () => {
       const idsDasQuestoes = selectedQuestoes.value.map(questao => questao.id_questao);
 
@@ -79,20 +107,24 @@ export default defineComponent({
       try {
         const response = await axios.post('https://api-quest-bank.vercel.app/prova/adicionar', formData);
         console.log('Prova criada:', response.data);
+
+        limparCampos();
+
+        localStorage.removeItem('prova_form_data');
+
+        if (route.path !== '/telaConfim') {
+          router.push('/telaConfim');
+        } else {
+          router.push('/telaErro');
+        }
       } catch (error) {
         console.error('Erro ao criar prova:', error);
       }
     };
 
-
     const prova = () => {
       if (descricao.value && enunciado.value && tipo.value) {
-        if (route.path !== '/telaConfim') {
-          criarProva();
-          router.push('/telaConfim');
-        } else {
-          router.push('/telaErro');
-        }
+        criarProva();
       } else {
         errorMessage.value = 'Por favor, preencha todos os campos obrigatórios.';
         showError.value = true;
@@ -120,17 +152,17 @@ export default defineComponent({
       enunciado,
       tipo,
       descricao,
-
       professorId,
       prova,
-      criarProva,
       questoes,
       showError,
       errorMessage,
+      limparCampos,
     };
   },
 });
 </script>
+
 <style>
 .custom-select2 {
   width: 100%;
@@ -144,4 +176,4 @@ export default defineComponent({
   color: #9c9c9c;
   cursor: pointer;
 }
-</style> 
+</style>
