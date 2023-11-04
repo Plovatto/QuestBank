@@ -11,7 +11,7 @@ import CriarProva from "@/components/telaHome/Provas/CriarProva.vue";
 import CriarAlternativa from "@/components/telaHome/Alternativas/CriarAlternativa.vue";
 import QuestaoDetalhes from "@/components/telaHome/Questoes/QuestaoDetalhes.vue";
 import telaConfim from "@/components/telaHome/telaConfim.vue";
-
+import email from "@/components/telaRedefinir/enviaremail.vue";
 import telaConfimExcluir from "@/components/telaHome/telaConfimExcluir.vue";
 import telaErro from "@/components/telaHome/telaErro.vue";
 import TopicosDetalhes from "@/components/telaHome/Topicos/TopicosDetalhes.vue";
@@ -113,7 +113,11 @@ const routes = [
     name: 'EditarQuestao',
     component: EditarQuestao,
   },
-  
+  {
+    path: '/email',
+    name: 'email',
+    component: email,
+  },
 ];
 
 const router = createRouter({
@@ -132,11 +136,11 @@ function requireAuth(to, from, next) {
   const token = localStorage.getItem("token");
   const perfil = localStorage.getItem("userPerfil"); 
   const id = localStorage.getItem("userId"); 
-  if (!token && to.name !== "Login" && to.name !== "redefinir") {
+  if (!token && to.name !== "Login" && to.name !== "redefinir" && to.name !== "email") {
     console.log(token);
     console.log(id);
     router.push("/Login");
-  } else if (to.name !== "Login" && to.name !== "redefinir") {
+  } else if (to.name !== "Login" && to.name !== "redefinir" && to.name !== "email") {
     if (isTokenExpired(token)) {
       console.log(id);
       console.log(token);
@@ -146,7 +150,7 @@ function requireAuth(to, from, next) {
      console.log(id);
       next();
     }
-  } else if (!token && to.name === "Login" && to.name !== "redefinir") {
+  } else if (!token && to.name === "Login" && to.name !== "redefinir" && to.name !== "email") {
     console.log(token);
     console.log(id);
     next();

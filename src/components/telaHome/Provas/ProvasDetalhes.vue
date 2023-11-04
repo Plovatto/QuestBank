@@ -47,7 +47,7 @@
       <br><v-row justify="center"> 
         <v-col cols="auto">
           <v-btn class="bg-green" elevation="2" rounded="xl" min-width="210" width="100%" height="40" >
-            <a v-if="prova && prova.id_prova" class="bg-green" style="text-decoration: none;" elevation="2" rounded="xl" min-width="210" width="100%" height="40" :href="`https://api-questbankv2.onrender.com/prova/download/${prova.id_prova}`">Gerar PDF</a>
+            <a v-if="prova && prova.id_prova" class="bg-green" style="text-decoration: none;" elevation="2" rounded="xl" min-width="210" width="100%" height="40" :href="`http://localhost:3000/prova/download/${prova.id_prova}`">Gerar PDF</a>
           </v-btn>
         </v-col>
       </v-row>
@@ -71,7 +71,7 @@
 <script>
 import Nav from '@/components/Nav.vue';
 import axios from 'axios';
-
+//https://api-questbankv2.onrender.com
 export default {
   components: {
     Nav,

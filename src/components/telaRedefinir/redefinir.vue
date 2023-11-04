@@ -1,4 +1,4 @@
-<template>
+<template><br><br>
     <h4 class="text-h6 text-blue font-weight-bold text-center">Redefina sua senha!</h4>
     <h4 class="mt-2 text-center font-weight-medium text-break">Confirme seu email para poder redefinir sua senha</h4>
     <v-container>
@@ -23,12 +23,15 @@
                     :error-messages="invalidConfirmPassword ? ['Confirmação de senha é obrigatória.'] : []"
                     @input="handleConfirmPasswordInput"></v-text-field>
 
+                <v-text-field class="mt-1"  density="compact" variant="solo" v-model="codigo"  :error-messages="invalidCodigo ? ['O Email é obrigatório.'] : []"
+                    @input="handleCodigo" label="Código de verificação" required></v-text-field>
+
                 <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-end">
                     <h5 class="text-caption text-decoration-none text-blue" rel="noopener noreferrer" target="_blank">
                         Caracteres não permitidos: */.,;:...
                     </h5>
                 </div>
-
+<v-snackbar v-model="snackbar" :timeout="5000" :color="snackbarColor">{{ snackbarText }}</v-snackbar>
                 <v-container class="text-center">
                     <v-container class="mt-auto d-flex justify-center align-self-center">
                         <v-btn class="mt-8 text-capitalize text-h6 bg-blue font-weight-black" block rounded="xl"
@@ -37,6 +40,7 @@
                     <v-progress-circular class="mt-2" indeterminate color="blue"
                         v-if="progressVisible"></v-progress-circular>
                 </v-container>
+                
             </v-form>
         </v-container>
     </v-container>
@@ -48,7 +52,6 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 
 export default defineComponent({
-
     setup() {
         const route = useRoute();
         const router = useRouter();
@@ -58,10 +61,11 @@ export default defineComponent({
         const email = ref('');
         const novaSenha = ref('');
         const confirmSenha = ref('');
+        const codigo = ref(''); 
         const invalidEmail = ref(false);
         const invalidPassword = ref(false);
         const invalidConfirmPassword = ref(false);
-
+        const invalidCodigo = ref(false);
         const validateEmail = (email) => {
             const emailRegex = /.+/;
             return emailRegex.test(email);
@@ -74,7 +78,11 @@ export default defineComponent({
                 invalidEmail.value = false;
             }
         };
-
+        const handleCodigo = () => {
+            if (codigo.value.trim()) {
+                invalidCodigo.value = false;
+            }
+        };
         const handlePasswordInput = () => {
             if (novaSenha.value.trim()) {
                 invalidPassword.value = false;
@@ -88,8 +96,8 @@ export default defineComponent({
         };
 
         const close = () => {
-            if (route.path !== '/Login') {
-                router.push('/Login');
+            if (route.path !== '/email') {
+                router.push('/email');
             }
         };
 
@@ -123,12 +131,13 @@ export default defineComponent({
                 email: email.value,
                 novaSenha: novaSenha.value,
                 confirmSenha: confirmSenha.value,
+                codigo: codigo.value, 
             };
 
             progressVisible.value = true;
 
             axios
-                .put('https://api-quest-bank.vercel.app/user/esqueceuSenha', formData)
+                .put('https://api-quest-bank.vercel.app/user/reset/senha', formData)
                 .then((response) => {
                     console.log(response.data);
 
@@ -140,9 +149,15 @@ export default defineComponent({
                 .catch((error) => {
                     progressVisible.value = false;
                     console.error(error);
+                    snackbarText.value = 'Email ou código incorreto';
+                    snackbarColor.value = 'red';
+                    snackbar.value = true;
                 });
         };
 
+        const snackbar = ref(false);
+        const snackbarText = ref('');
+        const snackbarColor = ref('');
 
         return {
             visible,
@@ -150,6 +165,7 @@ export default defineComponent({
             email,
             novaSenha,
             confirmSenha,
+            codigo, 
             invalidEmail,
             invalidPassword,
             invalidConfirmPassword,
@@ -162,6 +178,9 @@ export default defineComponent({
             invalidPassword,
             handlePasswordInput,
             togglePasswordVisibility,
+            snackbar,
+            snackbarText,
+            snackbarColor,
         };
     },
 });

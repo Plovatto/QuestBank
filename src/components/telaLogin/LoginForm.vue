@@ -74,7 +74,7 @@ export default defineComponent({
 
 
     const abrir = () => {
-      router.push({ name: 'redefinir' });
+      router.push({ name: 'email' });
     };
     const login = () => {
       if (!email.value.trim() || !password.value.trim()) {

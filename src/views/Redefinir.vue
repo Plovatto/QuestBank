@@ -6,14 +6,12 @@
       </template>
     </v-app-bar>
 
-    <v-main>
-      <v-app>
-        <v-container>
-          <Logo />
+
+        
+         
           <redefinir />
-        </v-container>
-      </v-app>
-    </v-main>
+      
+  
   </v-container>
 </template>
 

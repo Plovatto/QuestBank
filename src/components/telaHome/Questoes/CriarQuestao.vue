@@ -41,9 +41,9 @@
 
           </v-form>
         </v-card-text>
-        <v-card-actions class="d-flex justify-center align-items-center">
+        <v-card-actions class="d-flex justify-center flex-column align-items-center">
           <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="questao">Salvar</v-btn>
-          <v-btn :height="50" :width="240" class="bg-red rounded-pill text-h6" @click="limparCampos">Limpar Campos</v-btn>
+          <br><v-btn :height="50" :width="240" class="bg-red rounded-pill text-h6" @click="limparCampos">Limpar Campos</v-btn>
         </v-card-actions>
       </v-card>
     </v-container>

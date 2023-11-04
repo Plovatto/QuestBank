@@ -24,17 +24,19 @@ export default {
   },
   methods: {
     voltar() {
-      this.$router.push({ name: 'Home' });
+      this.voltarParaTelaAnterior();
+    },
+    voltarParaTelaAnterior() {
+      this.mostrarMensagem = false;
+      history.go(-1);
     },
   },
   components: {
     Logo,
   },
   mounted() {
-    
     setTimeout(() => {
-      this.mostrarMensagem = false;
-      this.$router.push({ name: 'Home' }); 
+      this.voltarParaTelaAnterior();
     }, 3000);
   },
 };
