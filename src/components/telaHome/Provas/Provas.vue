@@ -7,21 +7,24 @@
           @mouseleave="hover = false; hoveredCardIndex = null">
 
           <div class="bg-white ma-3 elevation-3 rounded-xl text-start card-content">
-            <v-card-title class="text-start ">
-              <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado }}</span>
-            </v-card-title>
-            <v-card-text class="text-caption">
-              <span class="font-weight-bold">Tipo:</span> {{ prova.tipo }}<br>
-              <span class="font-weight-bold">Descrição:</span> {{ prova.descricao }} <br />
-              <span class="font-weight-bold">Criado por:</span>
+            <div class="card-text-content">
+              <v-card-title class="text-start ">
+                <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado }}</span>
+              </v-card-title>
+              <v-card-text class="text-caption">
+                <span class="font-weight-bold">Tipo:</span> {{ prova.tipo }}<br>
+                <span class="font-weight-bold">Descrição:</span> {{ prova.descricao }} <br />
+                <span class="font-weight-bold">Criado por:</span>
 
-              {{ prova.criado_por.professor_nome }} <br />
-            </v-card-text>
-
-            <v-card-actions class="text-center">
-              <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
-                @click="verDetalhes(prova)">Ver</v-btn>
-            </v-card-actions>
+                {{ prova.criado_por.professor_nome }} <br />
+              </v-card-text>
+            </div>
+            <div class="card-button-content">
+              <v-card-actions class="text-center">
+                <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
+                  @click="verDetalhes(prova)">Ver</v-btn>
+              </v-card-actions>
+            </div>
           </div>
         </v-card>
       </v-slide-group-item>
@@ -112,6 +115,7 @@ export default {
   justify-content: space-between;
   transition: transform 0.2s, box-shadow 0.2s;
   transform-origin: center;
+
 }
 
 .hovered {

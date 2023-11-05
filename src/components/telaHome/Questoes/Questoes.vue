@@ -4,7 +4,8 @@
       <v-slide-group-item v-for="(card, cardIndex) in cards" :key="cardIndex">
         <v-card elevation="0" :class="{ hovered: hoveredCardIndex === cardIndex }"
           @mouseover="hoveredCardIndex = cardIndex" @mouseleave="hoveredCardIndex = null">
-          <div class="bg-white ma-3 elevation-3 rounded-xl text-center card-content">
+          <div class="bg-white ma-3 elevation-3 rounded-xl text-start card-content">
+    <div class="card-text-content">
             <v-card-title class="text-center"> </v-card-title>
             <v-card-text class="text-caption text-left">
               <span class="font-weight-bold">Tópico:</span>
@@ -16,11 +17,11 @@
               <br />
               <span class="font-weight-bold">Criado por:</span>
               {{ card.professor.professor_nome }} <br />
-            </v-card-text>
+            </v-card-text></div> <div class="card-button-content">
             <v-card-actions class="text-center">
               <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
                 @click="verDetalhes(card)">Ver</v-btn>
-            </v-card-actions>
+            </v-card-actions></div>
           </div>
         </v-card>
       </v-slide-group-item>
@@ -104,15 +105,10 @@ export default {
   overflow: hidden;
 }
 
-.card-content {
-  height: 310px;
-  width: 210px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s, box-shadow 0.2s;
-  transform-origin: center;
+.card-text-content {
+  overflow: auto; 
+  flex-grow: 1; 
+
 }
 
 .hovered {

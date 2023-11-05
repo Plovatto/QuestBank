@@ -5,25 +5,27 @@
       <v-card-title class="text-blue font-weight-bold text-center text-hg">Adicionar Alternativa</v-card-title>
       <br>
       <v-card-text>
-        <v-form ref="form" @submit.prevent="adicionarAlternativa">
-          <label>Questão </label> <add />
-          <select class="custom-select mt-2" id="questao" name="questao" v-model="questaoSelecionada">
-            <option value="">Selecione uma questão</option>
-            <option v-for="questao in questoes" :value="questao.id_questao">{{ questao.enunciado }}</option>
+
+        <v-form ref="form" @submit="criarAlternativa">
+          <label>Questão</label>
+          <select class="custom-select mt-2" id="questao" name="questao" v-model="enunciadoQuestao">
+            <option value="">Selecione uma questao</option>
+            <option v-for="questao in questoes" :value="{ id_questao: questao.id_questao, enunciado: questao.enunciado }">
+              {{ questao.enunciado
+              }}</option>
           </select>
           <br><br>
           <label>Enunciado da Alternativa</label>
-          <v-textarea placeholder="Exemplo: a) 2 + 2 = 4" class="mt-3" rows="2" row-height="20" variant="solo" v-model="enunciadoAlternativa"></v-textarea>
-          <v-checkbox color="success" v-model="correta" label="Marque se for a alternativa correta" class="pr-0" true-value="true" false-value="false"></v-checkbox>
-          <br>
-          
-         
+          <v-textarea placeholder="Exemplo: a) 2 + 2 = 4" class="mt-3" rows="2" row-height="20" variant="solo"
+            v-model="enunciado"></v-textarea>
+          <v-checkbox color="success" v-model="correta" label="Marque se for a alternativa correta" class="pr-0"
+            true-value="1" false-value="0"></v-checkbox>
         </v-form>
-        <v-alert v-if="showError" type="error" class="mt-3">{{ errorMessage }}</v-alert>
       </v-card-text>
       <v-card-actions class="d-flex justify-center flex-column align-itens-center">
-        <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="adicionarAlternativa">Salvar</v-btn> 
-        <br><v-btn :height="50" :width="240" class="bg-red rounded-pill text-h6" @click="limparCampos">Limpar Campos</v-btn>
+        <v-btn :height="50" :width="240" class="bg-blue rounded-pill text-h6" @click="adicionarAlternativa">Salvar</v-btn>
+        <br><v-btn :height="50" :width="240" class="bg-red rounded-pill text-h6" @click="limparCampos">Limpar
+          Campos</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -37,13 +39,13 @@ import Nav from '@/components/Nav.vue';
 import add from "@/components/telaHome/Questoes/addQuestao.vue";
 export default defineComponent({
   components: {
-    Nav,add
+    Nav, add
   },
   setup() {
-    const questaoSelecionada = ref(null);
+    const enunciadoQuestao = ref(null);
     const questoes = ref([]);
-    const enunciadoAlternativa = ref('');
-    const correta = ref(false);
+    const enunciado = ref('');
+    const correta = ref('');
     const route = useRoute();
     const router = useRouter();
     const showError = ref(false);
@@ -52,25 +54,25 @@ export default defineComponent({
 
     const saveFormDataToLocalStorage = () => {
       const formData = {
-        questaoSelecionada: questaoSelecionada.value,
-        enunciadoAlternativa: enunciadoAlternativa.value,
+        enunciadoQuestao: enunciadoQuestao.value,
+        enunciado: enunciado.value,
         correta: correta.value,
       };
       localStorage.setItem('alternativa_form_data', JSON.stringify(formData));
     };
 
-    
-    watch([questaoSelecionada, enunciadoAlternativa, correta], () => {
-     
+
+    watch([enunciadoQuestao, enunciado, correta], () => {
+
       saveFormDataToLocalStorage();
     });
 
-    
+
     const formDataFromLocalStorage = localStorage.getItem('alternativa_form_data');
     if (formDataFromLocalStorage) {
       const formData = JSON.parse(formDataFromLocalStorage);
-      questaoSelecionada.value = formData.questaoSelecionada;
-      enunciadoAlternativa.value = formData.enunciadoAlternativa;
+      enunciadoQuestao.value = formData.enunciadoQuestao;
+      enunciado.value = formData.enunciado;
       correta.value = formData.correta;
     }
 
@@ -90,27 +92,31 @@ export default defineComponent({
 
 
     const limparCampos = () => {
-      questaoSelecionada.value = null;
-      enunciadoAlternativa.value = '';
+      enunciadoQuestao.value = null;
+      enunciado.value = '';
       correta.value = false;
     };
 
     const adicionarAlternativa = async () => {
-      if (questaoSelecionada && enunciadoAlternativa && correta !== null) {
+      if (enunciadoQuestao.value && enunciado.value && correta.value !== null) {
+        const enunciadoQuestaoValue = enunciadoQuestao.value ? enunciadoQuestao.value.enunciado : '';
+
+
         const formData = {
-          id_questao: questaoSelecionada,
-          enunciado: enunciadoAlternativa,
+          enunciado: enunciado.value,
           correta: correta,
+          enunciadoQuestao: enunciadoQuestaoValue,
+
         };
 
         try {
           const response = await axios.post('https://api-quest-bank.vercel.app/alternativa/adicionar', formData);
           console.log('Alternativa criada:', response.data);
 
-      
+
           localStorage.removeItem('alternativa_form_data');
 
-          
+
           limparCampos();
         } catch (error) {
           console.error('Erro ao criar alternativa:', error);
@@ -126,11 +132,12 @@ export default defineComponent({
     };
 
     return {
-      questaoSelecionada,
+      enunciado,
       questoes,
-      enunciadoAlternativa,
       correta,
       adicionarAlternativa,
+
+      enunciadoQuestao,
       limparCampos,
       showError,
       errorMessage,
