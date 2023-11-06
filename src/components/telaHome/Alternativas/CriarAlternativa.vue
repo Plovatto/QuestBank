@@ -42,7 +42,7 @@ export default defineComponent({
     Nav, add
   },
   setup() {
-    const enunciadoQuestao = ref(null);
+    const enunciadoQuestao = ref();
     const questoes = ref([]);
     const enunciado = ref('');
     const correta = ref('');
@@ -76,10 +76,14 @@ export default defineComponent({
       correta.value = formData.correta;
     }
 
+    console.log('enunciadoQuestao:', enunciadoQuestao.value);
+    console.log('enunciado:', enunciado.value);
+    console.log('correta:', correta.value);
+
     const carregarQuestoes = async () => {
       try {
         const userId = localStorage.getItem('userId');
-        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
+        const response = await axios.get(`https://api-quest-bank.vercel.app/questoes/listar`);
         questoes.value = response.data.questoes;
       } catch (error) {
         console.error('Erro ao carregar questões:', error);
@@ -99,25 +103,23 @@ export default defineComponent({
 
     const adicionarAlternativa = async () => {
       if (enunciadoQuestao.value && enunciado.value && correta.value !== null) {
-        const enunciadoQuestaoValue = enunciadoQuestao.value ? enunciadoQuestao.value.enunciado : '';
-
+        const enunciadoQuestaoValue = enunciadoQuestao.value.enunciado;
+        const corretaValue = correta.value === '1' ? '1' : '0';
 
         const formData = {
           enunciado: enunciado.value,
-          correta: correta,
+          correta: corretaValue,
           enunciadoQuestao: enunciadoQuestaoValue,
-
         };
+
+        console.log('formData:', formData);
 
         try {
           const response = await axios.post('https://api-quest-bank.vercel.app/alternativa/adicionar', formData);
           console.log('Alternativa criada:', response.data);
 
-
           localStorage.removeItem('alternativa_form_data');
 
-
-          limparCampos();
         } catch (error) {
           console.error('Erro ao criar alternativa:', error);
         }
@@ -130,6 +132,8 @@ export default defineComponent({
         }, 3000);
       }
     };
+
+
 
     return {
       enunciado,
