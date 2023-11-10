@@ -17,15 +17,25 @@
           <label>Descrição</label>
           <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
             variant="solo" v-model="descricao"></v-textarea>
-          <div>
+         
             <label>Questões</label>
             <add />
 
             <br>
-            <select class="custom-select2 mt-3" v-model="selectedQuestoes" multiple required>
-              <option v-for="questao in questoes" :value="questao">{{ questao.enunciado }}</option>
-            </select>
-          </div>
+            <div>
+<br>
+
+    <v-combobox variant="solo" v-model="selectedQuestoes" :items="questoes" :item-text="itemText" item-value="id_questao" label="Selecione as questões" multiple></v-combobox>
+   
+    <div v-if="selectedQuestoes.length > 0"> 
+      <div class="elevation-2" style="border: solid 1px #e6e6e6; padding: 8px; height: auto;">
+      <br><label class="ml-3 text-blue font-weight-bold ">Questões adicionadas:</label><br>
+      <br>
+      <ol class="ml-7">
+        <li class="mb-4" v-for="questao in selectedQuestoes" :key="questao">{{ questao }}</li>
+      </ol><br>
+    </div></div><br>
+  </div>
         </v-form>
         <v-alert v-if="showError" type="error" class="mt-3">{{ errorMessage }}</v-alert>
       </v-card-text>
@@ -48,8 +58,7 @@ export default defineComponent({
     Nav, add
   },
   setup() {
-    const selectedQuestoes = ref([]);
-    const questoes = ref([]);
+
     const enunciado = ref('');
     const tipo = ref('');
     const descricao = ref('');
@@ -58,6 +67,12 @@ export default defineComponent({
     const router = useRouter();
     const showError = ref(false);
     const errorMessage = ref('');
+    const questoes = ref([
+      { enunciado: 'Questão 1', id_questao: 1 },
+      { enunciado: 'Questão 2', id_questao: 2 },
+    
+    ]);
+    const selectedQuestoes = ref([]);
 
     const limparCampos = () => {
       enunciado.value = '';
@@ -65,11 +80,12 @@ export default defineComponent({
       descricao.value = '';
       selectedQuestoes.value = [];
     };
-
-    watch([enunciado, tipo, descricao, selectedQuestoes], () => {
-      saveFormDataToLocalStorage();
-    });
-
+    const itemText = (item) => {
+  if (typeof item === 'object' && item !== null && 'enunciado' in item) {
+    return item.enunciado;
+  }
+  return item;
+};
     const saveFormDataToLocalStorage = () => {
       const formData = {
         enunciado: enunciado.value,
@@ -92,35 +108,34 @@ export default defineComponent({
       descricao.value = formData.descricao;
       selectedQuestoes.value = formData.questoes;
     }
-
     const criarProva = async () => {
-      const idsDasQuestoes = selectedQuestoes.value.map(questao => questao.id_questao);
+  const enunciadosDasQuestoes = selectedQuestoes.value.map(questao => questao);
 
-      const formData = {
-        enunciado: enunciado.value,
-        tipo: tipo.value,
-        descricao: descricao.value,
-        professorId: professorId,
-        questoes: idsDasQuestoes
-      };
+  const formData = {
+    enunciado: enunciado.value,
+    tipo: tipo.value,
+    descricao: descricao.value,
+    professorId: professorId,
+    questoes: enunciadosDasQuestoes
+  };
 
-      try {
-        const response = await axios.post('https://api-quest-bank.vercel.app/prova/adicionar', formData);
-        console.log('Prova criada:', response.data);
+  try {
+    const response = await axios.post('https://api-quest-bank.vercel.app/prova/adicionar', formData);
+    console.log('Prova criada:', response.data);
 
-        limparCampos();
+    limparCampos();
 
-        localStorage.removeItem('prova_form_data');
+    localStorage.removeItem('prova_form_data');
 
-        if (route.path !== '/telaConfim') {
-          router.push('/telaConfim');
-        } else {
-          router.push('/telaErro');
-        }
-      } catch (error) {
-        console.error('Erro ao criar prova:', error);
-      }
-    };
+    if (route.path !== '/telaConfim') {
+      router.push('/telaConfim');
+    } else {
+      router.push('/telaErro');
+    }
+  } catch (error) {
+    console.error('Erro ao criar prova:', error);
+  }
+};
 
     const prova = () => {
       if (descricao.value && enunciado.value && tipo.value) {
@@ -135,15 +150,15 @@ export default defineComponent({
       }
     };
 
-    const carregarQuestoes = async () => {
-      try {
-        const userId = localStorage.getItem('userId');
-        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
-        questoes.value = response.data.questoes;
-      } catch (error) {
-        console.error('Erro ao carregar questões:', error);
-      }
-    };
+const carregarQuestoes = async () => {
+  try {
+    
+    const response = await axios.get(`https://api-quest-bank.vercel.app/questoes/listar/`);
+    questoes.value = response.data.questoes.map(questao => questao.enunciado);
+  } catch (error) {
+    console.error('Erro ao carregar questões:', error);
+  }
+};
 
     carregarQuestoes();
 
@@ -157,7 +172,8 @@ export default defineComponent({
       questoes,
       showError,
       errorMessage,
-      limparCampos,
+      limparCampos, questoes,
+      selectedQuestoes, itemText,
     };
   },
 });
@@ -165,15 +181,7 @@ export default defineComponent({
 
 <style>
 .custom-select2 {
-  width: 100%;
-  height: 125px;
-  padding: 8px;
-  font-size: 16px;
-  border: 0.4px groove #eeeeee;
-  border-radius: 4px;
-  background-color: #ffffff;
-  box-shadow: 0px 2px 4px 0px rgba(4, 4, 3, 0.25);
-  color: #9c9c9c;
-  cursor: pointer;
+background-color: #0099ff;
+
 }
 </style>
