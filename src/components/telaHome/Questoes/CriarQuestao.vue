@@ -32,9 +32,7 @@
             <v-select class="mt-3" label="Selecione o nível" v-model="nivel" :items="['Fácil', 'Médio', 'Difícil']"
               variant="solo"></v-select>
 
-            <label>Imagem</label>
-            <v-file-input class="mt-3" type="file" label="Selecione a imagem" variant="solo"
-              v-on:change="handleFileChange($event)"></v-file-input>
+         
 
 
             <v-alert v-if="showError" type="error" class="mt-3">{{ errorMessage }}</v-alert>
@@ -71,7 +69,7 @@ export default defineComponent({
     const nivel = ref("");
     const resposta = ref("");
     const professor_nome = localStorage.getItem("userName") || "";
-    const imagemFileName = ref("");
+
     const topicos = ref([]);
     const showError = ref(false);
     const errorMessage = ref('');
@@ -81,7 +79,7 @@ export default defineComponent({
         enunciado: enunciado.value,
         topico_enunciado: topico_enunciado.value,
         tipo: tipo.value,
-        Enunciado_imagem: imagemFileName.value,
+   
         nivel: nivel.value,
         resposta: resposta.value,
         professor_nome: professor_nome,
@@ -90,7 +88,7 @@ export default defineComponent({
     };
 
     
-    watch([enunciado, topico_enunciado, tipo, imagemFileName, nivel, resposta], () => {
+    watch([enunciado, topico_enunciado, tipo, nivel, resposta], () => {
      
       saveFormDataToLocalStorage();
     });
@@ -101,20 +99,12 @@ export default defineComponent({
       enunciado.value = formData.enunciado;
       topico_enunciado.value = formData.topico_enunciado;
       tipo.value = formData.tipo;
-      imagemFileName.value = formData.Enunciado_imagem;
+ 
       nivel.value = formData.nivel;
       resposta.value = formData.resposta;
     }
 
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        imagemFileName.value = file.name;
-      } else {
-        imagemFileName.value = "";
-      }
-    };
-
+   
     const carregarTopicos = async () => {
       try {
         const userId = localStorage.getItem('userId');
@@ -139,7 +129,7 @@ export default defineComponent({
           enunciado: enunciado.value,
           topico_enunciado: topico_enunciado.value,
           tipo: tipo.value,
-          Enunciado_imagem: imagemFileName.value,
+    
           nivel: nivel.value,
           resposta: resposta.value,
           professor_nome: professor_nome,
@@ -178,7 +168,6 @@ export default defineComponent({
       enunciado.value = "";
       topico_enunciado.value = "";
       tipo.value = "";
-      imagemFileName.value = "";
       nivel.value = "";
       resposta.value = "";
       localStorage.removeItem('questao_form_data');
@@ -188,13 +177,13 @@ export default defineComponent({
       enunciado,
       topico_enunciado,
       tipo,
-      Enunciado_imagem,
+      
       nivel,
       resposta,
       professor_nome,
-      imagemFileName,
+     
       topicos,
-      handleFileChange,
+ 
       questao,
       showError,
       errorMessage,

@@ -17,16 +17,40 @@
           <label>Descrição</label>
           <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
             variant="solo" v-model="descricao"></v-textarea>
-         
-            <label>Questões</label>
-            <add />
+            <v-row>
+  <v-col cols="11">
+    <label>Filtro nível</label>
+    <v-select  class="mt-3 mb-0" label="Filtrar por nível" v-model="nivel" :items="Object.keys(niveis)" variant="solo" @change="carregarQuestoes"></v-select>
+  </v-col>
+  <v-col cols="1" class="d-flex align-center justify-center">
+    <v-icon style=" height: 12px;" color="red" @click="nivel= ''" v-if="nivel" size="small" >mdi-close-circle</v-icon>
+  </v-col>
+</v-row>
 
-            <br>
-            <div>
-<br>
-
-    <v-combobox variant="solo" v-model="selectedQuestoes" :items="questoes" :item-text="itemText" item-value="id_questao" label="Selecione as questões" multiple></v-combobox>
+<v-row class="mt-0 pt-0">
+  <v-col cols="11">
+    <label class="mt-0">Filtro tópico </label>
    
+    <select density="compact" class="custom-select mt-3" v-model="topico">
+      <option value="">Filtrar por tópico</option>
+      <option v-for="topico in topicos" :value="topico.id_topico">{{ topico.enunciado }}</option>
+    </select>
+  </v-col>
+  <v-col cols="1" class="d-flex align-center justify-center">
+    <v-icon style=" height: 95px;" color="red" @click="topico= ''" v-if="topico" size="small" >mdi-close-circle</v-icon>
+  </v-col>
+</v-row>
+
+<br><br>
+  <label>Questões</label>
+            <add />
+          
+
+            <div>
+
+
+    <v-combobox  v-if="nivel || topico" class="mt-3" color="info" clearable chips multiple variant="solo" v-model="selectedQuestoes" :items="questoes" :item-text="itemText" item-value="id_questao" label="Selecione as questões"></v-combobox>
+    <v-combobox  v-if="!(nivel || topico)"  variant="solo" v-model="selectedQuestoes" :items="questoes" :item-text="itemText" item-value="id_questao" label="Selecione as questões" multiple></v-combobox>
     <div v-if="selectedQuestoes.length > 0"> 
       <div class="elevation-2" style="border: solid 1px #e6e6e6; padding: 8px; height: auto;">
       <br><label class="ml-3 text-blue font-weight-bold ">Questões adicionadas:</label><br>
@@ -49,7 +73,7 @@
 
 <script>
 import Nav from "@/components/Nav.vue";
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, ref, watch, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import add from "@/components/telaHome/Questoes/addQuestao.vue";
@@ -58,7 +82,9 @@ export default defineComponent({
     Nav, add
   },
   setup() {
-
+    const nivel = ref('');
+    const topico = ref('');
+    const topicos = ref([]);
     const enunciado = ref('');
     const tipo = ref('');
     const descricao = ref('');
@@ -68,18 +94,23 @@ export default defineComponent({
     const showError = ref(false);
     const errorMessage = ref('');
     const questoes = ref([
-      { enunciado: 'Questão 1', id_questao: 1 },
-      { enunciado: 'Questão 2', id_questao: 2 },
+ 
     
     ]);
     const selectedQuestoes = ref([]);
-
+   const niveis = {
+  'Fácil': 'facil',
+  'Médio': 'medio',
+  'Difícil': 'dificil'
+};const nivelSemAcento = niveis[nivel.value];
     const limparCampos = () => {
-      enunciado.value = '';
-      tipo.value = '';
-      descricao.value = '';
-      selectedQuestoes.value = [];
-    };
+  enunciado.value = '';
+  tipo.value = '';
+  descricao.value = '';
+  nivel.value = '';
+  topico.value = '';
+  selectedQuestoes.value = [];
+};
     const itemText = (item) => {
   if (typeof item === 'object' && item !== null && 'enunciado' in item) {
     return item.enunciado;
@@ -136,7 +167,19 @@ export default defineComponent({
     console.error('Erro ao criar prova:', error);
   }
 };
-
+const carregarTopicos = async () => {
+      try {
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/?idProfessor=${userId}`);
+        if (response.data.status === "success") {
+          topicos.value = response.data.topicos;
+        } else {
+          console.error("Erro ao carregar tópicos:", response.data.msg);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar tópicos:", error);
+      }
+    };onMounted(carregarTopicos);
     const prova = () => {
       if (descricao.value && enunciado.value && tipo.value) {
         criarProva();
@@ -148,9 +191,7 @@ export default defineComponent({
           errorMessage.value = '';
         }, 3000);
       }
-    };
-
-const carregarQuestoes = async () => {
+    };const carregarQuestoes = async () => {
   try {
     
     const response = await axios.get(`https://api-quest-bank.vercel.app/questoes/listar/`);
@@ -158,9 +199,41 @@ const carregarQuestoes = async () => {
   } catch (error) {
     console.error('Erro ao carregar questões:', error);
   }
+};carregarQuestoes();
+    const carregarQuestoes2 = async () => {
+  try {
+    let url = 'https://api-quest-bank.vercel.app/questoes/listar/';
+    let urlNivel;
+    let urlTopico;
+    if (nivel.value) {
+      urlNivel = `https://api-quest-bank.vercel.app/questao/listar/nivel/?nivel=${nivel.value}`;
+    }
+    if (topico.value) {
+      urlTopico = `https://api-quest-bank.vercel.app/questao/listar/topico/?idTopico=${topico.value}`;
+    }
+
+    if (!nivel.value && !topico.value) {
+      const response = await axios.get(url);
+      questoes.value = response.data.questoes.map(questao => questao.enunciado);
+    } else {
+      const responseNivel = nivel.value ? await axios.get(urlNivel) : null;
+      const responseTopico = topico.value ? await axios.get(urlTopico) : null;
+
+      const questoesNivel = responseNivel ? responseNivel.data.questoes.map(questao => questao.enunciado) : [];
+      const questoesTopico = responseTopico ? responseTopico.data.questoes.map(questao => questao.enunciado) : [];
+
+      questoes.value = [...questoesNivel, ...questoesTopico];
+    }
+  } catch (error) {
+    console.error('Erro ao carregar questões:', error);
+  }
 };
 
-    carregarQuestoes();
+watch([nivel, topico], () => {
+  carregarQuestoes2();
+});
+
+
 
     return {
       selectedQuestoes,
@@ -173,7 +246,9 @@ const carregarQuestoes = async () => {
       showError,
       errorMessage,
       limparCampos, questoes,
-      selectedQuestoes, itemText,
+      selectedQuestoes, itemText,  nivel,
+      topico,
+      topicos,carregarTopicos, niveis,
     };
   },
 });
