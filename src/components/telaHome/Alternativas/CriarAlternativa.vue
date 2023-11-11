@@ -119,7 +119,11 @@ export default defineComponent({
           console.log('Alternativa criada:', response.data);
 
           localStorage.removeItem('alternativa_form_data');
-
+          if (route.path !== '/telaConfim') {
+      router.push('/telaConfim');
+    } else {
+      router.push('/telaErro');
+    }
         } catch (error) {
           console.error('Erro ao criar alternativa:', error);
         }

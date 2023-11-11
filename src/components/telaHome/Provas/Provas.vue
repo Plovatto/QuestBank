@@ -9,11 +9,11 @@
           <div class="bg-white ma-3 elevation-3 rounded-xl text-start card-content">
             <div class="card-text-content">
               <v-card-title class="text-start ">
-                <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado }}</span>
+                <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado}}</span>
               </v-card-title>
               <v-card-text class="text-caption">
                 <span class="font-weight-bold">Tipo:</span> {{ prova.tipo }}<br>
-                <span class="font-weight-bold">Descrição:</span> {{ prova.descricao }} <br />
+                <span class="font-weight-bold">Descrição:</span> {{ truncateText(prova.descricao),10 }} <br />
                 <span class="font-weight-bold">Criado por:</span>
 
                 {{ prova.criado_por.professor_nome }} <br />
@@ -64,7 +64,12 @@ export default {
       this.fetchProvas();
     },
   },
-  methods: {
+  methods: { truncateText(text, maxLength) {
+      if (text.length > maxLength) {
+        return text.substring(0, maxLength) + '...';
+      }
+      return text;
+    },
     verDetalhes(prova) {
       this.$router.push({ name: 'ProvasDetalhes', params: { id: prova.id_prova } });
     },

@@ -10,7 +10,7 @@
         <v-progress-circular v-if="isLoading" indeterminate color="blue"></v-progress-circular>
       </v-col>
         <v-card-text v-if="!isLoading && topico">
-          <p v-if="topico"><span class="text-blue font-weight-bold">ID do Tópico:</span> {{ topico.id_topico }}</p>
+        
           <p v-if="topico"><span class="text-blue font-weight-bold">Enunciado:</span> {{ topico.enunciado }}</p>
           <p v-if="topico"><span class="text-blue font-weight-bold">Criado por:</span> {{ topico.usuario.nome_pessoa }}
           </p>
@@ -20,14 +20,14 @@
         <br>
         <v-row justify="center">
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-blue" elevation="2" rounded="xl" max-width="500" width="100%" height="40">
+            <v-btn v-if="idAtual == idCriador"  class="bg-blue" elevation="2" rounded="xl" max-width="500" width="100%" height="40">
               <router-link v-if="topico" :to="'/editar-topico/' + topico.id_topico" class="bg-blue" elevation="2"
                 rounded="xl" max-width="500" width="100%" height="40"
                 style="color: #fff; text-decoration: none;">Editar</router-link>
             </v-btn>
           </v-col>
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-red" elevation="2" rounded="xl" max-width="500" width="100%" height="40"
+            <v-btn v-if="idAtual == idCriador"  class="bg-red" elevation="2" rounded="xl" max-width="500" width="100%" height="40"
               @click="confirmarExclusao(topico ? topico.id_topico : null)">Excluir</v-btn>
             <br><br></v-col>
         </v-row>
@@ -64,6 +64,7 @@ export default {
       topico: null,
       dialogExclusao: false,
       isLoading: true,
+      userId: localStorage.getItem('userId'),
     };
   },
   async mounted() {
@@ -77,6 +78,12 @@ export default {
         if (response.data.status === 'success') {
           this.topico = response.data.topico;
           this.isLoading = false;
+          this.idAtual = this.userId;
+      if (this.topico.usuario) {
+        this.idCriador = this.topico.usuario.id_pessoa;
+      }
+      console.log(this.idAtual);
+      console.log(this.idCriador);
         } else {
           console.error('Erro', response.data.msg);
         }

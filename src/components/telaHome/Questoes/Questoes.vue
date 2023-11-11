@@ -9,9 +9,9 @@
             <v-card-title class="text-center"> </v-card-title>
             <v-card-text class="text-caption text-left">
               <span class="font-weight-bold">Tópico:</span>
-              {{ card.topico.topico_enunciado }} <br />
+              {{ truncateText(card.topico.topico_enunciado),20 }} <br />
               <span class="font-weight-bold">Enunciado:</span>
-              {{ card.enunciado }} <br />
+              {{ truncateText(card.enunciado, 45) }} <br />
               <span class="font-weight-bold">Tipo:</span> {{ card.tipo }} <br />
               <span class="font-weight-bold">Nível:</span> {{ card.nivel }}
               <br />
@@ -59,7 +59,12 @@ export default {
       this.fetchCards();
     },
   },
-  methods: {
+  methods: { truncateText(text, maxLength) {
+      if (text.length > maxLength) {
+        return text.substring(0, maxLength) + '...';
+      }
+      return text;
+    },
     verDetalhes(questao) {
       this.$router.push({
         name: "QuestaoDetalhes",

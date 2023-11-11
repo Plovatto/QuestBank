@@ -18,10 +18,13 @@
         </a>
       </div>
 
+      <v-alert type="error" v-if="showInvalidAlert" class="mt-3">
+  Email ou senha inválidos
+</v-alert>
+
       <v-container class="text-center">
         <v-container class="mt-auto d-flex justify-center align-self-center"></v-container>
         <i class="input-icon uil uil-lock-alt"></i>
-        <h4 class="text-red error-message text-subtitle-1 " v-if="invalid">Email ou senha inválida</h4>
         <v-btn class="mt-5 text-capitalize text-h6 bg-blue font-weight-black" block rounded="xl" size="x-large"
           @click="login">
           Entrar
@@ -47,7 +50,7 @@ export default defineComponent({
     const router = useRouter();
     const progressVisible = ref(false);
     const progressDisplayTime = 2000;
-
+    const showInvalidAlert = ref(false);
     const visible = ref(false);
     const email = ref('');
     const password = ref('');
@@ -114,13 +117,20 @@ export default defineComponent({
               router.push('/Home');
               progressVisible.value = false;
             }, progressDisplayTime);
-          } else {
+          }else {
             console.log('Credenciais inválidas');
             invalid.value = true;
+
             progressVisible.value = false;
           }
         })
         .catch((error) => {
+          console.log('Erro da API:', error);
+          invalid.value = true;
+          showInvalidAlert.value = true;
+          setTimeout(() => {
+            showInvalidAlert.value = false;
+          }, 3000);
           progressVisible.value = false;
         });
     };
@@ -136,11 +146,12 @@ export default defineComponent({
       invalidEmail,
       invalidPassword,
       invalid,
+  login,
       abrir,
       progressVisible,
       handleEmailInput,
       handlePasswordInput,
-      login,
+      showInvalidAlert,
     };
   }
 });

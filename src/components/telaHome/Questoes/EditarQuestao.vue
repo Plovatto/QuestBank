@@ -83,7 +83,10 @@ export default {
         };
         reader.readAsDataURL(file);
       }
-    },
+    },redirectToDetails() {
+  console.log('Redirecionando para a tela anterior');
+  this.$router.go(-1);
+},
     async editarQuestao() {
       try {
         const dadosEditados = {

@@ -9,11 +9,11 @@
             <v-progress-circular v-if="isLoading" indeterminate color="blue"></v-progress-circular>
           </v-col>
         <v-card-text v-if="!isLoading && prova">
-          <p><span class="text-blue font-weight-bold">ID da Prova:</span> {{ prova.id_prova }}</p>
+         
           <p><span class="text-blue font-weight-bold">Nome da Prova:</span> {{ prova.enunciado }}</p>
           <p><span class="text-blue font-weight-bold">Criado por:</span> {{ prova.criado_por.professor_nome }}</p>
           <p><span class="text-blue font-weight-bold">Descrição:</span> {{ prova.descricao }}</p>
-
+ 
           <br>
          <p><span class="text-blue font-weight-bold">Questões:</span></p>
           <p v-for="questao in prova.questoes" :key="questao.questao_id">
@@ -22,6 +22,7 @@
   <p><span class="text-blue font-weight-bold">Resposta:</span> {{ questao.questao_resposta }}</p>
   <p><span class="text-blue font-weight-bold">Tipo:</span> {{ questao.questao_tipo }}</p>
   <p><span class="text-blue font-weight-bold">Nível:</span> {{ questao.questao_nivel }}</p>
+
   <p v-if="questao.topicos">
     <p v-if="questao.topicos.disciplina">
       <p><span class="text-blue font-weight-bold">Disciplina:</span> {{ questao.topicos.disciplina.questao_topico_disciplina_nome }}</p>
@@ -34,13 +35,32 @@
 <br>
         <v-row justify="center">
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-blue text-white"  elevation="2" rounded="xl" max-width="200" width="100%" height="40">
-              <router-link v-if="prova" :to="`/editar-provas/${prova.id_prova}`" style="color: #fff; text-decoration: none;">Editar</router-link>
-            </v-btn>
+            <v-btn
+            v-if="prova && prova.id_prova && idAtual == idCriador"
+    class="bg-blue text-white"
+    elevation="2"
+    rounded="xl"
+    max-width="200"
+    width="100%"
+    height="40"
+  >
+    <router-link :to="`/editar-provas/${prova.id_prova}`" style="color: #fff; text-decoration: none;">Editar</router-link>
+  </v-btn>
           </v-col>
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-red" elevation="2" rounded="xl" max-width="200" width="100%" height="40"  @click="confirmarExclusao(prova ? prova.id_prova : null)">Excluir</v-btn>
-          </v-col>
+            <v-btn
+            v-if="prova && prova.id_prova && idAtual == idCriador"
+            
+    class="bg-red"
+    elevation="2"
+    rounded="xl"
+    max-width="200"
+    width="100%"
+    height="40"
+    @click="confirmarExclusao(prova ? prova.id_prova : null)"
+  >
+    Excluir
+  </v-btn>          </v-col>
         </v-row>
       <br>
       </v-card> 
@@ -82,6 +102,7 @@ export default {
       prova: null,
       dialogExclusao: false,
       isLoading: true,
+      userId: localStorage.getItem('userId'),
     };
   },
   mounted() {
@@ -91,10 +112,17 @@ export default {
   methods: {
     async carregarDetalhesProva() {
       try {
+    
         const response = await axios.get(`https://api-quest-bank.vercel.app/prova/listar/${this.id_prova}`);
         if (response.data.status === 'success') {
           this.prova = response.data.prova;
-          this.isLoading = false;
+          this.isLoading = false;    
+          this.idAtual = this.userId;
+      if (this.prova.criado_por) {
+        this.idCriador = this.prova.criado_por.professor_pessoa_id_pessoa;
+      }
+      console.log(this.idAtual);
+      console.log(this.idCriador);
         } else {
           console.error('Erro ao carregar detalhes da prova:', response.data.msg);
         }
@@ -102,12 +130,17 @@ export default {
         console.error('Erro ao carregar detalhes da prova:', error);
       }
     },confirmarExclusao(idProva) {
-      this.prova.id_prova = idProva;
-      this.dialogExclusao = true;
-    },
-    async excluirProva(provaId) {
-      try {
-        const response = await axios.delete(`https://api-quest-bank.vercel.app/prova/deletar/${provaId}`);
+  if (this.prova) {
+    this.prova.id_prova = idProva;
+    this.dialogExclusao = true;
+  } else {
+    console.error('this.prova is null');
+  }
+},
+async excluirProva(provaId) {
+  try {
+  
+    const response = await axios.delete(`https://api-quest-bank.vercel.app/prova/deletar/${provaId}`);
         if (response.data.status === 'success') {
           this.$router.push('/telaConfimExcluir');
         } else {
@@ -117,7 +150,7 @@ export default {
       } catch (error) {
         console.error('Erro ao excluir a prova:', error);
       }
-    },
+},
     async gerarPDF(provaId) {
       try {
         const response = await axios.get(`https://api-questbankv2.onrender.com/prova/download/${provaId}`);

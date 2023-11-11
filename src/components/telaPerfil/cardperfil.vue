@@ -1,6 +1,6 @@
 <template>
   <div id="btn">
-    <v-container class="mt-8">
+    <v-container class="mt-1">
       <h5 class="ml-2 text-blue">Configurações do perfil</h5>
       <h6 class="ml-2 font-weight-medium">Alterar detalhes da conta</h6>
       <div class="mt-2 bg-white elevation-3 rounded-xl" height="700" width="190">
@@ -20,10 +20,10 @@
           </v-container>
         </v-card>
       </div>
-
-    </v-container><v-btn :height="50" :width="240" class="bg-blue rounded-pill text-overline font-weight-bold">SALVAR
-      ALTERAÇÔES</v-btn>
-    <a class="text-black text-overline mt-2 font-weight-bold" @click="close">SAIR</a>
+<br>
+    </v-container><v-btn :height="50" :width="240" @click="close" class="bg-blue rounded-pill text-overline font-weight-bold">
+     SAIR </v-btn>
+   
   </div>
 </template>
 

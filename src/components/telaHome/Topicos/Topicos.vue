@@ -12,7 +12,7 @@
               }}</span>
             </v-card-title>
             <v-card-text class="text-caption text-left">
-              <span class="font-weight-bold">Tópico:</span> {{ card.enunciado }} <br>
+              <span class="font-weight-bold">Tópico:</span> {{ truncateText(card.enunciado),40 }} <br>
               <span class="font-weight-bold">Criado por:</span> {{ card.usuario.nome_pessoa }} <br>
             </v-card-text>
 
@@ -64,7 +64,12 @@ export default {
    
   },
 
-  methods: {
+  methods: { truncateText(text, maxLength) {
+      if (text.length > maxLength) {
+        return text.substring(0, maxLength) + '...';
+      }
+      return text;
+    },
     async fetchCards() {
   console.log('fetchCards called with selectedOption:', this.selectedOption);
   try {

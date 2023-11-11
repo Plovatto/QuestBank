@@ -65,7 +65,10 @@ export default {
             } catch (error) {
                 console.error('Erro ao carregar detalhes da prova:', error);
             }
-        },
+        },redirectToDetails() {
+  console.log('Redirecionando para a tela anterior');
+  this.$router.go(-1);
+},
         async editarProva() {
             try {
                 const dadosEditados = {

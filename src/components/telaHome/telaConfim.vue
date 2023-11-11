@@ -27,17 +27,17 @@ export default {
       this.voltarParaTelaAnterior();
     },
     voltarParaTelaAnterior() {
-      this.mostrarMensagem = false;
-      history.go(-1);
-    },
+  this.mostrarMensagem = false;
+  this.$router.back();
+},
   },
   components: {
     Logo,
   },
   mounted() {
-    setTimeout(() => {
-      this.voltarParaTelaAnterior();
-    }, 3000);
-  },
+  setTimeout(() => {
+    this.$router.back();
+  }, 3000);
+},
 };
 </script>

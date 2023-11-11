@@ -62,31 +62,33 @@ export default {
       } catch (error) {
         console.error('Erro ao carregar detalhes da alternativa:', error);
       }
-    },
+    },redirectToDetails() {
+  console.log('Redirecionando para a tela anterior');
+  this.$router.go(-1);
+},
     async editarAlternativa() {
-      try {
-        const dadosEditados = {
-          enunciado: this.enunciado,
-          correta: this.correta,
-        };
+  try {
+    const dadosEditados = {
+      enunciado: this.enunciado,
+      correta: this.correta ? "True" : "False",
+    };
 
-        const response = await axios.put(`https://api-quest-bank.vercel.app/alternativa/atualizar/${this.id_alternativa}`, dadosEditados);
-        if (response.data.status === 'success') {
-          console.log('Alternativa editada com sucesso');
-          this.dialog = true;
+    console.log('Tentando editar a alternativa com o ID:', this.id_alternativa);
+    const response = await axios.put(`https://api-quest-bank.vercel.app/alternativa/atualizar/${this.id_alternativa}`, dadosEditados);
+    if (response.data.status === 'success') {
+      console.log('Alternativa editada com sucesso');
+      this.dialog = true;
       setTimeout(() => {
+        this.dialog = false; 
         this.redirectToDetails();
       }, 2000);
-        } else {
-          console.error('Erro ao editar a alternativa:', response.data.msg);
-          this.$router.push('/telaErro');
-        }
-      } catch (error) {
-        console.error('Erro ao editar a alternativa:', error);
-      }
-    },redirectToDetails() {
-  this.$router.push(`/alternativa-detalhes/${this.id_alternativa}`);
-},
-  },
+    } else {
+      console.error('Erro ao editar a alternativa:', response.data.msg);
+      this.$router.push('/telaErro');
+    }
+  } catch (error) {
+    console.error('Erro ao editar a alternativa:', error);
+  }
+},}
 };
 </script>

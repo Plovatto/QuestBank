@@ -7,7 +7,7 @@
         <v-col v-if="!isLoading && alternativa" cols="auto" class="mb-2 d-flex justify-center"> <v-progress-circular v-if="isLoading" indeterminate color="blue"></v-progress-circular>
           </v-col>
         <v-card-text v-if="!isLoading && alternativa">
-          <p><span class="text-blue font-weight-bold">ID da Alternativa:</span> {{ alternativa.id_alternativa }}</p>
+   
           <p><span class="text-blue font-weight-bold">Enunciado:</span> {{ alternativa.enunciado }}</p>
           <p><span class="text-blue font-weight-bold">Correta:</span> {{ alternativa.correta === 1 ? 'Sim' : 'Não' }}</p>
           <p><span class="text-blue font-weight-bold">Questão Associada:</span> {{ alternativa.questao.enunciado }}</p>
@@ -23,13 +23,13 @@
 
         <v-row justify="center">
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-blue text-white" elevation="2" rounded="xl" max-width="200" width="100%" height="40">
+            <v-btn v-if="idAtual == idCriador"  class="bg-blue text-white" elevation="2" rounded="xl" max-width="200" width="100%" height="40">
               <router-link v-if="alternativa" :to="`/editar-alternativas/${alternativa.id_alternativa}`"
                 style="color: #fff; text-decoration: none;">Editar</router-link>
             </v-btn>
           </v-col>
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-red" elevation="2" rounded="xl" max-width="200" width="100%" height="40"
+            <v-btn v-if="idAtual == idCriador"  class="bg-red" elevation="2" rounded="xl" max-width="200" width="100%" height="40"
               @click="excluirAlternativa(alternativa.id_alternativa)">
               Excluir
             </v-btn><br><br>
@@ -63,6 +63,12 @@ export default {
     const response = await axios.get(`https://api-quest-bank.vercel.app/alternativa/listar/${id_alternativa.value}`);
     if (response.data.status === 'success') {
       alternativa.value = response.data.alternativa;
+      this.idAtual = this.userId;
+      if (this.topico.usuario) {
+        this.idCriador = this.topico.usuario.id_pessoa;
+      }
+      console.log(this.idAtual);
+      console.log(this.idCriador);
     } else {
       console.error('Erro ao carregar detalhes da alternativa:', response.data.msg);
     }
@@ -95,7 +101,7 @@ const excluirAlternativa = async (alternativaId) => {
     return {
       alternativa,
       excluirAlternativa,
-     
+      userId: localStorage.getItem('userId'),
     };
   },
 };

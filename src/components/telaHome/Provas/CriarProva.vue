@@ -17,15 +17,7 @@
           <label>Descrição</label>
           <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
             variant="solo" v-model="descricao"></v-textarea>
-            <v-row>
-  <v-col cols="11">
-    <label>Filtro nível</label>
-    <v-select  class="mt-3 mb-0" label="Filtrar por nível" v-model="nivel" :items="Object.keys(niveis)" variant="solo" @change="carregarQuestoes"></v-select>
-  </v-col>
-  <v-col cols="1" class="d-flex align-center justify-center">
-    <v-icon style=" height: 12px;" color="red" @click="nivel= ''" v-if="nivel" size="small" >mdi-close-circle</v-icon>
-  </v-col>
-</v-row>
+        
 
 <v-row class="mt-0 pt-0">
   <v-col cols="11">
@@ -40,7 +32,15 @@
     <v-icon style=" height: 95px;" color="red" @click="topico= ''" v-if="topico" size="small" >mdi-close-circle</v-icon>
   </v-col>
 </v-row>
-
+    <v-row>
+  <v-col cols="11">
+    <label>Filtro nível</label>
+    <v-select  class="mt-3 mb-0" label="Filtrar por nível" v-model="nivel" :items="Object.keys(niveis)" variant="solo" @change="carregarQuestoes"></v-select>
+  </v-col>
+  <v-col cols="1" class="d-flex align-center justify-center">
+    <v-icon style=" height: 12px;" color="red" @click="nivel= ''" v-if="nivel" size="small" >mdi-close-circle</v-icon>
+  </v-col>
+</v-row>
 <br><br>
   <label>Questões</label>
             <add />

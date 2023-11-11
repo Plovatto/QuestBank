@@ -79,8 +79,9 @@
         }
       },
       redirectToDetails() {
-        this.$router.push(`/topicos-detalhes/${this.id_topico}`);
-      },
+  console.log('Redirecionando para a tela anterior');
+  this.$router.go(-1);
+},
     },
   };
   </script>

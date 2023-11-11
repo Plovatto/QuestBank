@@ -10,14 +10,14 @@
           </v-col>
         <v-card-text v-if="!isLoading && questao">
         
-          <p><span class="text-blue font-weight-bold">ID da Questão:</span> {{ questao.id_questao }}</p>
+       
           <p><span class="text-blue font-weight-bold">Enunciado:</span> {{ questao.enunciado }}</p>
           <p><span class="text-blue font-weight-bold">Tipo:</span> {{ questao.tipo }}</p>
           <p><span class="text-blue font-weight-bold">Nível:</span> {{ questao.nivel }}</p>
           <p><span class="text-blue font-weight-bold">Resposta:</span> {{ questao.resposta }}</p>
           <p><span class="text-blue font-weight-bold">Professor:</span> {{ questao.professor.nome }}</p>
           <p><span class="text-blue font-weight-bold">Tópico:</span> {{ questao.topico.enunciado }}</p>
-
+        
           <img v-if="questao.enunciado_imagem" :src="questao.enunciado_imagem" class="mt-7" alt="Imagem do Enunciado"
             width="300" />
           <br>
@@ -49,13 +49,13 @@
         <br /><br />
         <v-row justify="center">
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-blue white-text" elevation="2" rounded="xl" max-width="200" width="100%" height="40">
+            <v-btn v-if="idAtual == idCriador" class="bg-blue white-text" elevation="2" rounded="xl" max-width="200" width="100%" height="40">
               <router-link v-if="questao" :to="`/editar-questao/${questao.id_questao}`"
                 style="color: #fff; text-decoration: none;">Editar</router-link>
             </v-btn>
           </v-col>
           <v-col cols="auto" class="mb-2">
-            <v-btn class="bg-red" elevation="2" rounded="xl" max-width="200" width="100%" height="40"
+            <v-btn v-if="idAtual == idCriador" class="bg-red" elevation="2" rounded="xl" max-width="200" width="100%" height="40"
               @click="confirmarExclusao(questao ? questao.id_questao : null)">Excluir</v-btn>
             <br><br>
           </v-col>
@@ -92,6 +92,8 @@ export default {
       questao: null,
       dialogExclusao: false,
       isLoading: true,
+      idCriador: null,
+      userId: localStorage.getItem('userId'),
     };
   },
   async mounted() {
@@ -100,18 +102,26 @@ export default {
   },
   methods: {
     async fetchQuestao() {
-      try {
-        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/${this.id_questao}`);
-        if (response.data.status === "success") {
-          this.questao = response.data.questao;
-          this.isLoading = false;
-        } else {
-          console.error("Erro", response.data.msg);
-        }
-      } catch (error) {
-        console.error("Erro", error);
+  try {
+    const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/${this.id_questao}`);
+    if (response.data.status === "success") {
+      this.questao = response.data.questao;
+      console.log(this.questao);  // Add this line
+      this.isLoading = false;
+      this.idAtual = this.userId;
+      if (this.questao.professor) {
+        this.idCriador = this.questao.professor.id_professor;
       }
-    }, confirmarExclusao(idQuestao) {
+      console.log(this.idAtual);
+      console.log(this.idCriador);
+    } else {
+      console.error("Erro", response.data.msg);
+    }
+  } catch (error) {
+    console.error("Erro", error);
+  }
+},
+     confirmarExclusao(idQuestao) {
       this.questao.id_questao = idQuestao;
       this.dialogExclusao = true;
     },
