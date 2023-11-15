@@ -1,34 +1,38 @@
 <template>
-  <div class="carousel-container mt-3">
-    <v-slide-group width="100%" v-model="model" show-arrows>
-      <v-slide-group-item>
-        <v-card elevation="0" v-for="(prova, index) in provas" :key="index" class="card"
-          :class="{ 'hovered': hover && hoveredCardIndex === index }" @mouseover="hover = true; hoveredCardIndex = index"
-          @mouseleave="hover = false; hoveredCardIndex = null">
+  <div>
+    <v-skeleton-loader :elevation="3" type="card" v-if="provas.length === 0"></v-skeleton-loader>
 
-          <div class="bg-white ma-3 elevation-3 rounded-xl text-start card-content">
-            <div class="card-text-content">
-              <v-card-title class="text-start ">
-                <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado}}</span>
-              </v-card-title>
-              <v-card-text class="text-caption">
-                <span class="font-weight-bold">Tipo:</span> {{ prova.tipo }}<br>
-                <span class="font-weight-bold">Descrição:</span> {{ truncateText(prova.descricao),10 }} <br />
-                <span class="font-weight-bold">Criado por:</span>
+    <div v-else class="carousel-container mt-3">
+      <v-slide-group width="100%" v-model="model" show-arrows>
+        <v-slide-group-item>
+          <v-card elevation="0" v-for="(prova, index) in provas" :key="index" class="card"
+            :class="{ 'hovered': hover && hoveredCardIndex === index }"
+            @mouseover="hover = true; hoveredCardIndex = index"
+            @mouseleave="hover = false; hoveredCardIndex = null">
 
-                {{ prova.criado_por.professor_nome }} <br />
-              </v-card-text>
+            <div class="bg-white ma-3 elevation-3 rounded-xl text-start card-content">
+              <div class="card-text-content">
+                <v-card-title class="text-start ">
+                  <span class="font-weight-bold text-subtitle-2">{{ prova.enunciado}}</span>
+                </v-card-title>
+                <v-card-text class="text-caption">
+                  <span class="font-weight-bold">Tipo:</span> {{ prova.tipo }}<br>
+                  <span class="font-weight-bold">Descrição:</span> {{ truncateText(prova.descricao, 10) }} <br />
+                  <span class="font-weight-bold">Criado por:</span>
+                  {{ prova.criado_por.professor_nome }} <br />
+                </v-card-text>
+              </div>
+              <div class="card-button-content">
+                <v-card-actions class="text-center">
+                  <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
+                    @click="verDetalhes(prova)">Ver</v-btn>
+                </v-card-actions>
+              </div>
             </div>
-            <div class="card-button-content">
-              <v-card-actions class="text-center">
-                <v-btn class="bg-blue" elevation="2" rounded="xl" width="500" height="40"
-                  @click="verDetalhes(prova)">Ver</v-btn>
-              </v-card-actions>
-            </div>
-          </div>
-        </v-card>
-      </v-slide-group-item>
-    </v-slide-group>
+          </v-card>
+        </v-slide-group-item>
+      </v-slide-group>
+    </div>
   </div>
 </template>
 
@@ -59,12 +63,14 @@ export default {
   mounted() {
     this.fetchProvas();
     this.startAutoSlide();
-  }, watch: {
+  },
+  watch: {
     selectedOption3() {
       this.fetchProvas();
     },
   },
-  methods: { truncateText(text, maxLength) {
+  methods: {
+    truncateText(text, maxLength) {
       if (text.length > maxLength) {
         return text.substring(0, maxLength) + '...';
       }
@@ -120,7 +126,6 @@ export default {
   justify-content: space-between;
   transition: transform 0.2s, box-shadow 0.2s;
   transform-origin: center;
-
 }
 
 .hovered {

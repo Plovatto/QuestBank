@@ -4,9 +4,10 @@
     <v-card elevation="0">
       <v-card-title class="text-blue font-weight-bold text-center text-h5">Editar Alternativa</v-card-title>
       <v-card-text>
-        <v-form ref="form" @submit="editarAlternativa">
-          <v-textarea label="Enunciado da Alternativa" v-model="enunciado" outlined rows="4"></v-textarea>
-          <v-checkbox v-model="correta" label="Correta" class="pr-0"></v-checkbox>
+        <v-form ref="form" @submit="editarAlternativa"><br>
+          <v-textarea  variant="solo" label="Enunciado da Alternativa" v-model="enunciado" outlined rows="4"></v-textarea>
+          <v-combobox class="mt-3"  variant="solo" v-model="enunciadoQuestao" :items="questoes" item-text="enunciado" item-value="id_questao" label="Selecione as questões"></v-combobox>
+          <v-checkbox  variant="solo" v-model="correta" label="Correta" class="pr-0"></v-checkbox>
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-center align-items-center">
@@ -38,22 +39,36 @@ export default {
     return {
       id_alternativa: null,
       enunciado: '',
+      enunciadoQuestao: '',
       correta: false,
       dialog: false,
         dialogTitle: '',
         dialogMessage: '',
+        questoes: [],
     };
   },
   async mounted() {
-    this.id_alternativa = this.$route.params.id;
-    await this.carregarDetalhesAlternativa();
-  },
+  this.id_alternativa = this.$route.params.id;
+  await this.carregarDetalhesAlternativa();
+  await this.carregarQuestoes();
+},
   methods: {
+    async carregarQuestoes() {
+      try {
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
+        this.questoes = response.data.questoes.map(questao => questao.enunciado);
+      } catch (error) {
+        console.error('Erro ao carregar questões:', error);
+      }
+    },
+    
     async carregarDetalhesAlternativa() {
       try {
         const response = await axios.get(`https://api-quest-bank.vercel.app/alternativa/listar/${this.id_alternativa}`);
         if (response.data.status === 'success') {
           const alternativa = response.data.alternativa;
+          this.enunciadoQuestao = alternativa.questao.topico.enunciado;
           this.enunciado = alternativa.enunciado;
           this.correta = alternativa.correta === true;
         } else {
@@ -70,7 +85,9 @@ export default {
   try {
     const dadosEditados = {
       enunciado: this.enunciado,
+      enunciadoQuestao: this.enunciadoQuestao,
       correta: this.correta ? "True" : "False",
+      
     };
 
     console.log('Tentando editar a alternativa com o ID:', this.id_alternativa);

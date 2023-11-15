@@ -7,15 +7,30 @@
       <v-card-text>
 
         <v-form ref="form" @submit="criarAlternativa">
-          <label>Questão</label>
-          <select class="custom-select mt-2" id="questao" name="questao" v-model="enunciadoQuestao">
-            <option value="">Selecione uma questao</option>
-            <option v-for="questao in questoes" :value="{ id_questao: questao.id_questao, enunciado: questao.enunciado }">
-              {{ questao.enunciado
-              }}</option>
-          </select>
-          <br><br>
-          <label>Enunciado da Alternativa</label>
+          <label>Questão</label>   <button class="rounded-pill small" type="button"  @click.prevent="mostrarInfo('topico')">ℹ️</button>
+          <v-card v-if="mostrarCardInfoTopico" class="info-card">
+            <v-card-title>Informações sobre o campo Questão</v-card-title>
+            <v-card-text>
+              Este campo é destinado para selecionar a questão referente a alternativa. Escolha a questão que você deseja criar uma alternativa.
+            
+            </v-card-text> 
+            <v-card-actions>
+              <v-btn @click="ocultarInfo('topico')">Fechar</v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-combobox class="mt-3"  variant="solo" v-model="enunciadoQuestao" :items="questoes" item-text="enunciado" item-value="id_questao" label="Selecione as questões"></v-combobox>          <br><br>
+          <label>Enunciadoda Alternativa</label><button type="button" class="rounded-pill small" @click.prevent="mostrarInfo('enunciado')">ℹ️</button>
+
+      
+<v-card v-if="mostrarCardInfoEnunciado" class="info-card">
+  <v-card-title>Informações sobre o campo Enunciado da alternativa</v-card-title>
+  <v-card-text>
+   Este campo é destinado para o enunciado da alternativa. Neste campo forneça as opções de alternativas que estarão abaixo da questão. 
+  </v-card-text>
+  <v-card-actions>
+    <v-btn @click="ocultarInfo('enunciado')">Fechar</v-btn>
+  </v-card-actions>
+</v-card>
           <v-textarea placeholder="Exemplo: a) 2 + 2 = 4" class="mt-3" rows="2" row-height="20" variant="solo"
             v-model="enunciado"></v-textarea>
           <v-checkbox color="success" v-model="correta" label="Marque se for a alternativa correta" class="pr-0"
@@ -50,7 +65,35 @@ export default defineComponent({
     const router = useRouter();
     const showError = ref(false);
     const errorMessage = ref('');
+    const mostrarCardInfoEnunciado = ref(false);
+    const mostrarCardInfoTopico = ref(false);
+    const cartoesInfoAbertos = ref([]);
 
+const mostrarInfo  = (campo) => {
+  if (cartoesInfoAbertos.value.includes(campo)) {
+   
+      cartoesInfoAbertos.value.splice(cartoesInfoAbertos.value.indexOf(campo), 1);
+    } else {
+     
+      cartoesInfoAbertos.value = [campo];
+    }
+ 
+  mostrarCardInfoEnunciado.value = cartoesInfoAbertos.value.includes('enunciado');
+  mostrarCardInfoTopico.value = cartoesInfoAbertos.value.includes('topico');
+
+};
+
+    
+    const ocultarInfo = (campo) => {
+      if (campo === 'enunciado') {
+        mostrarCardInfoEnunciado.value = false;
+      }
+      if (campo === 'topico') {
+        mostrarCardInfoTopico.value = false;
+      }
+
+    
+    };
 
     const saveFormDataToLocalStorage = () => {
       const formData = {
@@ -81,18 +124,15 @@ export default defineComponent({
     console.log('correta:', correta.value);
 
     const carregarQuestoes = async () => {
-      try {
-        const userId = localStorage.getItem('userId');
-        const response = await axios.get(`https://api-quest-bank.vercel.app/questoes/listar`);
-        questoes.value = response.data.questoes;
-      } catch (error) {
-        console.error('Erro ao carregar questões:', error);
-      }
-    };
-
-    onMounted(() => {
-      carregarQuestoes();
-    });
+  try {
+    const userId = localStorage.getItem('userId');
+    const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/?idProfessor=${userId}`);
+    questoes.value = response.data.questoes.map(questao => questao.enunciado);
+  } catch (error) {
+    console.error('Erro ao carregar questões:', error);
+  }
+};carregarQuestoes();
+    
 
 
     const limparCampos = () => {
@@ -103,7 +143,7 @@ export default defineComponent({
 
     const adicionarAlternativa = async () => {
       if (enunciadoQuestao.value && enunciado.value && correta.value !== null) {
-        const enunciadoQuestaoValue = enunciadoQuestao.value.enunciado;
+        const enunciadoQuestaoValue = enunciadoQuestao.value;
         const corretaValue = correta.value === '1' ? '1' : '0';
 
         const formData = {
@@ -144,7 +184,11 @@ export default defineComponent({
       questoes,
       correta,
       adicionarAlternativa,
-
+      mostrarCardInfoEnunciado,
+      mostrarCardInfoTopico,
+ 
+      mostrarInfo,
+      ocultarInfo,
       enunciadoQuestao,
       limparCampos,
       showError,

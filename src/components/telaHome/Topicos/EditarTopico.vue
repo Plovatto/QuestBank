@@ -6,7 +6,15 @@
         <br><br>
         <v-card-text>
           <v-form ref="form" @submit="editarTopico">
-            <v-textarea label="Enunciado" v-model="enunciado" outlined rows="4"></v-textarea>
+            <v-textarea  variant="solo" label="Enunciado" v-model="enunciado" outlined rows="4"></v-textarea>
+
+            <v-select
+    class="mt-3"
+    label="Selecione uma disciplina"
+    v-model="selectedDisciplina"
+    :items="disciplinas"
+    variant="solo"
+  ></v-select>
           </v-form><v-alert v-if="showError" type="error" class="mt-3">{{ errorMessage }}</v-alert>
         </v-card-text>
         <v-card-actions class="d-flex justify-center align-itens-center">
@@ -39,48 +47,59 @@
         enunciado: '',
         dialog: false,
         dialogTitle: '',
-        dialogMessage: '',
+        dialogMessage: '', selectedDisciplina: null,
+      disciplinas: [],
       };
     },
     async mounted() {
       this.id_topico = this.$route.params.id;
       await this.carregarDadosDoTopico();
+      await this.carregarDisciplinas();
     },
-    methods: {
-      async carregarDadosDoTopico() {
-        try {
-          const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/${this.id_topico}`);
-          if (response.data.status === 'success') {
-            const topico = response.data.topico;
-            this.enunciado = topico.enunciado;
-          } else {
-            console.error('Erro ao carregar dados do tópico:', response.data.msg);
-          }
-        } catch (error) {
-          console.error('Erro ao carregar dados do tópico:', error);
+    methods: {async carregarDisciplinas() {
+      try {
+        const response = await axios.get('https://api-quest-bank.vercel.app/disciplina/listar');
+        this.disciplinas = response.data.disciplinas.map(disciplina => disciplina.nome);
+      } catch (error) {
+        console.error('Erro ao carregar disciplinas:', error);
+      }
+    },
+    async carregarDadosDoTopico() {
+      try {
+        const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/${this.id_topico}`);
+        if (response.data.status === 'success') {
+          const topico = response.data.topico;
+          this.enunciado = topico.enunciado;
+          this.selectedDisciplina = topico.disciplina.nome_disciplina; 
+        } else {
+          console.error('Erro ao carregar dados do tópico:', response.data.msg);
         }
-      },
-      async editarTopico() {
-        try {
-          const dadosEditados = {
-            enunciado: this.enunciado,
-          };
-          const response = await axios.put(`https://api-quest-bank.vercel.app/topico/atualizar/${this.id_topico}`, dadosEditados);
-          if (response.data.status === 'success') {
-            this.dialog = true;
-   
-            setTimeout(this.redirectToDetails, 2000);
-          } else {
-            console.error('Erro ao editar tópico:', response.data.msg);
-            this.$router.push('/telaErro');
-          }
-        } catch (error) {
-          console.error('Erro ao editar tópico:', error);
-        }
-      },
+      } catch (error) {
+        console.error('Erro ao carregar dados do tópico:', error);
+      }
+    },
+    async editarTopico() {
+  try {
+    const dadosEditados = {
+      enunciado: this.enunciado,
+      nomeDisciplina: this.selectedDisciplina,
+    };
+    const response = await axios.put(`https://api-quest-bank.vercel.app/topico/atualizar/${this.id_topico}`, dadosEditados);
+    if (response.data.status === 'success') {
+      this.dialog = true;
+    } else {
+      console.error('Erro ao editar tópico:', response.data.msg);
+      this.$router.push('/telaErro');
+    }
+  } catch (error) {
+    console.error('Erro ao editar tópico:', error);
+  } finally {
+    setTimeout(this.redirectToDetails, 2000);
+  }
+},
       redirectToDetails() {
   console.log('Redirecionando para a tela anterior');
-  this.$router.go(-1);
+  this.$router.push(`/topicos-detalhes/${this.id_topico}`);
 },
     },
   };

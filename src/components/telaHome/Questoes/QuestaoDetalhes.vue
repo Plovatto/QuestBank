@@ -1,40 +1,39 @@
 <template>
   <div>
-    <br /><br /><br />
+    <br /><br />
     <Nav />
-    <v-container class="mt-12">
+    <v-container class="mt-3" >
       <v-card class="mx-auto" max-width="800" v-if="questao">
-        <v-card-title class="text-blue font-weight-bold">Detalhes da Questão</v-card-title>
+        <v-card-title class="text-blue font-weight-bold mt-6 pl-7">Detalhes da Questão</v-card-title>
   <v-col cols="auto" class="mb-2 d-flex justify-center">
             <v-progress-circular v-if="isLoading" indeterminate color="blue"></v-progress-circular>
           </v-col>
         <v-card-text v-if="!isLoading && questao">
         
        
-          <p><span class="text-blue font-weight-bold">Enunciado:</span> {{ questao.enunciado }}</p>
-          <p><span class="text-blue font-weight-bold">Tipo:</span> {{ questao.tipo }}</p>
-          <p><span class="text-blue font-weight-bold">Nível:</span> {{ questao.nivel }}</p>
-          <p><span class="text-blue font-weight-bold">Resposta:</span> {{ questao.resposta }}</p>
-          <p><span class="text-blue font-weight-bold">Professor:</span> {{ questao.professor.nome }}</p>
-          <p><span class="text-blue font-weight-bold">Tópico:</span> {{ questao.topico.enunciado }}</p>
+          <p class="pl-4"><span class="text-blue font-weight-bold">Enunciado:</span> {{ questao.enunciado }}</p>
+          <p class="mt-2 pl-4"><span class="text-blue font-weight-bold">Tipo:</span> {{ questao.tipo }}</p>
+          <p class="mt-2 pl-4"><span class="text-blue font-weight-bold">Nível:</span> {{ displayNivelComAcento(questao.nivel) }}</p>
+          <p class="mt-2 pl-4" v-if="questao.tipo === 'Dissertativa'"> <span class="text-blue font-weight-bold">Resposta:</span>
+    {{ questao.resposta ? questao.resposta : 'Nenhuma resposta fornecida' }}
+  </p>
+          <p class="mt-2 pl-4"><span class="text-blue font-weight-bold">Professor:</span> {{ questao.professor.nome }}</p>
+          <p class="mt-2 pl-4"><span class="text-blue font-weight-bold">Tópico:</span> {{ questao.topico.enunciado }}</p>
         
-          <img v-if="questao.enunciado_imagem" :src="questao.enunciado_imagem" class="mt-7" alt="Imagem do Enunciado"
-            width="300" />
-          <br>
+        
+         
           <div>
-            <v-row>
-              <v-col cols="7">
-<br>
-                <v-card-title class="text-blue font-weight-bold mt-1">Alternativas</v-card-title>
+      <br> 
+             <div class="d-flex">
+
+                <v-card-title v-if="questao.tipo === 'Objetiva'" class="text-blue font-weight-bold ">Alternativas</v-card-title>
 
 
-              </v-col>
-              <v-col cols="1"><br>
-                <alternativa class="mt-4" />
-              </v-col>
-            </v-row>
+            
+                <alternativa  v-if="questao.tipo === 'Objetiva'" class="mt-3"/></div>
+            
           </div>
-          <v-card-text>
+          <v-card-text v-if="questao.tipo === 'Objetiva'">
             <ul>
               <p class="mt-5" v-for="(alternativa, index) in questao.alternativas" :key="alternativa.id_alternativa">
                 <v-btn class="bg-blue white-text" elevation="2" rounded="xl" max-width="10" width="100%" height="20"
@@ -100,7 +99,18 @@ export default {
     this.id_questao = this.$route.params.id;
     await this.fetchQuestao();
   },
-  methods: {
+  methods: { displayNivelComAcento(nivel) {
+    switch (nivel) {
+      case 'facil':
+        return 'Fácil';
+      case 'medio':
+        return 'Médio';
+      case 'dificil':
+        return 'Difícil';
+      default:
+        return nivel;
+    }
+  },
     async fetchQuestao() {
   try {
     const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/${this.id_questao}`);

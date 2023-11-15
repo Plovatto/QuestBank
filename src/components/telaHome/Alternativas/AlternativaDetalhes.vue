@@ -1,26 +1,27 @@
 <template>
   <div>
     <Nav />
-    <v-container class="mt-12">
+    <v-container class="mt-5">
       <v-card class="mx-auto" max-width="800">
-        <v-card-title class="text-blue font-weight-bold">Detalhes da Alternativa</v-card-title>
+        <v-card-title class="text-blue font-weight-bold mt-8">Detalhes da Alternativa</v-card-title>
         <v-col v-if="!isLoading && alternativa" cols="auto" class="mb-2 d-flex justify-center"> <v-progress-circular v-if="isLoading" indeterminate color="blue"></v-progress-circular>
           </v-col>
         <v-card-text v-if="!isLoading && alternativa">
    
           <p><span class="text-blue font-weight-bold">Enunciado:</span> {{ alternativa.enunciado }}</p>
-          <p><span class="text-blue font-weight-bold">Correta:</span> {{ alternativa.correta === 1 ? 'Sim' : 'Não' }}</p>
-          <p><span class="text-blue font-weight-bold">Questão Associada:</span> {{ alternativa.questao.enunciado }}</p>
-          <p><span class="text-blue font-weight-bold">Nível da Questão:</span> {{ alternativa.questao.nivel }}</p>
-          <p><span class="text-blue font-weight-bold">Tipo da Questão:</span> {{ alternativa.questao.tipo }}</p>
-          <p><span class="text-blue font-weight-bold">Tópico da Questão:</span> {{ alternativa.questao.topico.enunciado }}
+          <p class="mt-2"><span class="text-blue font-weight-bold">Correta:</span> {{ alternativa.correta === 1 ? 'Sim' : 'Não' }}</p>
+          <br> <p class="mt-2"> <span class="text-blue font-weight-bold">Disciplina:</span> {{ alternativa.questao.topico.disciplina.nome }}
+            <p class="mt-2"><span class="text-blue font-weight-bold">Tópico da Questão:</span> {{ alternativa.questao.topico.enunciado }}</p>
+          <p class="mt-2"><span class="text-blue font-weight-bold">Questão Associada:</span> {{ alternativa.questao.enunciado }}</p> 
+         
+          <p class="mt-2"><span class="text-blue font-weight-bold">Nível da Questão:</span> {{ displayNivelComAcento(alternativa.questao.nivel) }}</p>
+          <p class="mt-2"><span class="text-blue font-weight-bold">Tipo da Questão:</span> {{ alternativa.questao.tipo }}</p>
+          
+         
           </p>
-          <p><span class="text-blue font-weight-bold">Disciplina:</span> {{ alternativa.questao.topico.disciplina.nome }}
-          </p>
-          <img v-if="alternativa.questao.enunciado_imagem" :src="alternativa.questao.enunciado_imagem" class="mt-7"
-            alt="Imagem do Enunciado" :width="300" />
+        
         </v-card-text>
-
+<br><br>
         <v-row justify="center">
           <v-col cols="auto" class="mb-2">
             <v-btn v-if="idAtual == idCriador"  class="bg-blue text-white" elevation="2" rounded="xl" max-width="200" width="100%" height="40">
@@ -55,7 +56,7 @@ export default {
     const router = useRouter();
     const id_alternativa = ref(null);
     const alternativa = ref(null);
-    
+
 
     const carregarDetalhesAlternativa = async () => {
   try {
@@ -103,6 +104,19 @@ const excluirAlternativa = async (alternativaId) => {
       excluirAlternativa,
       userId: localStorage.getItem('userId'),
     };
-  },
+  },  methods: {
+    displayNivelComAcento(nivel) {
+    switch (nivel) {
+      case 'facil':
+        return 'Fácil';
+      case 'medio':
+        return 'Médio';
+      case 'dificil':
+        return 'Difícil';
+      default:
+        return nivel;
+    }
+  }
+  },  
 };
 </script>

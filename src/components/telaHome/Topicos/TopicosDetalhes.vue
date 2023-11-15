@@ -2,22 +2,22 @@
   <div>
     <br><br><br>
     <Nav />
-    <v-container class="mt-12">
+    <v-container>
       <v-card class="mx-auto" max-width="800">
-        <v-card-title class="text-blue font-weight-bold">Detalhes do Tópico</v-card-title>
+        <v-card-title class="text-blue font-weight-bold mt-5">Detalhes do Tópico</v-card-title>
         <br>
         <v-col  v-if="isLoading"  cols="auto" class="mb-2 d-flex justify-center">
         <v-progress-circular v-if="isLoading" indeterminate color="blue"></v-progress-circular>
       </v-col>
         <v-card-text v-if="!isLoading && topico">
-        
-          <p v-if="topico"><span class="text-blue font-weight-bold">Enunciado:</span> {{ topico.enunciado }}</p>
-          <p v-if="topico"><span class="text-blue font-weight-bold">Criado por:</span> {{ topico.usuario.nome_pessoa }}
-          </p>
-          <p v-if="topico"><span class="text-blue font-weight-bold">Disciplina:</span> {{
+           <p v-if="topico"><span class="text-blue font-weight-bold">Disciplina:</span> {{
             topico.disciplina.nome_disciplina }}</p>
+          <p class="mt-2" v-if="topico"><span class="text-blue font-weight-bold">Conteúdo:</span> {{ topico.enunciado }}</p>
+          <p class="mt-2"  v-if="topico"><span class="text-blue font-weight-bold">Criado por:</span> {{ topico.usuario.nome_pessoa }}
+          </p>
+       
         </v-card-text>
-        <br>
+        <br><br>
         <v-row justify="center">
           <v-col cols="auto" class="mb-2">
             <v-btn v-if="idAtual == idCriador"  class="bg-blue" elevation="2" rounded="xl" max-width="500" width="100%" height="40">

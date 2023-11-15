@@ -4,33 +4,62 @@
     <Nav />
     <v-container>
       <v-card class="mx-auto" max-width="800">
-        <v-card-title class="text-blue font-weight-bold">Detalhes da Prova</v-card-title>
+        <v-card-title class="text-blue font-weight-bold mt-5">Detalhes da Prova</v-card-title>
         <v-col cols="auto" class="mb-2 d-flex justify-center">
             <v-progress-circular v-if="isLoading" indeterminate color="blue"></v-progress-circular>
           </v-col>
         <v-card-text v-if="!isLoading && prova">
-         
+
           <p><span class="text-blue font-weight-bold">Nome da Prova:</span> {{ prova.enunciado }}</p>
-          <p><span class="text-blue font-weight-bold">Criado por:</span> {{ prova.criado_por.professor_nome }}</p>
-          <p><span class="text-blue font-weight-bold">Descrição:</span> {{ prova.descricao }}</p>
+          <p class="mt-2"><span class="text-blue font-weight-bold">Criado por:</span> {{ prova.criado_por.professor_nome }}</p>
+          <p class="mt-2"><span class="text-blue font-weight-bold">Descrição:</span> {{ prova.descricao }}</p>
  
           <br>
-         <p><span class="text-blue font-weight-bold">Questões:</span></p>
-          <p v-for="questao in prova.questoes" :key="questao.questao_id">
-  <br> 
-  <p><span class="text-blue font-weight-bold">Enunciado:</span> {{ questao.questao_enunciado }}</p>
-  <p><span class="text-blue font-weight-bold">Resposta:</span> {{ questao.questao_resposta }}</p>
-  <p><span class="text-blue font-weight-bold">Tipo:</span> {{ questao.questao_tipo }}</p>
-  <p><span class="text-blue font-weight-bold">Nível:</span> {{ questao.questao_nivel }}</p>
+         <p class="mt-2"><span class="text-blue font-weight-bold ">Questões:</span></p><br>
+         <hr>
+          <div v-for="(questao, index) in prova.questoes" :key="questao.questao_id">
+  <br>            <v-expansion-panels variant="accordion">
+  <v-expansion-panel>
+  <v-expansion-panel-title class="text-blue-darken-2"> {{ questao.questao_enunciado }}
+    
+    <template v-slot:actions="{ expanded }">
+      <router-link :to="`/questao-detalhes/${questao.questao_id}`">
+      
+          <v-icon
+          end
+          color="blue"
+          icon="mdi-file-edit-outline"
+        ></v-icon>
+      
+      </router-link>
+    </template>
+  </v-expansion-panel-title>
+        <v-expansion-panel-text>
+    
+           <p class="mt-2" v-if="questao.questao_tipo === 'Dissertativa'"> <span class="text-blue font-weight-bold">Resposta:</span>
+    {{ questao.questao_resposta ? questao.questao_resposta : 'Nenhuma resposta fornecida' }}
+  </p>
+  <p class="mt-2"><span class="text-blue font-weight-bold">Tipo:</span> {{ questao.questao_tipo }}</p>
+  <p class="mt-2"><span class="text-blue font-weight-bold">Nível:</span> {{ displayNivelComAcento(questao.questao_nivel) }}</p>
 
   <p v-if="questao.topicos">
     <p v-if="questao.topicos.disciplina">
-      <p><span class="text-blue font-weight-bold">Disciplina:</span> {{ questao.topicos.disciplina.questao_topico_disciplina_nome }}</p>
-      <p><span class="text-blue font-weight-bold">Tópico:</span> {{ questao.topicos.questao_topico_enunciado }}</p>
+      <p class="mt-2"><span class="text-blue font-weight-bold">Disciplina:</span> {{ questao.topicos.disciplina.questao_topico_disciplina_nome }}</p>
+      <p class="mt-2"><span class="text-blue font-weight-bold">Tópico:</span> {{ questao.topicos.questao_topico_enunciado }}</p>
     </p>
-  </p>
-  <img v-if="questao.questao_enunciado_imagem" :src="questao.questao_enunciado_imagem" class="mt-7" alt="Imagem do Enunciado" :width="300" />
-</p>
+  </p><br>
+  <p class="mt-2"><span class="text-blue font-weight-bold " v-if="questao.questao_tipo === 'Objetiva'">Alternativas</span></p>
+  <p class="mt-2" v-for="(alternativa, index) in questao.alternativas" :key="alternativa.id_alternativa">
+   
+    <span class="font-weight-bold text-blue">{{ String.fromCharCode(97 + index) }})</span> {{ alternativa.enunciado }}
+    <span v-if="alternativa.correta === 1"> (Correta)</span>
+  </p><br>
+
+        </v-expansion-panel-text>
+      </v-expansion-panel></v-expansion-panels>
+ 
+  
+</div>
         </v-card-text>
 <br>
         <v-row justify="center">
@@ -109,7 +138,21 @@ export default {
     this.id_prova = this.$route.params.id;
     this.carregarDetalhesProva();
   },
-  methods: {
+  methods: {    
+
+    
+    displayNivelComAcento(nivel) {
+    switch (nivel) {
+      case 'facil':
+        return 'Fácil';
+      case 'medio':
+        return 'Médio';
+      case 'dificil':
+        return 'Difícil';
+      default:
+        return nivel;
+    }
+  },
     async carregarDetalhesProva() {
       try {
     

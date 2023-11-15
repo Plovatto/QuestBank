@@ -5,14 +5,15 @@
       <v-card-title class="text-blue font-weight-bold text-center text-h5">Editar Questão</v-card-title><br>
       <v-card-text>
         <v-form ref="form" @submit="editarQuestao">
-          <v-textarea label="Enunciado da questão" v-model="enunciado" outlined rows="4"></v-textarea>
-          <v-select label="Tipo" v-model="tipo" :items="['Objetiva', 'Dissertativa']" outlined></v-select>
+          <v-textarea variant="solo"  label="Enunciado da questão" v-model="enunciado" outlined rows="6" row-height="25"></v-textarea>
+
+          <v-select variant="solo" v-if="topicos.length > 0" v-model="enunciadoTopico" :items="topicos" item-text="enunciado" item-value="enunciado" label="Selecione um tópico" outlined></v-select>
+          <v-select variant="solo"  label="Tipo" v-model="tipo" :items="['Objetiva', 'Dissertativa']" outlined></v-select>
           <div v-if="tipo === 'Dissertativa'">
-            <v-textarea label="Resposta" v-model="resposta" outlined rows="4"></v-textarea>
+            <v-textarea variant="solo"  label="Resposta da questão" v-model="resposta" outlined rows="4"></v-textarea>
           </div>
-          <v-select label="Nível" v-model="nivel" :items="['Fácil', 'Médio', 'Difícil']" outlined></v-select>
-          <v-file-input label="Enunciado da imagem" v-model="enunciadoImagem" @change="onFileChange" outlined rows="4"></v-file-input>
-          <img v-if="imagePreview" :src="imagePreview" alt="Imagem de visualização" class="mt-2" width="200" />
+          <v-select variant="solo"  label="Nível" v-model="nivel" :items="['Fácil', 'Médio', 'Difícil']" outlined></v-select>
+         
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-center align-items-center">
@@ -48,32 +49,37 @@ export default {
       tipo: '',
       nivel: '',
       resposta: '',
+      enunciadoTopico: '',
       imagePreview: null,
-      dialog: false,
+      dialog: false,topicos: [],
     };
   },
   async mounted() {
     this.questaoId = this.$route.params.id;
     await this.carregarDetalhesQuestao();
-  },
+    await this.carregarTopicos();
+  
+},
   methods: {
     async carregarDetalhesQuestao() {
-      try {
-        const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/${this.questaoId}`);
-        if (response.data.status === 'success') {
-          const questao = response.data.questao;
-          this.enunciado = questao.enunciado;
-          this.tipo = questao.tipo;
-          this.nivel = questao.nivel;
-          this.resposta = questao.resposta || ''; // Certifique-se de definir um valor padrão se a resposta for nula
-          this.imagePreview = questao.enunciado_imagem;
-        } else {
-          console.error('Erro ao carregar detalhes da questão:', response.data.msg);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar detalhes da questão:', error);
-      }
-    },
+  try {
+    const response = await axios.get(`https://api-quest-bank.vercel.app/questao/listar/${this.questaoId}`);
+    if (response.data.status === 'success') {
+      const questao = response.data.questao;
+      this.enunciado = questao.enunciado;
+      this.enunciadoTopico = questao.topico.enunciado; 
+      this.tipo = questao.tipo;
+      this.nivel = questao.nivel;
+      this.resposta = questao.resposta || '';
+      this.imagePreview = questao.enunciado_imagem;
+    } else {
+      console.error('Erro ao carregar detalhes da questão:', response.data.msg);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar detalhes da questão:', error);
+  }
+},
+
     onFileChange(event) {
       const file = event.target.files[0];
       if (file) {
@@ -90,6 +96,7 @@ export default {
     async editarQuestao() {
       try {
         const dadosEditados = {
+          enunciadoTopico: this.enunciadoTopico,
           enunciado: this.enunciado,
           enunciado_imagem: this.imagePreview,
           tipo: this.tipo,
@@ -110,6 +117,18 @@ export default {
         }
       } catch (error) {
         console.error('Erro ao editar a questão:', error);
+      }
+    }, async carregarTopicos() {
+      try {
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`https://api-quest-bank.vercel.app/topico/listar/?idProfessor=${userId}`);
+        if (response.data.status === 'success') {
+          this.topicos = response.data.topicos.map(topico => topico.enunciado); 
+        } else {
+          console.error('Erro ao carregar tópicos:', response.data.msg);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar tópicos:', error);
       }
     },
     redirectToDetails() {

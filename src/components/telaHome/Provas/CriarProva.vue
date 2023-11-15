@@ -8,49 +8,107 @@
         <v-form ref="form" @submit="prova">
 
           <br><br>
-          <label>Nome da prova</label>
+          <label>Nome da prova</label><button type="button" class="rounded-pill small" @click.prevent="mostrarInfo('enunciado')">ℹ️</button>
+
+      
+<v-card v-if="mostrarCardInfoEnunciado" class="info-card">
+  <v-card-title>Informações sobre o campo Nome da Prova</v-card-title>
+  <v-card-text>
+   Este campo é destinado para o nome da prova. Neste campo, ofereça um título referente a prova que será criada. 
+   <p class="font-weight-bold">OBS: O arquivo PDF terá o mesmo nome da prova.</p>
+  </v-card-text>
+  <v-card-actions>
+    <v-btn @click="ocultarInfo('enunciado')">Fechar</v-btn>
+  </v-card-actions>
+</v-card>
           <v-textarea placeholder="Exemplo: Prova 1" class="mt-3" rows="2" row-height="20" variant="solo"
             v-model="enunciado"></v-textarea>
           <label>Tipo</label>
+          <button class="rounded-pill small" type="button"  @click.prevent="mostrarInfo('tipo')">ℹ️</button>
+          <v-card v-if="mostrarCardInfoTipo" class="info-card">
+            <v-card-title>Informações sobre o campo Tipo</v-card-title>
+            <v-card-text>
+              Este campo é destinado para selecionar o tipo da prova. Escolha se a prova irá conter questões objetivas, dissertativas ou ambas.
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="ocultarInfo('tipo')">Fechar</v-btn>
+            </v-card-actions>
+          </v-card>
           <v-select class="mt-3" label="Selecione o tipo" v-model="tipo" :items="['Objetiva', 'Dissertativa', 'Ambas']"
             variant="solo"></v-select>
-          <label>Descrição</label>
-          <v-textarea placeholder="Exemplo: Prova do 3° ano segundo trimestre" class="mt-3" rows="2" row-height="20"
+          <label>Descrição</label><button class="rounded-pill small" type="button"  @click.prevent="mostrarInfo('resposta')">ℹ️</button>
+          <v-card v-if="mostrarCardInfoResposta" class="info-card">
+            <v-card-title>Informações sobre o campo Descrição</v-card-title>
+            <v-card-text>
+              Este campo é destinado para a descrição da prova. Forneça orientações sobre a prova, como por exemplo de como realizar as questões.
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="ocultarInfo('resposta')">Fechar</v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-textarea placeholder="Exemplo: Leia cuidadosamente cada pergunta antes de responder. Isso ajuda a compreender completamente o que é solicitado." class="mt-3" rows="4" row-height="30"
             variant="solo" v-model="descricao"></v-textarea>
         
-
-<v-row class="mt-0 pt-0">
-  <v-col cols="11">
-    <label class="mt-0">Filtro tópico </label>
-   
-    <select density="compact" class="custom-select mt-3" v-model="topico">
+            <div class="d-flex">
+  <v-row class="mt-0 pt-0">
+  <v-col cols="6" v-if="!mostrarCardInfoNivel">
+      <label class="mt-0">Filtro tópico </label> <v-icon class="ml-2" color="red" @click="topico= ''" v-if="topico" size="small" >mdi-close-circle</v-icon>
+      <button class="rounded-pill small" type="button" @click.prevent="mostrarInfo('topico2')">ℹ️</button><br>
+      <v-card v-if="mostrarCardInfoTopico2" class="info-card2">
+        <v-card-title>Informações sobre o campo filtro de Tópico</v-card-title>
+        <v-card-text>
+          Este campo é destinado para filtrar o tópico da questão. Caso queira achar uma questão de um determinado tópico, basta escolher neste campo o tópico e após ao selecionar as questões exibirá somente as questões do tópico escolhido.
+    
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="ocultarInfo('topico2')">Fechar</v-btn>
+        </v-card-actions>
+      </v-card>
+      
+      <select density="compact" class="custom-select mt-3" v-model="topico">
       <option value="">Filtrar por tópico</option>
       <option v-for="topico in topicos" :value="topico.id_topico">{{ topico.enunciado }}</option>
     </select>
-  </v-col>
-  <v-col cols="1" class="d-flex align-center justify-center">
-    <v-icon style=" height: 95px;" color="red" @click="topico= ''" v-if="topico" size="small" >mdi-close-circle</v-icon>
-  </v-col>
-</v-row>
-    <v-row>
-  <v-col cols="11">
-    <label>Filtro nível</label>
-    <v-select  class="mt-3 mb-0" label="Filtrar por nível" v-model="nivel" :items="Object.keys(niveis)" variant="solo" @change="carregarQuestoes"></v-select>
-  </v-col>
-  <v-col cols="1" class="d-flex align-center justify-center">
-    <v-icon style=" height: 12px;" color="red" @click="nivel= ''" v-if="nivel" size="small" >mdi-close-circle</v-icon>
-  </v-col>
-</v-row>
-<br><br>
-  <label>Questões</label>
-            <add />
+    </v-col>
+    <v-col cols="6" v-if="!mostrarCardInfoTopico2">
+      <label>Filtro nível</label>  <v-icon style=" height: 12px;" class="ml-2" color="red" @click="nivel= ''" v-if="nivel" size="small" >mdi-close-circle</v-icon>
+      <button class="rounded-pill small ml-3" type="button" @click.prevent="mostrarInfo('nivel')">ℹ️</button>
+      <v-card v-if="mostrarCardInfoNivel" class="info-card2">
+        <v-card-title>Informações sobre o campo filtro de Nível</v-card-title>
+        <v-card-text>
+          Este campo é destinado para filtrar o nível de dificuldade da questão. Caso queira achar uma questão de um determinado nível, basta escolher neste campo o nível e após ao selecionar as questões exibirá somente as questões do nível de dificuldade escolhido.
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="ocultarInfo('nivel')">Fechar</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-select class="mt-3 mb-0" v-model="nivel" :items="Object.keys(niveis)" variant="solo" @change="carregarQuestoes"></v-select>
+    </v-col> 
+ 
+  
+ 
+  </v-row>
+  <br><br>
+</div>
+  <label>Questões </label> <add class="ml-1 mr-1" /> <button class="rounded-pill small" type="button"  @click.prevent="mostrarInfo('topico')">ℹ️</button>
+          <v-card v-if="mostrarCardInfoTopico" class="info-card">
+            <v-card-title>Informações sobre o campo Questões</v-card-title>
+            <v-card-text>
+              Este campo é destinado para selecionar as questões que estarão na prova. Escolha as questões relevantes para criar a prova.
+             <p class="font-weight-bold">OBS: Caso não exista uma questão relevante, crie uma nova questão.</p>
+            </v-card-text> 
+            <v-card-actions>
+              <v-btn @click="ocultarInfo('topico')">Fechar</v-btn>
+            </v-card-actions>
+          </v-card>
+            
           
 
             <div>
 
 
     <v-combobox  v-if="nivel || topico" class="mt-3" color="info" clearable chips multiple variant="solo" v-model="selectedQuestoes" :items="questoes" :item-text="itemText" item-value="id_questao" label="Selecione as questões"></v-combobox>
-    <v-combobox  v-if="!(nivel || topico)"  variant="solo" v-model="selectedQuestoes" :items="questoes" :item-text="itemText" item-value="id_questao" label="Selecione as questões" multiple></v-combobox>
+    <v-combobox  v-if="!(nivel || topico)" class="mt-3"  variant="solo" v-model="selectedQuestoes" :items="questoes" :item-text="itemText" item-value="id_questao" label="Selecione as questões" multiple></v-combobox>
     <div v-if="selectedQuestoes.length > 0"> 
       <div class="elevation-2" style="border: solid 1px #e6e6e6; padding: 8px; height: auto;">
       <br><label class="ml-3 text-blue font-weight-bold ">Questões adicionadas:</label><br>
@@ -96,7 +154,53 @@ export default defineComponent({
     const questoes = ref([
  
     
-    ]);
+    ]);const mostrarCardInfoEnunciado = ref(false);
+    const mostrarCardInfoTopico = ref(false);
+    const mostrarCardInfoTopico2 = ref(false);
+    const mostrarCardInfoTipo = ref(false);
+    const mostrarCardInfoResposta = ref(false);
+    const mostrarCardInfoNivel = ref(false);
+    const cartoesInfoAbertos = ref([]);
+
+const mostrarInfo  = (campo) => {
+  if (cartoesInfoAbertos.value.includes(campo)) {
+   
+      cartoesInfoAbertos.value.splice(cartoesInfoAbertos.value.indexOf(campo), 1);
+    } else {
+     
+      cartoesInfoAbertos.value = [campo];
+    }
+ 
+  mostrarCardInfoEnunciado.value = cartoesInfoAbertos.value.includes('enunciado');
+  mostrarCardInfoTopico.value = cartoesInfoAbertos.value.includes('topico');
+  mostrarCardInfoTopico2.value = cartoesInfoAbertos.value.includes('topico2');
+  mostrarCardInfoTipo.value = cartoesInfoAbertos.value.includes('tipo');
+  mostrarCardInfoResposta.value = cartoesInfoAbertos.value.includes('resposta');
+  mostrarCardInfoNivel.value = cartoesInfoAbertos.value.includes('nivel');
+};
+
+    
+    const ocultarInfo = (campo) => {
+      if (campo === 'enunciado') {
+        mostrarCardInfoEnunciado.value = false;
+      }
+      if (campo === 'topico') {
+        mostrarCardInfoTopico.value = false;
+      }
+      if (campo === 'topico2') {
+        mostrarCardInfoTopico2.value = false;
+      }
+      if (campo === 'tipo') {
+        mostrarCardInfoTipo.value = false;
+      }
+      if (campo === 'resposta') {
+        mostrarCardInfoResposta.value = false;
+      }
+      if (campo === 'nivel') {
+        mostrarCardInfoNivel.value = false;
+      }
+    
+    };
     const selectedQuestoes = ref([]);
    const niveis = {
   'Fácil': 'facil',
@@ -249,6 +353,14 @@ watch([nivel, topico], () => {
       selectedQuestoes, itemText,  nivel,
       topico,
       topicos,carregarTopicos, niveis,
+      mostrarCardInfoEnunciado,
+      mostrarCardInfoTopico,
+      mostrarCardInfoTopico2,
+      mostrarCardInfoTipo,
+      mostrarCardInfoResposta,
+      mostrarCardInfoNivel,
+      mostrarInfo,
+      ocultarInfo,
     };
   },
 });
@@ -258,5 +370,14 @@ watch([nivel, topico], () => {
 .custom-select2 {
 background-color: #0099ff;
 
+} 
+.info-card2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 160%;
+  z-index: 1;
 }
 </style>

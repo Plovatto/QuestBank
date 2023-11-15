@@ -3,12 +3,12 @@
         <Nav />
         <v-card elevation="0">
             <v-card-title class="text-blue font-weight-bold text-center text-h5">Editar Avaliação</v-card-title>
-            <v-card-text>
+            <v-card-text><br>
                 <v-form ref="form" @submit="editarProva">
-                    <v-textarea label="Nome da avaliação" v-model="enunciado" outlined rows="4"></v-textarea>
-                    <v-select label="Tipo" v-model="tipo" :items="['Objetiva', 'Dissertativa', 'Ambas']"
+                    <v-textarea  variant="solo" label="Nome da avaliação" v-model="enunciado" outlined rows="4"></v-textarea>
+                    <v-select  variant="solo" label="Tipo" v-model="tipo" :items="['Objetiva', 'Dissertativa', 'Ambas']"
                         outlined></v-select>
-                    <v-textarea label="Descrição" v-model="descricao" outlined rows="4"></v-textarea>
+                    <v-textarea  variant="solo" label="Descrição" v-model="descricao" outlined rows="4"></v-textarea>
                 </v-form>
             </v-card-text>
             <v-card-actions class="d-flex justify-center align-items-center">
