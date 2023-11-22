@@ -23,7 +23,7 @@ import AlternativaDetalhes from "@/components/telaHome/Alternativas/AlternativaD
 import EditarAlternativas from "@/components/telaHome/Alternativas/EditarAlternativas";
 import Logo from "./components/Logo.vue";
 const routes = [
-  { path: "/", name: "Inicio", component: Inicio },
+  { path: "/", name: "Inicio", component: Inicio, beforeEnter: requireAuth, },
   { path: "/Login", name: "Login", component: Login },
   { path: "/Logo", name: "Logo", component: Logo },
   { path: "/redefinir", name: "redefinir", component: redefinir },
@@ -136,7 +136,10 @@ function requireAuth(to, from, next) {
   const token = localStorage.getItem("token");
   const perfil = localStorage.getItem("userPerfil"); 
   const id = localStorage.getItem("userId"); 
-  if (!token && to.name !== "Login" && to.name !== "redefinir" && to.name !== "email") {
+  if (to.name === "Inicio") {
+
+    next();}
+  else if (!token && to.name !== "Login" && to.name !== "redefinir" && to.name !== "email") {
     console.log(token);
     console.log(id);
     router.push("/Login");
